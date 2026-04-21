@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FAF8F5;
+  --surface: #FFFFFF;
+  --border: #E8E3DC;
+  --text: #0A0A0A;
+  --muted: #666660;
+  --accent: #8B6914;
+  --accent-hover: #7A5A10;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --surface: #1A1A1A;
+  --border: #2A2A2A;
+  --text: #F5F0E8;
+  --muted: #888880;
+  --accent: #C9A96E;
+  --accent-hover: #B8904A;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+}
+
+* {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn {
+  @apply uppercase tracking-wider border-radius-sm px-6 py-3 font-medium transition-all;
+}
+
+.border-radius-sm {
+  border-radius: 2px;
+}
+
+.font-mono {
+  font-family: 'DM Mono', monospace;
+}
+
+.aspect-3-4 {
+  aspect-ratio: 3 / 4;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.badge {
+  @apply absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-xs rounded-full;
+}
