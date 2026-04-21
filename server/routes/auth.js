@@ -12,14 +12,14 @@ router.post('/login', loginLimiter,
     body('email').isEmail().normalizeEmail(),
     body('password').notEmpty()
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(email);
 
     if (!user || !bcrypt.compareSync(password, user.password_hash)) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -33,8 +33,9 @@ router.post('/login', loginLimiter,
 
     res.cookie('token', token, {
       httpOnly: true,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      sameSite: 'none'
     });
 
     res.json({
@@ -48,8 +49,8 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
-router.get('/me', authenticateToken, (req, res) => {
-  const user = db.prepare('SELECT id, email, role FROM users WHERE id = ?').get(req.user.id);
+router.get('/me', authenticateToken, async (req, res) => {
+  const user = await db.prepare('SELECT id, email, role FROM users WHERE id = ?').get(req.user.id);
   res.json(user);
 });
 
