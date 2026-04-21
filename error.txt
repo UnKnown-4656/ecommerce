@@ -1,0 +1,61 @@
+[plugin:vite:react-babel] C:\Users\user\Desktop\frontend\client\src\pages\HomePage.jsx: Invalid left-hand side in assignment expression. (28:11)
+  31 |         <div className="relative z-20 px-4 max-w-5xl mx-auto">
+C:/Users/user/Desktop/frontend/client/src/pages/HomePage.jsx:28:11
+26 |          style={{ 
+27 |            background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)',
+28 |            [data-theme="light"]: 'radial-gradient(ellipse at center, #2A2215 0%, #1A1510 100%)'
+   |             ^
+29 |          }}>
+30 |          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg z-10" />
+    at constructor (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:365:19)
+    at JSXParserMixin.raise (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:6599:19)
+    at JSXParserMixin.checkLVal (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:7521:12)
+    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10861:12)
+    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:39
+    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
+    at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:17)
+    at JSXParserMixin.parsePropertyName (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11985:23)
+    at JSXParserMixin.parsePropertyDefinition (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11889:10)
+    at JSXParserMixin.parseObjectLike (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11832:21)
+    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11339:23)
+    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4764:20)
+    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
+    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
+    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
+    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61)
+    at JSXParserMixin.parseExprOps (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10904:23)
+    at JSXParserMixin.parseMaybeConditional (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10881:23)
+    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10831:21)
+    at JSXParserMixin.parseExpressionBase (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10784:23)
+    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10780:39
+    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
+    at JSXParserMixin.parseExpression (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10780:17)
+    at JSXParserMixin.jsxParseExpressionContainer (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4632:31)
+    at JSXParserMixin.jsxParseAttributeValue (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4604:21)
+    at JSXParserMixin.jsxParseAttribute (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4653:38)
+    at JSXParserMixin.jsxParseOpeningElementAfterName (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4667:28)
+    at JSXParserMixin.jsxParseOpeningElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4662:17)
+    at JSXParserMixin.jsxParseElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4686:33)
+    at JSXParserMixin.jsxParseElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4698:32)
+    at JSXParserMixin.jsxParseElement (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4749:17)
+    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4759:19)
+    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
+    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
+    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
+    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61)
+    at JSXParserMixin.parseExprOps (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10904:23)
+    at JSXParserMixin.parseMaybeConditional (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10881:23)
+    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10831:21)
+    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:39
+    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
+    at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:17)
+    at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12493:17)
+    at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11675:28)
+    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11331:23)
+    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4764:20)
+    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
+    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
+    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
+    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61
+Click outside, press Esc key, or fix the code to dismiss.
+You can also disable this overlay by setting server.hmr.overlay to false in vite.config.js.

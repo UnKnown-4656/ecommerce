@@ -3,6 +3,20 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { db } = require('../db/database');
 
+router.get('/track', async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
+    res.json(orders.map(o => ({ ...o, items: JSON.parse(o.items || '[]') })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
 router.post('/',
   [
     body('customer_name').notEmpty().trim(),
@@ -51,15 +65,6 @@ router.get('/:id', (req, res) => {
     return res.status(404).json({ message: 'Order not found' });
   }
   res.json(order);
-});
-
-router.get('/track', (req, res) => {
-  const { email } = req.query;
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
-  }
-  const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email);
-  res.json(orders);
 });
 
 module.exports = router;

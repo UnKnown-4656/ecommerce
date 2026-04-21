@@ -13,12 +13,12 @@ const OrderSuccessPage = () => {
           </svg>
         </div>
         <h1 className="font-display text-3xl mb-4">Order Placed Successfully!</h1>
-        {orderId && (
+        {orderId !== undefined && orderId !== null && (
           <p className="text-lg mb-2">
             Order <span className="font-mono text-accent">#{orderId}</span>
           </p>
         )}
-        {total && (
+        {total !== undefined && total !== null && (
           <p className="text-xl font-mono text-accent mb-4">${total.toFixed(2)}</p>
         )}
         <p className="text-muted mb-8">

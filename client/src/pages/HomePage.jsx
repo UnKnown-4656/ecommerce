@@ -22,11 +22,10 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-center" 
-        style={{ 
-          background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)',
-          [data-theme="light"]: 'radial-gradient(ellipse at center, #2A2215 0%, #1A1510 100%)'
-        }}>
+<section className="relative h-screen flex items-center justify-center text-center" 
+  style={{ 
+    background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)'
+  }}>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg z-10" />
         <div className="relative z-20 px-4 max-w-5xl mx-auto">
           <motion.h1 

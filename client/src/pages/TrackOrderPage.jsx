@@ -16,7 +16,9 @@ const TrackOrderPage = () => {
     setSearched(true);
 
     try {
-      const response = await api.get(`/orders/track?email=${encodeURIComponent(email)}`);
+      // Trim email to remove any accidental whitespace
+      const trimmedEmail = email.trim();
+      const response = await api.get(`/orders/track?email=${encodeURIComponent(trimmedEmail)}`);
       setOrders(response.data);
     } catch (err) {
       setError('Unable to find orders. Please check your email address.');
@@ -63,10 +65,10 @@ const TrackOrderPage = () => {
         <p className="text-center text-muted italic">No orders found for this email address.</p>
       )}
 
-      {orders.length > 0 && (
-        <div className="space-y-6">
-          {orders.map((order) => {
-            const items = JSON.parse(order.items);
+       {orders.length > 0 && (
+         <div className="space-y-6">
+           {orders.map((order) => {
+             const items = Array.isArray(order.items) ? order.items : JSON.parse(order.items);
             const status = statusColors[order.status] || statusColors.Pending;
             return (
               <div key={order.id} className="card p-6">
