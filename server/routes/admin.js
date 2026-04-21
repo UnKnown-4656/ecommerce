@@ -39,13 +39,7 @@ router.get('/stats', authenticateToken, requireAdmin, (req, res) => {
   const totalOrders = db.prepare('SELECT COUNT(*) as count FROM orders').get().count;
   const pendingOrders = db.prepare("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending'").get().count;
   const revenue = db.prepare('SELECT COALESCE(SUM(total), 0) as total FROM orders').get().total;
-
-  res.json({
-    totalProducts,
-    totalOrders,
-    pendingOrders,
-    revenue
-  });
+  res.json({ totalProducts, totalOrders, pendingOrders, revenue });
 });
 
 router.get('/products', authenticateToken, requireAdmin, (req, res) => {
@@ -58,8 +52,7 @@ router.post('/products', authenticateToken, requireAdmin, upload.single('image')
   body('category').notEmpty().trim(),
   body('price').isFloat({ min: 0 }),
   body('description').optional().trim(),
-  body('stock').isInt({ min: 0 }),
-  body('sizes').isArray()
+  body('stock').isInt({ min: 0 })
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -67,14 +60,13 @@ router.post('/products', authenticateToken, requireAdmin, upload.single('image')
   }
 
   const { name, category, price, description, stock, sizes } = req.body;
+  const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes || [];
   const image_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-  const stmt = db.prepare(`
+  const result = db.prepare(`
     INSERT INTO products (name, category, price, description, stock, sizes, image_url)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  const result = stmt.run(name, category, parseFloat(price), description || '', stock, JSON.stringify(sizes), image_url);
+  `).run(name, category, parseFloat(price), description || '', parseInt(stock), JSON.stringify(parsedSizes), image_url);
 
   res.status(201).json({ id: result.lastInsertRowid, message: 'Product created' });
 });
@@ -84,8 +76,7 @@ router.put('/products/:id', authenticateToken, requireAdmin, upload.single('imag
   body('category').notEmpty().trim(),
   body('price').isFloat({ min: 0 }),
   body('description').optional().trim(),
-  body('stock').isInt({ min: 0 }),
-  body('sizes').isArray()
+  body('stock').isInt({ min: 0 })
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -93,6 +84,7 @@ router.put('/products/:id', authenticateToken, requireAdmin, upload.single('imag
   }
 
   const { name, category, price, description, stock, sizes } = req.body;
+  const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes || [];
   const product = db.prepare('SELECT image_url FROM products WHERE id = ?').get(req.params.id);
 
   if (!product) {
@@ -104,7 +96,7 @@ router.put('/products/:id', authenticateToken, requireAdmin, upload.single('imag
   db.prepare(`
     UPDATE products SET name = ?, category = ?, price = ?, description = ?, stock = ?, sizes = ?, image_url = ?
     WHERE id = ?
-  `).run(name, category, parseFloat(price), description || '', stock, JSON.stringify(sizes), image_url, req.params.id);
+  `).run(name, category, parseFloat(price), description || '', parseInt(stock), JSON.stringify(parsedSizes), image_url, req.params.id);
 
   res.json({ message: 'Product updated' });
 });

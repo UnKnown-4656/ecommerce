@@ -48,12 +48,11 @@ const AdminAddProductPage = () => {
     }
 
     try {
-      await api.post('/admin/products', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await api.post('/admin/products', data);
       navigate('/admin/products');
     } catch (error) {
       console.error('Error creating product:', error);
+      alert('Error creating product: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -87,6 +86,9 @@ const AdminAddProductPage = () => {
               className="w-full px-4 py-2 border border-border bg-surface rounded focus:outline-none focus:border-accent"
             >
               <option value="">Select Category</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Essentials">Essentials</option>
               <option value="Tops">Tops</option>
               <option value="Bottoms">Bottoms</option>
               <option value="Outerwear">Outerwear</option>
@@ -140,7 +142,7 @@ const AdminAddProductPage = () => {
                 type="text"
                 value={sizeInput}
                 onChange={(e) => setSizeInput(e.target.value)}
-                placeholder="Enter size"
+                placeholder="e.g. S, M, L, XL"
                 className="flex-1 px-4 py-2 border border-border bg-surface rounded focus:outline-none focus:border-accent"
               />
               <button

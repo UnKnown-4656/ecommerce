@@ -18,6 +18,7 @@ class ApiClient {
       config.headers['Content-Type'] = 'application/json';
       config.body = JSON.stringify(data);
     } else if (data instanceof FormData) {
+      delete config.headers['Content-Type'];
       config.body = data;
     }
 
