@@ -41,7 +41,7 @@ const CheckoutPage = () => {
 
       const response = await api.post('/orders', orderData);
       clearCart();
-      navigate('/order-success', { state: { orderId: response.data.id } });
+      navigate('/order-success', { state: { orderId: response.data.id, total: cartTotal } });
     } catch (error) {
       console.error('Error placing order:', error);
       alert('Failed to place order. Please try again.');

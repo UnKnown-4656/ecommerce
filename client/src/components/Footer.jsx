@@ -15,6 +15,7 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <nav className="flex flex-col space-y-2">
               <Link to="/shop" className="text-muted hover:text-accent text-sm">Shop All</Link>
+              <Link to="/track-order" className="text-muted hover:text-accent text-sm">Track Order</Link>
               <Link to="/cart" className="text-muted hover:text-accent text-sm">Cart</Link>
               <Link to="/admin/login" className="text-muted hover:text-accent text-sm">Admin</Link>
             </nav>

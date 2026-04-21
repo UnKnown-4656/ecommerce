@@ -1,103 +1,222 @@
+You are working on a full-stack clothing ecommerce app called NOIR & CO.
+Location: C:\Users\user\Desktop\frontend
+Stack: React + Vite + Tailwind (client folder), Express + sql.js (server folder)
+Read every file before editing. Make all changes in one pass.
 
-Fix these issues in C:\Users\user\Desktop\frontend:
+CRITICAL FIXES FIRST:
 
-1. DARK/LIGHT MODE - Not working at all
-   - Read client/src/context/ThemeContext.jsx
-   - Read client/src/main.jsx  
-   - Read client/src/App.jsx
-   - The theme must be applied as data-theme="dark" or data-theme="light" on document.documentElement
-   - Default to dark mode
-   - Toggle must switch between dark and light instantly
-   - CSS variables in index.css must use [data-theme="dark"] and [data-theme="light"] selectors
-   - Make sure ThemeProvider wraps everything in main.jsx
+FIX 1 - OrderSuccessPage.jsx showing "0" for order ID and total:
+- Open client/src/pages/CheckoutPage.jsx
+- After successful POST /api/orders, the response contains order ID
+- Pass orderId and total to /order-success using React Router state: navigate('/order-success', { state: { orderId: response.data.id, total: cartTotal } })
+- Open client/src/pages/OrderSuccessPage.jsx
+- Read the state using: const { orderId, total } = location.state || {}
+- Display orderId and total correctly, show "Order #orderId" and "$total"
 
-2. ORDER TRACKING for customers
-   - After placing order, customer gets an order ID
-   - Add page /order/:id that shows order status (Pending/Shipped/Delivered)
-   - Add GET /api/orders/:id public route in server/routes/orders.js
-   - On OrderSuccessPage show the order ID and a link to track it
-   - Simple clean page showing: Order ID, Items, Status, Delivery address
+FIX 2 - Dark/Light mode completely broken:
+- Open client/src/context/ThemeContext.jsx
+- Replace entire file with this working implementation:
+import { createContext, useContext, useEffect, useState } from 'react';
+const ThemeContext = createContext();
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+}
+export function useTheme() { return useContext(ThemeContext); }
+export default ThemeContext;
+- Open client/src/index.css and make sure ALL color variables use [data-theme="dark"] and [data-theme="light"] selectors
+- Make sure ThemeProvider wraps everything in main.jsx
 
-3. UI/UX COMPLETE OVERHAUL
-   Read all files in client/src/pages/ and client/src/components/
-   Then apply these changes:
+FIX 3 - Order Tracking Page:
+- Create client/src/pages/OrderTrackingPage.jsx
+- Customer enters their email address and clicks Track
+- Frontend calls GET /api/orders/track?email=xxx
+- Shows list of their orders with: Order ID, Date, Items, Total, Status badge
+- Status badge colors: Pending=yellow, Shipped=blue, Delivered=green
+- Add server route in server/routes/orders.js: GET /api/orders/track?email=xxx returns orders matching that email
+- Add route /track-order in client/src/App.jsx
+- Add "Track Order" link in Header.jsx navigation and Footer.jsx
 
-   index.css:
-   - Add Google Fonts link in index.html: Playfair Display + DM Sans + DM Mono
-   - [data-theme="dark"]: --bg:#0A0A0A; --surface:#1A1A1A; --border:#2A2A2A; --text:#F5F0E8; --accent:#C9A96E;
-   - [data-theme="light"]: --bg:#FAF8F5; --surface:#FFFFFF; --border:#E8E3DC; --text:#0A0A0A; --accent:#8B6914;
-   - All headings: font-family Playfair Display
-   - All body: font-family DM Sans
-   - Prices: font-family DM Mono
+CSS VARIABLES - Replace in client/src/index.css:
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-secondary: #111111;
+  --surface: #1A1A1A;
+  --surface-hover: #222222;
+  --border: #2A2A2A;
+  --text: #F5F0E8;
+  --text-muted: #888880;
+  --accent: #C9A96E;
+  --accent-hover: #B8904A;
+  --accent-subtle: rgba(201,169,110,0.1);
+  --red: #E05555;
+  --green: #5A9E6F;
+  --blue: #5A7EC9;
+  --yellow: #C9A940;
+}
+[data-theme="light"] {
+  --bg: #FAF8F5;
+  --bg-secondary: #F5F2ED;
+  --surface: #FFFFFF;
+  --surface-hover: #F8F6F2;
+  --border: #E8E3DC;
+  --text: #0A0A0A;
+  --text-muted: #666660;
+  --accent: #8B6914;
+  --accent-hover: #7A5A10;
+  --accent-subtle: rgba(139,105,20,0.08);
+  --red: #C0392B;
+  --green: #27AE60;
+  --blue: #2980B9;
+  --yellow: #B7950B;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; }
+* { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+.btn { text-transform: uppercase; letter-spacing: 0.08em; border-radius: 2px; transition: all 0.2s ease; }
+.btn:hover { transform: scale(1.02); }
+.btn-primary { background: var(--accent); color: #000; padding: 12px 24px; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-outline { border: 1px solid var(--accent); color: var(--accent); padding: 12px 24px; background: transparent; }
+.btn-outline:hover { background: var(--accent); color: #000; }
+.card { background: var(--surface); border: 1px solid var(--border); }
+.text-accent { color: var(--accent); }
+.font-display { font-family: 'Playfair Display', serif; }
+.font-mono { font-family: 'DM Mono', monospace; }
 
-   Header.jsx:
-   - Logo: NOIR & CO. in Playfair Display bold
-   - Links: uppercase, letter-spacing 0.1em, small font
-   - Cart icon with item count badge in gold circle
-   - Theme toggle button with moon/sun icon
-   - Sticky with backdrop blur on scroll
-   - Mobile: hamburger menu
+Add to client/index.html inside head tag:
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-   HomePage.jsx:
-   - Hero: full viewport height, centered text
-   - H1: "Dress With Intent" in Playfair Display, large
-   - Subtitle: DM Sans light weight
-   - Two buttons: gold filled + outlined
-   - Product grid below hero
+UI IMPROVEMENTS:
 
-   ProductCard.jsx:
-   - Image: aspect-ratio 3/4, object-fit cover
-   - Hover: scale 1.05, show Add to Cart button
-   - Price in gold DM Mono
-   - Clean minimal card
+Header.jsx:
+- Logo "NOIR & CO." font-family Playfair Display, font-weight 700, letter-spacing 0.15em, font-size 1.4rem
+- Navigation links: uppercase, font-size 0.75rem, letter-spacing 0.12em, color var(--text-muted), hover color var(--accent)
+- Active link: border-bottom 2px solid var(--accent)
+- Cart icon: position relative, show gold circle badge with item count when cart not empty
+- Theme toggle: sun icon for light, moon icon for dark, smooth transition
+- On scroll (window.scrollY > 50): add backdrop-filter blur(16px), border-bottom 1px solid var(--border)
+- Mobile (max-width 768px): show hamburger menu button, hide nav links
+- Hamburger: clicking opens full screen overlay menu with links stacked vertically
+- Add "Track Order" link in navigation
 
-   All buttons:
-   - uppercase, letter-spacing 0.08em, border-radius 2px
-   - Gold background for primary
-   - Smooth hover transitions
+HomePage.jsx:
+- Hero section: height 100vh, display flex, align-items center, justify-content center, text-align center
+- Background: radial gradient from #1A1508 to #0A0A0A in dark mode
+- H1: "Dress With Intent" font-size clamp(3rem, 8vw, 7rem), font-family Playfair Display, line-height 1.1
+- H1 animation: on load, each word fades in with translateY(30px) to translateY(0), staggered 0.2s delay using CSS animation
+- Subtitle: "Premium clothing for the modern wardrobe" DM Sans font-weight 300, font-size 1.2rem, color var(--text-muted), margin-top 1.5rem
+- Two CTA buttons side by side: "Explore Collection" (btn-primary) and "New Arrivals" (btn-outline)
+- Thin horizontal gold line separator: width 60px, height 1px, background var(--accent), margin 2rem auto
+- Below hero: "New Arrivals" section with product grid
+- Section headings: Playfair Display, font-size 2.5rem, text-align center, margin-bottom 3rem
 
-   Make it look like a luxury fashion brand.
-   Mobile responsive: single column on small screens, hamburger nav.
+ProductCard.jsx:
+- Wrapper div: position relative, overflow hidden, cursor pointer
+- Image container: aspect-ratio 3/4, overflow hidden, background var(--surface)
+- Image: width 100%, height 100%, object-fit cover, transition transform 0.4s ease
+- On card hover: image transform scale(1.05)
+- Hover overlay: position absolute, inset 0, background rgba(0,0,0,0.4), opacity 0 normally, opacity 1 on hover, transition 0.3s, display flex align-items center justify-content center
+- Overlay text: "QUICK VIEW" color white, font-size 0.8rem, letter-spacing 0.15em, uppercase
+- Add to Cart button: position absolute, bottom 0, left 0, right 0, background var(--accent), color black, padding 12px, text-align center, uppercase, letter-spacing 0.1em, font-size 0.8rem, transform translateY(100%) normally, translateY(0) on card hover, transition 0.3s ease
+- Product info below image: padding 1rem 0
+- Category: font-size 0.7rem, uppercase, letter-spacing 0.1em, color var(--text-muted), margin-bottom 0.3rem
+- Product name: font-family Playfair Display, font-size 1rem, color var(--text), margin-bottom 0.5rem
+- Price: font-family DM Mono, color var(--accent), font-size 1.1rem, font-weight 500
+- If stock === 0: show "SOLD OUT" badge top-left position absolute, background #333, color white, font-size 0.65rem, padding 4px 8px, letter-spacing 0.1em
 
-ADVANCED VISUAL EFFECTS:
+ShopPage.jsx:
+- Layout: sidebar left (280px wide) + product grid right
+- Sidebar: filter by category (Men/Women/Essentials), filter by price range slider, sticky position
+- Product grid: 3 columns desktop, 2 columns tablet, 1 column mobile
+- Sort dropdown: custom styled, not default browser style
+- Loading state: show 6 skeleton cards (gray pulse animation) while fetching
+- Skeleton card: same dimensions as ProductCard but with animated gray background
+- Empty state: centered "No products found" in Playfair Display italic
 
-4. 3D SCROLL EFFECTS & ANIMATIONS
-   Install these in client/: npm install framer-motion
+ProductDetailPage.jsx:
+- Two column layout: image left, details right
+- Image: full width of left column, aspect-ratio 3/4, object-fit cover
+- Right side details:
+  - Category: small uppercase muted
+  - Product name: Playfair Display, font-size 2.5rem, line-height 1.2
+  - Thin gold divider: width 40px, height 2px, background var(--accent), margin 1rem 0
+  - Price: DM Mono, font-size 1.8rem, color var(--accent)
+  - Size selector: flex wrap gap, each size is a pill button (40px x 40px), border 1px solid var(--border), selected = background var(--accent) color black border-color var(--accent)
+  - Quantity stepper: minus button, number, plus button, clean styled
+  - Add to Cart button: full width, btn-primary class, large padding
+  - Stock warning: if stock <= 5 show "Only X left in stock" in red color
+  - Out of stock: disable button, show "OUT OF STOCK" text
 
-   Apply these effects:
+CartDrawer.jsx:
+- Position fixed right 0 top 0, height 100vh, width 420px (100% on mobile)
+- Background var(--surface), border-left 1px solid var(--border)
+- Slide in from right: transform translateX(100%) when closed, translateX(0) when open, transition 0.35s ease
+- Dark overlay behind drawer: position fixed inset 0, background rgba(0,0,0,0.5), z-index lower than drawer
+- Header: "YOUR CART" uppercase, close button X
+- Cart items: each item has small image (80px), product name, size, price, quantity stepper, remove button
+- Empty cart: centered, "Your cart is empty" in Playfair Display italic, continue shopping link
+- Footer: subtotal row, checkout button full width gold
 
-   HomePage.jsx:
-   - Hero: parallax scroll effect - background moves slower than content
-   - Product cards: fade in + slide up as they enter viewport (staggered, each card 0.1s delay)
-   - Hero heading: letter by letter reveal animation on load
-   - Smooth scroll behavior on entire page
+CheckoutPage.jsx:
+- Two column layout: form left (60%), order summary right (40%)
+- Form inputs: border 0, border-bottom 1px solid var(--border), background transparent, padding 12px 0, color var(--text), font-family DM Sans, focus border-bottom-color var(--accent), outline none
+- Labels: display block, font-size 0.7rem, uppercase, letter-spacing 0.1em, color var(--text-muted), margin-bottom 4px
+- Form sections: "Contact Information" and "Shipping Address" with Playfair Display headings
+- Order summary: sticky, card with border, each item with image and price, total in gold DM Mono
+- Place Order button: full width, large, gold, uppercase
 
-   ProductCard.jsx:
-   - 3D tilt effect on hover: card rotates slightly on mouse move (perspective: 1000px, rotateX/Y max 10deg)
-   - Gold shimmer effect on product image hover
-   - Price counter animation when card enters viewport
+OrderSuccessPage.jsx:
+- Centered card, large green checkmark icon
+- "Order Placed Successfully!" in Playfair Display
+- Show "Order #[orderId]" clearly
+- Show total amount in gold
+- Two buttons: Continue Shopping and Track Your Order (links to /track-order)
 
-   ShopPage.jsx:
-   - Products fade in with stagger as page loads
-   - Filter sidebar slides in from left smoothly
+AdminDashboard.jsx:
+- Stat cards: 4 cards in grid, each with left border 3px solid var(--accent)
+- Card numbers: DM Mono, font-size 2rem, color var(--accent), animate count up on load
+- Card labels: uppercase, font-size 0.75rem, letter-spacing 0.1em, color var(--text-muted)
+- Recent orders table with status badges
 
-   General:
-   - Page transitions: each page fades in (opacity 0→1, translateY 20px→0, 0.4s)
-   - Scroll progress bar at top of page in gold color
-   - Smooth scroll to top button (gold circle, bottom right, appears after 300px scroll)
-   - Loading skeleton with shimmer animation while products load
+AdminOrdersPage.jsx:
+- Full table: Order ID, Customer Name, Phone, City, Items count, Total, Status, Actions
+- Status badges: inline-flex, padding 4px 10px, border-radius 9999px, font-size 0.7rem, uppercase, letter-spacing 0.05em
+  Pending: background #C9A94020, color #C9A96E, border 1px solid #C9A96E
+  Shipped: background #5A7EC920, color #7EA8E9, border 1px solid #5A7EC9
+  Delivered: background #5A9E6F20, color #7ABE8F, border 1px solid #5A9E6F
+- Pending badges: add CSS animation pulse (opacity 1 to 0.6, 1.5s infinite)
+- Status dropdown to update status per order row
+- Filter tabs at top: All / Pending / Shipped / Delivered
 
-5. PREMIUM VISUAL DETAILS
-   - Add subtle grain texture overlay on hero (CSS noise filter)
-   - Gold gradient shimmer on logo text
-   - Floating cart button on mobile (fixed bottom right)
-   - Product image: zoom cursor on hover
-   - Admin dashboard: animated number counters on stat cards
-   - Status badges with pulse animation on Pending orders
-   - Toast notifications: slide in from bottom right with smooth animation
+TOAST NOTIFICATIONS:
+- Create client/src/components/Toast.jsx if not exists
+- Fixed position bottom-right, z-index 9999
+- Each toast: background var(--surface), border 1px solid var(--border), border-left 3px solid var(--accent), padding 16px, border-radius 4px, box-shadow
+- Animation: slide in from right (translateX(100%) to translateX(0)), fade out after 3 seconds
+- Types: success (green left border), error (red left border), info (gold left border)
+- Show toasts for: added to cart, removed from cart, order placed successfully, product saved, errors
 
-6. RESPONSIVE & MOBILE
-   - Hamburger menu: full screen overlay with staggered link animations
-   - Mobile product grid: 2 columns with proper spacing
-   - Touch-friendly size selectors (minimum 44px tap target)
-   - Swipeable product images on mobile
+SCROLL EFFECTS:
+- Add scroll progress bar: fixed top 0 left 0, height 3px, background var(--accent), width changes with scroll percentage, z-index 9999
+- Add scroll to top button: fixed bottom-right, 48px circle, background var(--accent), color black, appears when scrollY > 300, smooth scroll to top on click
+
+ANIMATIONS:
+- Product cards on ShopPage: fade in with translateY(20px) to translateY(0) as they enter viewport, staggered 0.1s per card
+- Use IntersectionObserver for scroll animations
+- Page load: opacity 0 to 1, translateY(20px) to 0, 0.4s ease
+
+MOBILE RESPONSIVE:
+- Header: hamburger at max-width 768px
+- Hero: font-size smaller on mobile, buttons stack vertically
+- Product grid: 2 columns on tablet, 1 column on mobile  
+- ProductDetail: stack vertically on mobile
+- CartDrawer: full width on mobile (width 100%)
+- Admin tables: horizontal scroll on mobile
+
+After all changes commit with: git add . && git commit -m "complete ui overhaul and fixes"

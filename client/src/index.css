@@ -2,65 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #FAF8F5;
-  --surface: #FFFFFF;
-  --border: #E8E3DC;
-  --text: #0A0A0A;
-  --muted: #666660;
-  --accent: #8B6914;
-  --accent-hover: #7A5A10;
-}
-
 [data-theme="dark"] {
   --bg: #0A0A0A;
+  --bg-secondary: #111111;
   --surface: #1A1A1A;
+  --surface-hover: #222222;
   --border: #2A2A2A;
   --text: #F5F0E8;
-  --muted: #888880;
+  --text-muted: #888880;
   --accent: #C9A96E;
   --accent-hover: #B8904A;
+  --accent-subtle: rgba(201,169,110,0.1);
+  --red: #E05555;
+  --green: #5A9E6F;
+  --blue: #5A7EC9;
+  --yellow: #C9A940;
+}
+[data-theme="light"] {
+  --bg: #FAF8F5;
+  --bg-secondary: #F5F2ED;
+  --surface: #FFFFFF;
+  --surface-hover: #F8F6F2;
+  --border: #E8E3DC;
+  --text: #0A0A0A;
+  --text-muted: #666660;
+  --accent: #8B6914;
+  --accent-hover: #7A5A10;
+  --accent-subtle: rgba(139,105,20,0.08);
+  --red: #C0392B;
+  --green: #27AE60;
+  --blue: #2980B9;
+  --yellow: #B7950B;
 }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+body { 
+  font-family: 'DM Sans', sans-serif; 
+  background: var(--bg); 
+  color: var(--text); 
+}
+h1, h2, h3, h4, h5 { 
+  font-family: 'Playfair Display', serif; 
+}
+* { 
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; 
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Playfair Display', serif;
+.btn { 
+  text-transform: uppercase; 
+  letter-spacing: 0.08em; 
+  border-radius: 2px; 
+  transition: all 0.2s ease; 
+  @apply px-6 py-3 font-medium;
+}
+.btn:hover { 
+  transform: scale(1.02); 
+}
+.btn-primary { 
+  @apply bg-accent text-black px-6 py-3;
+}
+.btn-primary:hover { 
+  background: var(--accent-hover); 
+}
+.btn-outline { 
+  @apply border border-accent text-accent px-6 py-3;
+}
+.btn-outline:hover { 
+  background: var(--accent); 
+  @apply text-black;
 }
 
-* {
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+.card { 
+  background: var(--surface); 
+  border: 1px solid var(--border); 
+}
+.text-accent { 
+  color: var(--accent); 
+}
+.font-display { 
+  font-family: 'Playfair Display', serif; 
+}
+.font-mono { 
+  font-family: 'DM Mono', monospace; 
 }
 
-.btn {
-  @apply uppercase tracking-wider border-radius-sm px-6 py-3 font-medium transition-all;
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 9999;
+  transition: width 0.1s;
 }
 
-.border-radius-sm {
-  border-radius: 2px;
+/* Scroll to top */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
 }
 
-.font-mono {
-  font-family: 'DM Mono', monospace;
-}
-
-.aspect-3-4 {
-  aspect-ratio: 3 / 4;
-}
-
-.hover-scale:hover {
-  transform: scale(1.05);
-}
-
-.badge {
-  @apply absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-xs rounded-full;
-}
-
-/* Premium visual effects */
+/* Grain overlay */
 .grain-overlay {
   position: fixed;
   top: 0;
@@ -73,101 +117,63 @@ h1, h2, h3, h4 {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* Scroll to top button */
-.scroll-to-top {
+/* Toast */
+.toast-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 50;
-  transition: all 0.3s ease;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  animation: slideIn 0.3s ease;
+}
+.toast-success { border-left-color: var(--green); }
+.toast-error { border-left-color: var(--red); }
+.toast-info { border-left-color: var(--accent); }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
-.scroll-to-top.hidden {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
+/* Pulse animation for pending */
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.pulse-pending {
+  animation: pulse-badge 1.5s infinite;
 }
 
-/* Gold shimmer effect */
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(201, 169, 110, 0.3) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-/* Scroll progress bar */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: var(--accent);
-  z-index: 100;
-  transition: width 0.1s;
-}
-
-/* Page transition */
-.page-enter {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.4s, transform 0.4s;
-}
-
-/* Loading skeleton */
-@keyframes skeleton-loading {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
+/* Skeleton loading */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--border) 0px,
-    var(--surface) 40px,
-    var(--border) 80px
-  );
+  background: linear-gradient(90deg, var(--border) 0px, var(--surface-hover) 40px, var(--border) 80px);
   background-size: 200px 100%;
   animation: skeleton-loading 1.5s infinite;
 }
-
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+@keyframes skeleton-loading {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
 }
 
-/* Pulse animation for pending orders */
-@keyframes pulse-badge {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+/* Product card hover */
+.product-card { position: relative; overflow: hidden; cursor: pointer; }
+.product-card img { transition: transform 0.4s ease; }
+.product-card:hover img { transform: scale(1.05); }
+.product-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.pulse-pending {
-  animation: pulse-badge 2s infinite;
-}
+.product-card:hover .overlay { opacity: 1; }

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const OrderSuccessPage = () => {
   const location = useLocation();
-  const orderId = location.state?.orderId;
+  const { orderId, total } = location.state || {};
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -14,23 +14,24 @@ const OrderSuccessPage = () => {
         </div>
         <h1 className="font-display text-3xl mb-4">Order Placed Successfully!</h1>
         {orderId && (
-          <p className="text-muted mb-2">
-            Order ID: <span className="font-mono text-accent">#{orderId}</span>
+          <p className="text-lg mb-2">
+            Order <span className="font-mono text-accent">#{orderId}</span>
           </p>
+        )}
+        {total && (
+          <p className="text-xl font-mono text-accent mb-4">${total.toFixed(2)}</p>
         )}
         <p className="text-muted mb-8">
           Thank you for your order. We'll process it shortly and update you on the status.
         </p>
-        {orderId && (
-          <div className="mb-6">
-            <Link
-              to={`/order/${orderId}`}
-              className="inline-block underline text-accent hover:text-accent-hover"
-            >
-              Track your order
-            </Link>
-          </div>
-        )}
+        <div className="mb-6">
+          <Link
+            to="/track-order"
+            className="inline-block underline text-accent hover:text-accent-hover"
+          >
+            Track Your Order
+          </Link>
+        </div>
         <div className="space-y-4">
           <Link
             to="/shop"

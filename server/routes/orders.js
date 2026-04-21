@@ -53,4 +53,13 @@ router.get('/:id', (req, res) => {
   res.json(order);
 });
 
+router.get('/track', (req, res) => {
+  const { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+  const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email);
+  res.json(orders);
+});
+
 module.exports = router;
