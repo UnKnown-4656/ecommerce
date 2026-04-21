@@ -9,7 +9,7 @@ router.get('/track', async (req, res) => {
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-    const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
+    const orders = await db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
     res.json(orders.map(o => ({ ...o, items: JSON.parse(o.items || '[]') })));
   } catch (err) {
     console.error(err);
@@ -29,7 +29,7 @@ router.post('/',
     body('items').isArray({ min: 1 }),
     body('total').isFloat({ min: 0 })
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -37,12 +37,10 @@ router.post('/',
 
     const { customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total } = req.body;
 
-    const stmt = db.prepare(`
+    const result = await db.prepare(`
       INSERT INTO orders (customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const result = stmt.run(
+    `).run(
       customer_name,
       phone,
       email,
@@ -59,8 +57,8 @@ router.post('/',
   }
 );
 
-router.get('/:id', (req, res) => {
-  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+router.get('/:id', async (req, res) => {
+  const order = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
   if (!order) {
     return res.status(404).json({ message: 'Order not found' });
   }

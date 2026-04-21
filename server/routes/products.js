@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { db } = require('../db/database');
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const { category, search } = req.query;
   let query = 'SELECT * FROM products WHERE 1=1';
   const params = [];
@@ -18,12 +18,12 @@ router.get('/', (req, res) => {
   }
 
   query += ' ORDER BY created_at DESC';
-  const products = db.prepare(query).all(...params);
+  const products = await db.prepare(query).all(...params);
   res.json(products);
 });
 
-router.get('/:id', (req, res) => {
-  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
+router.get('/:id', async (req, res) => {
+  const product = await db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
   if (!product) {
     return res.status(404).json({ message: 'Product not found' });
   }
