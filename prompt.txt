@@ -1,13 +1,103 @@
-Fix these two bugs in C:\Users\user\Desktop\frontend:
 
-1. server/routes/orders.js - Error "11 values for 10 columns"
-   - Open the file and count the INSERT columns vs values
-   - Make sure they match exactly
-   - Check the orders table schema in server/db/database.js and match it
+Fix these issues in C:\Users\user\Desktop\frontend:
 
-2. client/src/context/ThemeContext.jsx
-   - Dark/light mode toggle not working
-   - Make sure theme is applied as data-theme attribute on document.documentElement
-   - Persist theme in localStorage
+1. DARK/LIGHT MODE - Not working at all
+   - Read client/src/context/ThemeContext.jsx
+   - Read client/src/main.jsx  
+   - Read client/src/App.jsx
+   - The theme must be applied as data-theme="dark" or data-theme="light" on document.documentElement
    - Default to dark mode
-   - Make sure ThemeContext is wrapping the app in main.jsx or App.jsx
+   - Toggle must switch between dark and light instantly
+   - CSS variables in index.css must use [data-theme="dark"] and [data-theme="light"] selectors
+   - Make sure ThemeProvider wraps everything in main.jsx
+
+2. ORDER TRACKING for customers
+   - After placing order, customer gets an order ID
+   - Add page /order/:id that shows order status (Pending/Shipped/Delivered)
+   - Add GET /api/orders/:id public route in server/routes/orders.js
+   - On OrderSuccessPage show the order ID and a link to track it
+   - Simple clean page showing: Order ID, Items, Status, Delivery address
+
+3. UI/UX COMPLETE OVERHAUL
+   Read all files in client/src/pages/ and client/src/components/
+   Then apply these changes:
+
+   index.css:
+   - Add Google Fonts link in index.html: Playfair Display + DM Sans + DM Mono
+   - [data-theme="dark"]: --bg:#0A0A0A; --surface:#1A1A1A; --border:#2A2A2A; --text:#F5F0E8; --accent:#C9A96E;
+   - [data-theme="light"]: --bg:#FAF8F5; --surface:#FFFFFF; --border:#E8E3DC; --text:#0A0A0A; --accent:#8B6914;
+   - All headings: font-family Playfair Display
+   - All body: font-family DM Sans
+   - Prices: font-family DM Mono
+
+   Header.jsx:
+   - Logo: NOIR & CO. in Playfair Display bold
+   - Links: uppercase, letter-spacing 0.1em, small font
+   - Cart icon with item count badge in gold circle
+   - Theme toggle button with moon/sun icon
+   - Sticky with backdrop blur on scroll
+   - Mobile: hamburger menu
+
+   HomePage.jsx:
+   - Hero: full viewport height, centered text
+   - H1: "Dress With Intent" in Playfair Display, large
+   - Subtitle: DM Sans light weight
+   - Two buttons: gold filled + outlined
+   - Product grid below hero
+
+   ProductCard.jsx:
+   - Image: aspect-ratio 3/4, object-fit cover
+   - Hover: scale 1.05, show Add to Cart button
+   - Price in gold DM Mono
+   - Clean minimal card
+
+   All buttons:
+   - uppercase, letter-spacing 0.08em, border-radius 2px
+   - Gold background for primary
+   - Smooth hover transitions
+
+   Make it look like a luxury fashion brand.
+   Mobile responsive: single column on small screens, hamburger nav.
+
+ADVANCED VISUAL EFFECTS:
+
+4. 3D SCROLL EFFECTS & ANIMATIONS
+   Install these in client/: npm install framer-motion
+
+   Apply these effects:
+
+   HomePage.jsx:
+   - Hero: parallax scroll effect - background moves slower than content
+   - Product cards: fade in + slide up as they enter viewport (staggered, each card 0.1s delay)
+   - Hero heading: letter by letter reveal animation on load
+   - Smooth scroll behavior on entire page
+
+   ProductCard.jsx:
+   - 3D tilt effect on hover: card rotates slightly on mouse move (perspective: 1000px, rotateX/Y max 10deg)
+   - Gold shimmer effect on product image hover
+   - Price counter animation when card enters viewport
+
+   ShopPage.jsx:
+   - Products fade in with stagger as page loads
+   - Filter sidebar slides in from left smoothly
+
+   General:
+   - Page transitions: each page fades in (opacity 0→1, translateY 20px→0, 0.4s)
+   - Scroll progress bar at top of page in gold color
+   - Smooth scroll to top button (gold circle, bottom right, appears after 300px scroll)
+   - Loading skeleton with shimmer animation while products load
+
+5. PREMIUM VISUAL DETAILS
+   - Add subtle grain texture overlay on hero (CSS noise filter)
+   - Gold gradient shimmer on logo text
+   - Floating cart button on mobile (fixed bottom right)
+   - Product image: zoom cursor on hover
+   - Admin dashboard: animated number counters on stat cards
+   - Status badges with pulse animation on Pending orders
+   - Toast notifications: slide in from bottom right with smooth animation
+
+6. RESPONSIVE & MOBILE
+   - Hamburger menu: full screen overlay with staggered link animations
+   - Mobile product grid: 2 columns with proper spacing
+   - Touch-friendly size selectors (minimum 44px tap target)
+   - Swipeable product images on mobile

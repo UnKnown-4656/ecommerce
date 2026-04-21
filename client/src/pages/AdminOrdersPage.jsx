@@ -83,7 +83,7 @@ const AdminOrdersPage = () => {
                         <select
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                          className={`px-2 py-1 text-white text-xs rounded ${statusColors[order.status]}`}
+                          className={`px-2 py-1 text-white text-xs rounded ${statusColors[order.status]} ${order.status === 'Pending' ? 'pulse-pending' : ''}`}
                         >
                           <option value="Pending">Pending</option>
                           <option value="Shipped">Shipped</option>

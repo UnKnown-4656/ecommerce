@@ -25,7 +25,7 @@ router.post('/',
 
     const stmt = db.prepare(`
       INSERT INTO orders (customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
@@ -44,5 +44,13 @@ router.post('/',
     res.status(201).json({ id: result.lastInsertRowid, message: 'Order placed successfully' });
   }
 );
+
+router.get('/:id', (req, res) => {
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+  if (!order) {
+    return res.status(404).json({ message: 'Order not found' });
+  }
+  res.json(order);
+});
 
 module.exports = router;

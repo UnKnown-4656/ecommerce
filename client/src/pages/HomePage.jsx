@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 
@@ -26,13 +27,28 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent" />
         </div>
         <div className="relative z-20 text-center px-4">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold mb-6 tracking-tight">
+          <motion.h1 
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold mb-6 tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
             Dress With Intent
-          </h1>
-          <p className="text-muted text-lg md:text-xl max-w-2xl mx-auto mb-8">
+          </motion.h1>
+          <motion.p 
+            className="text-muted text-lg md:text-xl max-w-2xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             Timeless pieces crafted for those who understand that style is a statement, not just a choice.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          </motion.p>
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <Link
               to="/shop"
               className="btn bg-accent hover:bg-accent-hover text-white inline-block"
@@ -45,15 +61,27 @@ const HomePage = () => {
             >
               Explore Outerwear
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <motion.section 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <h2 className="font-display text-3xl md:text-4xl text-center mb-12">Featured Pieces</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
+          {products.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 * index }}
+            >
+              <ProductCard product={product} />
+            </motion.div>
           ))}
         </div>
         <div className="text-center mt-12">
@@ -64,7 +92,7 @@ const HomePage = () => {
             View All
           </Link>
         </div>
-      </section>
+      </motion.section>
 
       <section className="bg-surface py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

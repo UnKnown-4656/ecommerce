@@ -17,20 +17,20 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b border-border">
+    <header className="sticky top-0 z-50 bg-surface border-b border-border backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="font-display text-xl font-semibold tracking-wide">
-            NOIR & CO.
-          </Link>
+<Link to="/" className="font-display text-2xl font-bold tracking-wide">
+  NOIR & CO.
+</Link>
 
-          <nav className="hidden md:flex space-x-8">
-            <Link to="/" className="text-muted hover:text-accent transition-colors">Home</Link>
-            <Link to="/shop" className="text-muted hover:text-accent transition-colors">Shop</Link>
-            {user?.role === 'admin' && (
-              <Link to="/admin" className="text-muted hover:text-accent transition-colors">Admin</Link>
-            )}
-          </nav>
+<nav className="hidden md:flex space-x-6 items-center">
+  <Link to="/" className="uppercase text-sm tracking-widest font-medium hover:text-accent transition-colors">Home</Link>
+  <Link to="/shop" className="uppercase text-sm tracking-widest font-medium hover:text-accent transition-colors">Shop</Link>
+  {user?.role === 'admin' && (
+    <Link to="/admin" className="uppercase text-sm tracking-widest font-medium hover:text-accent transition-colors">Admin</Link>
+  )}
+</nav>
 
           <div className="flex items-center space-x-4">
             <button

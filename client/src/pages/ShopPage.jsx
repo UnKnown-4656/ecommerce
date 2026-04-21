@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 
@@ -67,7 +68,12 @@ const ShopPage = () => {
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-4 mb-8">
+      <motion.div 
+        className="flex gap-2 overflow-x-auto pb-4 mb-8"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {categories.map((cat) => (
           <button
             key={cat}
@@ -81,7 +87,7 @@ const ShopPage = () => {
             {cat}
           </button>
         ))}
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="flex justify-center py-12">
@@ -92,11 +98,23 @@ const ShopPage = () => {
           <p className="text-muted">No products found.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <motion.div 
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {products.map((product, index) => (
+          <motion.div
+            key={product.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.05 * index }}
+          >
+            <ProductCard product={product} />
+          </motion.div>
+        ))}
+      </motion.div>
       )}
     </div>
   );
