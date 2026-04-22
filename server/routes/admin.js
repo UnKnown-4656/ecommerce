@@ -1,36 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 const { body, validationResult } = require('express-validator');
 const { db } = require('../db/database');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads'));
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|webp/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
-  if (extname && mimetype) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only images (jpg, png, webp) are allowed'));
-  }
-};
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: { folder: 'noir-co', allowed_formats: ['jpg', 'png', 'webp'] }
+});
 
 const upload = multer({
   storage,
-  fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
@@ -50,7 +39,6 @@ router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
     const totalOrdersRow = await db.prepare('SELECT COUNT(*) as count FROM orders').get();
     const pendingOrdersRow = await db.prepare("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending'").get();
     const revenueRow = await db.prepare('SELECT COALESCE(SUM(total), 0) as total FROM orders').get();
-
     res.json({
       totalProducts: totalProductsRow.count,
       totalOrders: totalOrdersRow.count,
@@ -82,16 +70,13 @@ router.post('/products', authenticateToken, requireAdmin, upload.single('image')
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
   const { name, category, price, description, stock, sizes } = req.body;
   const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes || [];
-  const image_url = req.file ? `/uploads/${req.file.filename}` : null;
-
+  const image_url = req.file ? req.file.path : null;
   const result = await db.prepare(`
     INSERT INTO products (name, category, price, description, stock, sizes, image_url)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `).run(name, category, parseFloat(price), description || '', parseInt(stock), JSON.stringify(parsedSizes), image_url);
-
   res.status(201).json({ id: result.lastInsertRowid, message: 'Product created' });
 });
 
@@ -106,22 +91,17 @@ router.put('/products/:id', authenticateToken, requireAdmin, upload.single('imag
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
   const { name, category, price, description, stock, sizes } = req.body;
   const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes || [];
   const product = await db.prepare('SELECT image_url FROM products WHERE id = ?').get(req.params.id);
-
   if (!product) {
     return res.status(404).json({ message: 'Product not found' });
   }
-
-  const image_url = req.file ? `/uploads/${req.file.filename}` : product.image_url;
-
+  const image_url = req.file ? req.file.path : product.image_url;
   await db.prepare(`
     UPDATE products SET name = ?, category = ?, price = ?, description = ?, stock = ?, sizes = ?, image_url = ?
     WHERE id = ?
   `).run(name, category, parseFloat(price), description || '', parseInt(stock), JSON.stringify(parsedSizes), image_url, req.params.id);
-
   res.json({ message: 'Product updated' });
 });
 
@@ -150,7 +130,6 @@ router.put('/orders/:id', authenticateToken, requireAdmin, [
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
   const { status } = req.body;
   await db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, req.params.id);
   res.json({ message: 'Order status updated' });

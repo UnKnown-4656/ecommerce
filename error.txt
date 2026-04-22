@@ -1,61 +1,32 @@
-[plugin:vite:react-babel] C:\Users\user\Desktop\frontend\client\src\pages\HomePage.jsx: Invalid left-hand side in assignment expression. (28:11)
-  31 |         <div className="relative z-20 px-4 max-w-5xl mx-auto">
-C:/Users/user/Desktop/frontend/client/src/pages/HomePage.jsx:28:11
-26 |          style={{ 
-27 |            background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)',
-28 |            [data-theme="light"]: 'radial-gradient(ellipse at center, #2A2215 0%, #1A1510 100%)'
-   |             ^
-29 |          }}>
-30 |          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg z-10" />
-    at constructor (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:365:19)
-    at JSXParserMixin.raise (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:6599:19)
-    at JSXParserMixin.checkLVal (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:7521:12)
-    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10861:12)
-    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:39
-    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
-    at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:17)
-    at JSXParserMixin.parsePropertyName (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11985:23)
-    at JSXParserMixin.parsePropertyDefinition (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11889:10)
-    at JSXParserMixin.parseObjectLike (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11832:21)
-    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11339:23)
-    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4764:20)
-    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
-    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
-    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
-    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61)
-    at JSXParserMixin.parseExprOps (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10904:23)
-    at JSXParserMixin.parseMaybeConditional (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10881:23)
-    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10831:21)
-    at JSXParserMixin.parseExpressionBase (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10784:23)
-    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10780:39
-    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
-    at JSXParserMixin.parseExpression (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10780:17)
-    at JSXParserMixin.jsxParseExpressionContainer (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4632:31)
-    at JSXParserMixin.jsxParseAttributeValue (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4604:21)
-    at JSXParserMixin.jsxParseAttribute (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4653:38)
-    at JSXParserMixin.jsxParseOpeningElementAfterName (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4667:28)
-    at JSXParserMixin.jsxParseOpeningElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4662:17)
-    at JSXParserMixin.jsxParseElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4686:33)
-    at JSXParserMixin.jsxParseElementAt (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4698:32)
-    at JSXParserMixin.jsxParseElement (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4749:17)
-    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4759:19)
-    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
-    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
-    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
-    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61)
-    at JSXParserMixin.parseExprOps (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10904:23)
-    at JSXParserMixin.parseMaybeConditional (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10881:23)
-    at JSXParserMixin.parseMaybeAssign (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10831:21)
-    at C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:39
-    at JSXParserMixin.allowInAnd (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12426:12)
-    at JSXParserMixin.parseMaybeAssignAllowIn (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10800:17)
-    at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:12493:17)
-    at JSXParserMixin.parseParenAndDistinguishExpression (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11675:28)
-    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11331:23)
-    at JSXParserMixin.parseExprAtom (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:4764:20)
-    at JSXParserMixin.parseExprSubscripts (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11081:23)
-    at JSXParserMixin.parseUpdate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11066:21)
-    at JSXParserMixin.parseMaybeUnary (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:11046:23)
-    at JSXParserMixin.parseMaybeUnaryOrPrivate (C:\Users\user\Desktop\frontend\client\node_modules\@babel\parser\lib\index.js:10899:61
-Click outside, press Esc key, or fix the code to dismiss.
-You can also disable this overlay by setting server.hmr.overlay to false in vite.config.js.
+Update image upload in C:\Users\user\Desktop\frontend to use Cloudinary instead of local storage.
+
+1. Install in server: npm install cloudinary multer-storage-cloudinary
+
+2. Add to server/.env:
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+3. In server/routes/admin.js replace multer diskStorage with cloudinary storage:
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: { folder: 'noir-co', allowed_formats: ['jpg','png','webp'] }
+});
+- image_url will now be a full https:// Cloudinary URL, not /uploads/filename
+- No changes needed in frontend since image_url is already used directly
+
+4. For seed products - update the reseed route to also insert with correct Unsplash URLs:
+DELETE FROM products, then INSERT all 6 products with these image URLs:
+- Obsidian Wool Blazer: https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400
+- Midnight Silk Shirt: https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400
+- Charcoal Pleated Trousers: https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400
+- Noir Cashmere Sweater: https://images.unsplash.com/photo-1576566588028-4147f8942fe6?w=400
+- Onyx Leather Belt: https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400
+- Shadow Cotton T-Shirt: https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400
