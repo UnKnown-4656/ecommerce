@@ -34,23 +34,41 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
-  const totalProductsRow = await db.prepare('SELECT COUNT(*) as count FROM products').get();
-  const totalOrdersRow = await db.prepare('SELECT COUNT(*) as count FROM orders').get();
-  const pendingOrdersRow = await db.prepare("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending'").get();
-  const revenueRow = await db.prepare('SELECT COALESCE(SUM(total), 0) as total FROM orders').get();
+// TEMPORARY - remove after use
+router.get('/reseed', async (req, res) => {
+  try {
+    await db.query('DELETE FROM products');
+    res.json({ message: 'Products cleared. Trigger a new deploy to reseed.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-  res.json({
-    totalProducts: totalProductsRow.count,
-    totalOrders: totalOrdersRow.count,
-    pendingOrders: pendingOrdersRow.count,
-    revenue: revenueRow.total
-  });
+router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const totalProductsRow = await db.prepare('SELECT COUNT(*) as count FROM products').get();
+    const totalOrdersRow = await db.prepare('SELECT COUNT(*) as count FROM orders').get();
+    const pendingOrdersRow = await db.prepare("SELECT COUNT(*) as count FROM orders WHERE status = 'Pending'").get();
+    const revenueRow = await db.prepare('SELECT COALESCE(SUM(total), 0) as total FROM orders').get();
+
+    res.json({
+      totalProducts: totalProductsRow.count,
+      totalOrders: totalOrdersRow.count,
+      pendingOrders: pendingOrdersRow.count,
+      revenue: revenueRow.total
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get('/products', authenticateToken, requireAdmin, async (req, res) => {
-  const products = await db.prepare('SELECT * FROM products ORDER BY created_at DESC').all();
-  res.json(products);
+  try {
+    const products = await db.prepare('SELECT * FROM products ORDER BY created_at DESC').all();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.post('/products', authenticateToken, requireAdmin, upload.single('image'), [
@@ -62,8 +80,6 @@ router.post('/products', authenticateToken, requireAdmin, upload.single('image')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.error('Validation errors:', errors.array());
-    console.error('req.body:', req.body);
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -110,16 +126,21 @@ router.put('/products/:id', authenticateToken, requireAdmin, upload.single('imag
 });
 
 router.delete('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
-  const result = await db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
-  if (!result.lastInsertRowid && result.lastInsertRowid !== 0) {
-    return res.status(404).json({ message: 'Product not found' });
+  try {
+    await db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
+    res.json({ message: 'Product deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  res.json({ message: 'Product deleted' });
 });
 
 router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
-  const orders = await db.prepare('SELECT * FROM orders ORDER BY created_at DESC').all();
-  res.json(orders);
+  try {
+    const orders = await db.prepare('SELECT * FROM orders ORDER BY created_at DESC').all();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.put('/orders/:id', authenticateToken, requireAdmin, [
