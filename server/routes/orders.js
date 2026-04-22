@@ -3,13 +3,13 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { db } = require('../db/database');
 
-router.get('/track', async (req, res) => {
+router.get('/track', (req, res) => {
   try {
     const { email } = req.query;
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-    const orders = await db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
+    const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
     res.json(orders.map(o => ({ ...o, items: JSON.parse(o.items || '[]') })));
   } catch (err) {
     console.error(err);
@@ -29,11 +29,13 @@ router.post('/',
     body('items').isArray({ min: 1 }),
     body('total').isFloat({ min: 0 })
   ],
-  async (req, res) => {
+  (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    const { customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total } = req.body;
 
     let orderItems = items;
     if (typeof items === 'string') {
@@ -55,9 +57,9 @@ router.post('/',
       }
     }
 
-    const result = await db.prepare(`
+    const result = db.prepare(`
       INSERT INTO orders (customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       customer_name,
       phone,
@@ -73,20 +75,17 @@ router.post('/',
 
     for (const item of orderItems) {
       const productId = item.product_id || item.id;
-      const updateResult = db.prepare(
+      db.prepare(
         'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?'
       ).run(item.quantity, productId, item.quantity);
-      if (updateResult.changes === 0) {
-        console.error(`Stock conflict for product ${productId}`);
-      }
     }
 
     res.status(201).json({ id: result.lastInsertRowid, message: 'Order placed successfully' });
   }
 );
 
-router.get('/:id', async (req, res) => {
-  const order = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+router.get('/:id', (req, res) => {
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
   if (!order) {
     return res.status(404).json({ message: 'Order not found' });
   }
