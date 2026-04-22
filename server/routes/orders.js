@@ -3,14 +3,15 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { db } = require('../db/database');
 
-router.get('/track', (req, res) => {
+router.get('/track', async (req, res) => {
   try {
     const { email } = req.query;
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-    const orders = db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
-    res.json(orders.map(o => ({ ...o, items: JSON.parse(o.items || '[]') })));
+    const orders = await db.prepare('SELECT * FROM orders WHERE email = ? ORDER BY created_at DESC').all(email.trim().toLowerCase());
+    const orderList = Array.isArray(orders) ? orders : [];
+    res.json(orderList.map(o => ({ ...o, items: JSON.parse(o.items || '[]') })));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch orders' });
@@ -29,7 +30,7 @@ router.post('/',
     body('items').isArray({ min: 1 }),
     body('total').isFloat({ min: 0 })
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -48,7 +49,7 @@ router.post('/',
 
     for (const item of orderItems) {
       const productId = item.product_id || item.id;
-      const product = db.prepare('SELECT stock FROM products WHERE id = ?').get(productId);
+      const product = await db.prepare('SELECT stock FROM products WHERE id = ?').get(productId);
       if (!product) {
         return res.status(400).json({ error: `Product not found: ${item.name}` });
       }
@@ -57,7 +58,7 @@ router.post('/',
       }
     }
 
-    const result = db.prepare(`
+    const result = await db.prepare(`
       INSERT INTO orders (customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
@@ -75,7 +76,7 @@ router.post('/',
 
     for (const item of orderItems) {
       const productId = item.product_id || item.id;
-      db.prepare(
+      await db.prepare(
         'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?'
       ).run(item.quantity, productId, item.quantity);
     }
@@ -84,12 +85,17 @@ router.post('/',
   }
 );
 
-router.get('/:id', (req, res) => {
-  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
-  if (!order) {
-    return res.status(404).json({ message: 'Order not found' });
+router.get('/:id', async (req, res) => {
+  try {
+    const order = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.json(order);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch order' });
   }
-  res.json(order);
 });
 
 module.exports = router;
