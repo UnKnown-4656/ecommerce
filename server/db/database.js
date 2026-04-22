@@ -102,32 +102,32 @@ const initDb = async () => {
       {
         name: 'Obsidian Wool Blazer', category: 'Outerwear', price: 289,
         description: 'A timeless double-breasted wool blazer with satin lining.',
-        stock: 15, sizes: JSON.stringify(['S', 'M', 'L', 'XL']), image_url: '/uploads/sample1.jpg'
+        stock: 15, sizes: JSON.stringify(['S', 'M', 'L', 'XL']), image_url: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400'
       },
       {
         name: 'Midnight Silk Shirt', category: 'Tops', price: 145,
         description: 'Pure silk button-down shirt with mother-of-pearl buttons.',
-        stock: 20, sizes: JSON.stringify(['XS', 'S', 'M', 'L', 'XL']), image_url: '/uploads/sample2.jpg'
+        stock: 20, sizes: JSON.stringify(['XS', 'S', 'M', 'L', 'XL']), image_url: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400'
       },
       {
         name: 'Charcoal Pleated Trousers', category: 'Bottoms', price: 175,
         description: 'Tailored wool trousers with double pleats and adjustable waistband.',
-        stock: 12, sizes: JSON.stringify(['28', '30', '32', '34', '36']), image_url: '/uploads/sample3.jpg'
+        stock: 12, sizes: JSON.stringify(['28', '30', '32', '34', '36']), image_url: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400'
       },
       {
         name: 'Noir Cashmere Sweater', category: 'Tops', price: 320,
         description: '100% cashmere crewneck sweater. Incredibly soft and warm.',
-        stock: 8, sizes: JSON.stringify(['S', 'M', 'L', 'XL']), image_url: '/uploads/sample4.jpg'
+        stock: 8, sizes: JSON.stringify(['S', 'M', 'L', 'XL']), image_url: 'https://images.unsplash.com/photo-1576566588028-4147f8942fe6?w=400'
       },
       {
         name: 'Onyx Leather Belt', category: 'Accessories', price: 89,
         description: 'Full-grain leather belt with brushed silver buckle.',
-        stock: 25, sizes: JSON.stringify(['32', '34', '36', '38']), image_url: '/uploads/sample5.jpg'
+        stock: 25, sizes: JSON.stringify(['32', '34', '36', '38']), image_url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400'
       },
       {
         name: 'Shadow Cotton T-Shirt', category: 'Tops', price: 65,
         description: 'Premium organic cotton t-shirt with a relaxed fit.',
-        stock: 30, sizes: JSON.stringify(['XS', 'S', 'M', 'L', 'XL', 'XXL']), image_url: '/uploads/sample6.jpg'
+        stock: 30, sizes: JSON.stringify(['XS', 'S', 'M', 'L', 'XL', 'XXL']), image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400'
       }
     ];
 

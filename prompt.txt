@@ -1,30 +1,5 @@
-Fix stock management in C:\Users\user\Desktop\frontend\server\routes\orders.js
-
-In the POST / route, before inserting the order:
-
-1. Parse items from request body: const orderItems = JSON.parse(items) or items if already array
-
-2. Check stock for each item BEFORE inserting order:
-for (const item of orderItems) {
-  const product = db.prepare('SELECT stock FROM products WHERE id = ?').get(item.product_id || item.id);
-  if (!product) {
-    return res.status(400).json({ error: `Product not found: ${item.name}` });
-  }
-  if (product.stock < item.quantity) {
-    return res.status(400).json({ error: `Not enough stock for ${item.name}. Only ${product.stock} left.` });
-  }
-}
-
-3. After inserting order successfully, deduct stock atomically:
-for (const item of orderItems) {
-  const result = db.prepare(
-    'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?'
-  ).run(item.quantity, item.product_id || item.id, item.quantity);
-  if (result.changes === 0) {
-    return res.status(400).json({ error: `Stock conflict for ${item.name}. Please try again.` });
-  }
-}
-
-4. Make sure items in cart have product_id or id field - check CartContext.jsx and make sure each cart item includes the product id
-
-5. Also fix the validation error issue - the POST /products route in admin.js returns "Invalid value" - check what field is failing by logging req.body after multer processes it
+In server/db/database.js, update the seed products to use real image URLs from unsplash.
+For each product add image_url like:
+https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400
+Use different unsplash photo IDs for each product.
+These are free clothing/fashion images.
