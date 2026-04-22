@@ -57,7 +57,7 @@ const ProductDetailPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative aspect-3-4 bg-surface border border-border">
           <img
-            src={`http://localhost:5000${product.image_url}`}
+            src={product.image_url?.startsWith('http') ? product.image_url : `https://ecommerce-ahmv.onrender.com${product.image_url}`}
             alt={product.name}
             className="w-full h-full object-cover"
             onError={(e) => {

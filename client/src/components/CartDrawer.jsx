@@ -33,7 +33,7 @@ const CartDrawer = ({ isOpen }) => {
               {cart.map((item, index) => (
                 <div key={`${item.id}-${item.size}-${index}`} className="flex gap-4 border-b border-border pb-4">
                   <img
-                    src={`http://localhost:5000${item.image_url}`}
+                    src={item.image_url?.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                     alt={item.name}
                     className="w-20 h-24 object-cover"
                     onError={(e) => {

@@ -71,7 +71,7 @@ const AdminProductsPage = () => {
                     <td className="py-3 px-2">#{product.id}</td>
                     <td className="py-3 px-2">
                       <img
-                        src={`http://localhost:5000${product.image_url}`}
+                        src={product.image_url?.startsWith('http') ? product.image_url : `https://ecommerce-ahmv.onrender.com${product.image_url}`}
                         alt={product.name}
                         className="w-12 h-16 object-cover"
                         onError={(e) => {

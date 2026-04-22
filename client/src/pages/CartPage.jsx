@@ -26,7 +26,7 @@ const CartPage = () => {
             {cart.map((item, index) => (
               <div key={`${item.id}-${item.size}-${index}`} className="flex gap-4 p-4 bg-surface border border-border">
                 <img
-                  src={`http://localhost:5000${item.image_url}`}
+                  src={item.image_url?.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                   alt={item.name}
                   className="w-24 h-32 object-cover"
                   onError={(e) => {
