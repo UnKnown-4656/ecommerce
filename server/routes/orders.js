@@ -35,11 +35,29 @@ router.post('/',
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total } = req.body;
+    let orderItems = items;
+    if (typeof items === 'string') {
+      try {
+        orderItems = JSON.parse(items);
+      } catch {
+        return res.status(400).json({ error: 'Invalid items format' });
+      }
+    }
+
+    for (const item of orderItems) {
+      const productId = item.product_id || item.id;
+      const product = db.prepare('SELECT stock FROM products WHERE id = ?').get(productId);
+      if (!product) {
+        return res.status(400).json({ error: `Product not found: ${item.name}` });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ error: `Not enough stock for ${item.name}. Only ${product.stock} left.` });
+      }
+    }
 
     const result = await db.prepare(`
       INSERT INTO orders (customer_name, phone, email, address_line1, address_line2, city, state, pincode, items, total)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       customer_name,
       phone,
@@ -49,9 +67,19 @@ router.post('/',
       city,
       state,
       pincode,
-      JSON.stringify(items),
+      JSON.stringify(orderItems),
       total
     );
+
+    for (const item of orderItems) {
+      const productId = item.product_id || item.id;
+      const updateResult = db.prepare(
+        'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?'
+      ).run(item.quantity, productId, item.quantity);
+      if (updateResult.changes === 0) {
+        console.error(`Stock conflict for product ${productId}`);
+      }
+    }
 
     res.status(201).json({ id: result.lastInsertRowid, message: 'Order placed successfully' });
   }

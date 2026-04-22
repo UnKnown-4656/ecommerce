@@ -58,10 +58,12 @@ router.post('/products', authenticateToken, requireAdmin, upload.single('image')
   body('category').notEmpty().trim(),
   body('price').isFloat({ min: 0 }),
   body('description').optional().trim(),
-  body('stock').isInt({ min: 0 })
+  body('stock').toInt().isInt({ min: 0 })
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.error('Validation errors:', errors.array());
+    console.error('req.body:', req.body);
     return res.status(400).json({ errors: errors.array() });
   }
 
