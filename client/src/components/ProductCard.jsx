@@ -2,16 +2,20 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const ProductCard = ({ product }) => {
+  const imageUrl = product.image_url?.startsWith('http')
+    ? product.image_url
+    : `https://ecommerce-ahmv.onrender.com${product.image_url}`;
+
   return (
     <Link to={`/product/${product.id}`} className="group block">
       <div className="product-card card">
         <div className="aspect-[3/4] relative overflow-hidden bg-surface">
           <img
-            src={`http://localhost:5000${product.image_url}`}
+            src={imageUrl}
             alt={product.name}
             className="w-full h-full object-cover"
             onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/300x400?text=No+Image';
+              e.target.src = 'https://placehold.co/300x400?text=No+Image';
             }}
           />
           <div className="overlay">
