@@ -84,6 +84,21 @@ const initDb = async () => {
     )
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS reviews (
+      id SERIAL PRIMARY KEY,
+      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      reviewer_name VARCHAR(100) NOT NULL,
+      rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_reviews_product_id ON reviews(product_id)
+  `);
+
   // Seed admin user if not exists
   const adminCheck = await pool.query('SELECT id FROM users WHERE email = $1', [process.env.ADMIN_EMAIL]);
   if (adminCheck.rows.length === 0) {

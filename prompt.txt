@@ -1,10 +1,344 @@
-You are helping me improve my clothing ecommerce site called Noir & Co. Built with [your stack]. Work through each priority one at a time. Ask me for the relevant file/component before writing any code. Do not refactor anything outside the scope of each task.
-Priority 1 — Remove "Admin" from the footer Quick Links. Do not touch anything else in the footer.
-Priority 2 — Switch the shop/collection page from single-column to 2-column product grid on mobile using CSS grid.
-Priority 3 — Add a full-bleed dark editorial background image to the homepage hero. The text and buttons are already positioned correctly — only add a background-image to the hero container.
-Priority 4 — On the product page: (a) add "Free returns · Easy exchanges" as a small line directly above the Add to Cart button, (b) add a "Size Guide" text link next to the Size label — modal content can be placeholder text for now, (c) make the Add to Cart button sticky at the bottom of the screen on mobile scroll.
-Priority 5 — Add 6 hardcoded static reviews below the product description. Each review needs: reviewer name, star rating (4 or 5 stars only), one-line quote. Style with the existing black/gold aesthetic.
-Priority 6 — On the order tracking form, add an Order ID input field above the email field. Update the lookup logic to require both Order ID and email to return results.
-Priority 7 — On the order detail page: (a) replace the "Image" placeholder with the actual product thumbnail, (b) add a 4-step horizontal status stepper — Confirmed / Processing / Shipped / Delivered — with the current step highlighted in gold and future steps dimmed, (c) add estimated delivery date shown as order date + 7 days, (d) normalize status badge style to be consistent between list view and detail view, (e) fix "item(s)" to conditionally render "item" vs "items".
-Priority 8 — Add a thin full-width social proof bar on the homepage directly below the navbar: "4.8★ Rated by customers · Free shipping over ₹999 · 30-day easy returns". Style it in gold text on a slightly lighter dark background to separate it from the navbar.
-Do not start writing code until I share the relevant file for each task. Start with Priority 1 and ask me for the footer component
+You are redesigning a React + Tailwind + Node.js e-commerce website called NOIR & CO.
+Live site: https://noirco-frontend.onrender.com
+The project is a fullstack app — React frontend (Vite + Tailwind + Framer Motion + React Router) 
+and Node.js + Express backend with a local database (SQLite/PostgreSQL).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BRAND IDENTITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Name: NOIR & CO.
+Tagline: "Dress With Intent"
+Feel: Ultra-luxury fashion brand. Think Bottega Veneta, The Row, COS.
+NOT generic, NOT Bootstrap, NOT colorful. Dark, editorial, minimal, expensive-feeling.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESIGN SYSTEM — STRICTLY FOLLOW THIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Colors:
+  - Background: #0a0a0a (everywhere, no gray gradients)
+  - Surface/cards: #111111
+  - Border: #1e1e1e
+  - Gold accent: #b8922e (primary action color)
+  - Gold hover: #d4aa50
+  - Text primary: #e8e0d4
+  - Text muted: #666666
+  - Text subtle: #333333
+
+Typography:
+  - Add Google Fonts: "Cormorant Garamond" (weights 300, 400, 500, italic)
+    and "Inter" (weights 300, 400, 500)
+  - All H1, H2, H3, H4, product names → Cormorant Garamond, font-weight 400
+  - Body text, labels, buttons, nav → Inter, font-weight 300 or 400
+  - Prices → "Courier New" monospace
+  - Letter spacing on all uppercase labels → 0.2em or more
+
+Buttons:
+  - Zero border-radius (sharp corners only)
+  - Primary: bg #b8922e, text #0a0a0a, hover bg #d4aa50
+  - Outlined: border 1px solid #b8922e, text #b8922e, hover fill gold
+  - All button text: uppercase, tracking-widest, text-xs, Inter font
+
+Borders and spacing:
+  - All borders: 0.5px or 1px solid #1e1e1e
+  - No box shadows except subtle rgba(0,0,0,0.5)
+  - Generous whitespace — sections have py-24 minimum
+  - No rounded corners on cards or inputs (border-radius: 0)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GLOBAL ELEMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Custom cursor (desktop only):
+   - Small gold filled dot (#b8922e, 6px) follows mouse precisely
+   - Larger hollow ring (28px, border 1px solid rgba(184,146,46,0.4)) 
+     follows with slight lag using CSS transition
+   - Hide default cursor with: * { cursor: none; }
+   - On hovering buttons/links: dot scales up to 2x, ring shrinks
+
+2. Smooth scroll: html { scroll-behavior: smooth; }
+
+3. Custom scrollbar:
+   - Width: 2px
+   - Track: #0a0a0a
+   - Thumb: #b8922e
+
+4. Page transitions:
+   - Wrap routes in AnimatePresence from framer-motion
+   - Each page entry: opacity 0→1, y 20→0, duration 0.5s
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NAVBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Background: rgba(10,10,10,0.92) with backdrop-blur
+- Border bottom: 1px solid #1a1a1a
+- Logo: "NOIR & CO." in Cormorant Garamond, tracking-widest, font-size 1.1rem
+- Nav links: Inter, text-[11px], tracking-[0.2em], uppercase, color #888, 
+  hover color #e8e0d4, transition 0.3s
+- Icons (theme toggle, cart): gold color on hover
+- Cart icon shows item count badge in gold
+- On scroll down: navbar shrinks slightly (py reduces), smooth transition
+- Mobile: hamburger menu, full screen overlay menu with large Cormorant links
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOME PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Section 1 — Hero:
+  - Full viewport height (100vh), background #0a0a0a
+  - Very subtle radial glow: gold at center, 6% opacity, 600px wide
+  - Top small label: "SS 2026 Collection" in uppercase Inter, tracking-[0.3em], color #444
+  - Main headline: "Dress With Intent" — Cormorant Garamond, 
+    font-size clamp(4rem, 10vw, 9rem), font-weight 300
+  - "Intent" word in italic, color #b8922e
+  - Below headline: thin gold horizontal line (40px wide, 1px tall)
+  - Subtitle: "Premium clothing for the modern wardrobe" — 
+    Inter, text-xs, tracking-[0.25em], uppercase, color #555
+  - Two CTA buttons side by side (gap-4):
+    "Explore Collection" (gold filled) and "New Arrivals" (gold outlined)
+  - Bottom center: animated scroll indicator — 
+    "SCROLL" text in tiny uppercase + vertical line that pulses downward
+  - Use framer-motion for staggered entry animations on all elements (delay each by 0.2s)
+
+Section 2 — Marquee strip:
+  - Between hero and products
+  - Border top and bottom: 1px solid #1e1e1e, padding py-3
+  - Infinitely scrolling text: 
+    "Free Returns ✦ Handcrafted ✦ Worldwide Shipping ✦ SS 2026 ✦ Premium Quality ✦"
+  - Text: Inter, text-[11px], tracking-[0.2em], uppercase, color #3a3a3a
+  - Gold ✦ separators: color #b8922e
+  - CSS animation: marquee left scroll, duration 25s, linear, infinite
+
+Section 3 — Featured Products:
+  - Section heading: "The Collection" in Cormorant Garamond, 
+    text-4xl or 5xl, centered, font-weight 300
+  - Sub-label above heading: "Curated for you" uppercase tiny tracking text
+  - Product grid: 4 columns on desktop, 2 on tablet, 1 on mobile, gap-6
+  - Each card uses framer-motion whileInView fade-up, stagger by index * 0.1s
+  - Show 8 featured products
+
+Section 4 — Brand editorial strip:
+  - Full-width dark section, py-32
+  - Large Cormorant italic quote: "Luxury is not about price. It's about intent."
+  - Gold thin divider below quote
+  - Small Inter subtitle: "Crafted for those who dress with purpose"
+
+Section 5 — Categories grid:
+  - 3 column grid, each a tall card (aspect-[2/3])
+  - Background: dark surface #111
+  - Category name in large Cormorant Garamond over subtle overlay
+  - Hover: slow zoom effect on background image (if available) 
+    or color shift to #1a1a1a
+  - Categories: Shirts, Trousers, Accessories
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SHOP PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Page heading: "The Collection" same style as home
+- Filter bar below heading:
+  - Category filter buttons (All, Shirts, Trousers, Accessories etc.)
+  - Style: outlined pill-less buttons (sharp), text-[10px], tracking-widest
+  - Active filter: gold background, black text
+  - Sort dropdown: minimal, no default browser styling, 
+    custom arrow in gold, border #1e1e1e
+- Product grid: same card component as home
+- Empty state: centered Cormorant italic message "Nothing here yet."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRODUCT CARD COMPONENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Aspect ratio: 3/4 (portrait, like real fashion sites)
+- Image: object-cover, overflow hidden, bg #111
+- On hover: image slowly scales to 1.08 (transition 0.6s cubic-bezier)
+- Overlay on hover: semi-transparent black overlay (bg-black/40) 
+  with "Quick View" text in Inter, uppercase, tiny, white, 
+  inside a thin white border box — centered
+- Below image (no card border, just spacing):
+  - Category: Inter, text-[10px], tracking-[0.2em], uppercase, color #555
+  - Product name: Cormorant Garamond, text-xl, color #e0d8cc, 
+    hover transition to #b8922e
+  - Price: Courier New monospace, text-sm, color #b8922e
+  - Average star rating (if reviews exist): show gold stars (★) 
+    and review count like "★ 4.5 (12)" in small Inter text, color #888
+- NEW badge: if product.is_new → gold rectangle top-left, 
+  text "NEW", Inter bold 9px
+- SOLD OUT badge: if stock === 0 → dark badge, text "Sold Out"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRODUCT DETAIL PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Layout: 2-column grid on desktop (image left, details right), 
+        single column on mobile
+
+Left — Image area:
+  - Large product image, aspect-[3/4], object-cover
+  - No border radius
+  - If multiple images: small thumbnail strip below main image
+
+Right — Product info:
+  - Category label: uppercase tiny Inter, color #555, tracking-widest
+  - Product name: Cormorant Garamond, text-4xl or 5xl, font-weight 300
+  - Price: Courier New, text-2xl, color #b8922e
+  - Gold divider line (full width, 1px, #1e1e1e) after price
+  - Short description: Inter, text-sm, color #888, line-height 1.8
+  - Size selector: 
+    - Row of size buttons (32, 34, 36, 38 etc.)
+    - Each: 40x40px, border 1px solid #1e1e1e, Inter text-xs
+    - Selected: gold border + gold text
+    - Hover: gold border
+  - Quantity selector: minus button, number, plus button — all inline, 
+    border 1px solid #1e1e1e
+  - "Add to Cart" button: full width, gold filled, sharp corners, 
+    uppercase Inter tracking-widest, py-4
+  - Below button: small Inter text "Free returns · Easy exchanges" in #444
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REVIEW SYSTEM — BUILD THIS FULLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This is a full review system. Build both frontend and backend.
+
+BACKEND (Node.js + Express):
+  Database table: reviews
+    - id (primary key, auto increment)
+    - product_id (foreign key → products.id)
+    - reviewer_name (string, required)
+    - rating (integer 1–5, required)
+    - comment (text, required)
+    - created_at (timestamp, default now)
+
+  API Routes:
+    GET  /api/reviews/:productId  → fetch all reviews for a product
+    POST /api/reviews             → submit a new review
+      Body: { product_id, reviewer_name, rating, comment }
+      Validation: all fields required, rating must be 1–5
+      Return: created review object
+
+FRONTEND — Reviews section on product detail page:
+  Position: Below the Add to Cart section, full width below the 2-col grid
+
+  Part 1 — Review summary bar:
+    - Overall average rating (large gold number, Cormorant Garamond, text-5xl)
+    - "out of 5" in tiny Inter beside it
+    - Total review count: "(24 reviews)" Inter, color #666
+    - Star breakdown bar chart:
+      For each star level 5→1:
+        "5 ★" label | thin progress bar (gold fill, #111 bg) | count number
+      Bar fill width = percentage of total reviews
+    - Gold divider after summary
+
+  Part 2 — Individual reviews list:
+    - Each review card:
+      - Reviewer name: Inter, font-weight 500, color #e0d8cc
+      - Date: Inter, text-xs, color #444, right-aligned
+      - Star rating: gold filled stars ★ for rating, hollow ☆ for remainder
+      - Comment: Inter, text-sm, color #888, line-height 1.8
+      - Thin 1px border-bottom #1e1e1e between reviews
+      - No card background — just listed on page background
+    - If no reviews: italic Cormorant message "Be the first to share your thoughts."
+
+  Part 3 — Write a Review form:
+    - Section heading: "Share Your Experience" — Cormorant Garamond, text-2xl
+    - Gold thin divider below heading
+    - Fields:
+      1. Name input: full width, placeholder "Your name", 
+         border-bottom only (1px solid #333), no side borders, 
+         bg transparent, Inter text-sm, color #e8e0d4, py-3
+         Focus: border-bottom color changes to #b8922e
+      2. Interactive star rating picker:
+         5 large clickable stars (text-3xl)
+         Default: all hollow ☆ color #333
+         Hover: stars up to hovered index turn gold ★
+         Selected: stars up to selected index stay gold ★
+         Below stars: small text showing "X out of 5" that updates live
+      3. Comment textarea: 
+         Same style as name input (border-bottom only), 
+         4 rows, placeholder "Tell us about your experience...",
+         resize: none
+    - Submit button: gold filled, full width, uppercase Inter, 
+      "Submit Review" text, py-4, sharp corners
+    - On submit:
+      POST to /api/reviews with form data
+      Show inline success message in gold: 
+        "✦ Thank you. Your review has been published."
+      Clear form after success
+      Immediately re-fetch reviews and update the list + summary bar
+    - Client-side validation: 
+      Show red underline + small error text if name empty, 
+      no star selected, or comment empty
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CART SIDEBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Slides in from right (translateX animation, framer-motion)
+- Background: #0f0f0f, border-left 1px solid #1e1e1e
+- Width: 420px desktop, 100vw mobile
+- Header: "Your Cart (N)" in Cormorant Garamond, close X button gold
+- Each cart item:
+  - Small product image (80x100px, object-cover)
+  - Product name in Cormorant, price in monospace gold
+  - Quantity controls: −/+ buttons, minimal style
+  - Remove: small "×" in #444, hover red
+  - Thin border-bottom between items
+- Footer:
+  - Subtotal: Cormorant Garamond, large
+  - "Proceed to Checkout" button: full width, gold filled, sharp, uppercase Inter
+  - "Free returns · Easy exchanges" text below in tiny #444
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANIMATIONS SUMMARY (all use framer-motion)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Hero: staggered fade-up (each element 0.2s delay apart)
+- Product cards: whileInView fade-up, once: true, stagger by index
+- Page transitions: opacity + y slide via AnimatePresence
+- Cart sidebar: x: 420 → x: 0 slide-in
+- Review form submit: success message fade-in
+- Marquee: pure CSS animation (no JS needed)
+- Scroll indicator: y bounce loop in hero
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DO NOT CHANGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Backend API routes (except adding the new /api/reviews routes)
+- Database schema (except adding the reviews table)
+- Authentication logic
+- Admin panel functionality
+- Order tracking logic
+- Existing product data structure
+- Vite config, package.json dependencies (only add framer-motion 
+  and Google Fonts if not already present)
+
+
+
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DATABASE — RENDER POSTGRESQL (ALREADY DEPLOYED)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The backend is already deployed on Render with a Render PostgreSQL 
+database. Do NOT use SQLite or any local database.
+
+All database work must use PostgreSQL syntax only.
+
+For the reviews table, create it using a migration or by adding 
+this SQL to your database initialization file (database.js or db.js):
+
+  CREATE TABLE IF NOT EXISTS reviews (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    reviewer_name VARCHAR(100) NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_reviews_product_id ON reviews(product_id);
+
+Connection:
+- The database connection string is already in your .env file as DATABASE_URL
+- Use the existing pg (node-postgres) setup already in the project
+- Use pool.query() exactly like the rest of the existing backend code
+- Do NOT introduce any new ORM like Prisma or Sequelize
+- Do NOT change the existing database connection setup in database.js
+
+When adding review API routes in routes/products.js or a new 
+routes/reviews.js file, follow the exact same pattern already 
+used in the existing route files for consistency.
+
+After deploying, the reviews table will be auto-created on first 
+server start because of the CREATE TABLE IF NOT EXISTS statement.
+No manual migration step needed on Render.
