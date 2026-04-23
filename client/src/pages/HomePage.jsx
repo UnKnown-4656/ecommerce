@@ -24,355 +24,266 @@ const HomePage = () => {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{ background: '#0a0a0a', minHeight: '100vh' }}
-    >
-      {/* ── HERO ── */}
-      <section style={{
-        height: '100vh',
-        background: '#0a0a0a',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        textAlign: 'center',
-        padding: '0 2rem',
-      }}>
+    <div className="bg-bg">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[25vw] font-light text-[#0f0f0f] select-none pointer-events-none leading-none">
+            2026
+          </div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px]">
+            <div className="absolute inset-0 bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+          </div>
+        </div>
 
-        {/* Big background year */}
-        <div style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: '28vw',
-          fontFamily: 'Cormorant Garamond, serif',
-          color: '#0f0f0f',
-          zIndex: 0,
-          fontWeight: 300,
-          lineHeight: 1,
-          userSelect: 'none',
-          pointerEvents: 'none',
-          letterSpacing: '-0.05em',
-        }}>2026</div>
-
-        {/* Gold radial glow */}
-        <div style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '800px', height: '800px',
-          background: 'radial-gradient(ellipse, rgba(184,146,46,0.07) 0%, transparent 65%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }} />
-
-        {/* Content */}
-        <div style={{ position: 'relative', zIndex: 1 }}>
-
+        <div className="relative z-10 text-center px-6">
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '10px',
-              letterSpacing: '0.35em',
-              color: '#333',
-              textTransform: 'uppercase',
-              marginBottom: '1.5rem',
-            }}
-          >SS 2026 Collection</motion.p>
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted mb-8"
+          >
+            SS 2026 Collection
+          </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 1, ease: 'easeOut' }}
-            style={{
-              fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(4.5rem, 11vw, 10rem)',
-              fontWeight: 300,
-              letterSpacing: '-0.02em',
-              color: '#e8e0d4',
-              lineHeight: 0.95,
-              marginBottom: 0,
-            }}
+            transition={{ delay: 0.5, duration: 1, ease: 'easeOut' }}
+            className="font-display text-[clamp(4rem,11vw,10rem)] font-light leading-[0.92] tracking-tight"
           >
-            Dress With
-            <br />
-            <em style={{ color: '#b8922e', fontStyle: 'italic' }}>Intent</em>
+            <span className="block text-text">Dress With</span>
+            <span className="block text-accent italic">Intent</span>
           </motion.h1>
 
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            style={{
-              width: '40px', height: '1px',
-              background: '#b8922e',
-              margin: '1.8rem auto',
-            }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="h-px bg-accent w-10 mx-auto my-10 origin-left"
           />
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '10px',
-              letterSpacing: '0.28em',
-              color: '#3a3a3a',
-              textTransform: 'uppercase',
-              marginBottom: '2.5rem',
-            }}
-          >Premium clothing for the modern wardrobe</motion.p>
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted mb-12"
+          >
+            Premium clothing for the modern wardrobe
+          </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, duration: 0.6 }}
-            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
+            transition={{ delay: 1.4, duration: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Link
               to="/shop"
-              style={{
-                padding: '14px 44px',
-                background: '#b8922e',
-                color: '#0a0a0a',
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '10px',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                border: 'none',
-                display: 'inline-block',
-                transition: 'background 0.3s, transform 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = '#d4aa50'}
-              onMouseLeave={e => e.currentTarget.style.background = '#b8922e'}
-            >Explore Collection</Link>
-
+              className="btn-primary"
+            >
+              Explore Collection
+            </Link>
             <Link
               to="/shop"
-              style={{
-                padding: '14px 44px',
-                background: 'transparent',
-                color: '#b8922e',
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '10px',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                border: '1px solid #b8922e',
-                display: 'inline-block',
-                transition: 'all 0.3s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = '#b8922e';
-                e.currentTarget.style.color = '#0a0a0a';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.color = '#b8922e';
-              }}
-            >New Arrivals</Link>
+              className="btn-secondary"
+            >
+              New Arrivals
+            </Link>
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2 }}
-          style={{
-            position: 'absolute', bottom: '2.5rem',
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', gap: '10px', zIndex: 1,
-          }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         >
-          <span style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '8px',
-            letterSpacing: '0.35em',
-            color: '#222',
-            textTransform: 'uppercase',
-          }}>Scroll</span>
+          <span className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted">Scroll</span>
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              width: '1px', height: '50px',
-              background: 'linear-gradient(to bottom, #b8922e, transparent)',
-            }}
+            className="w-px h-12 bg-gradient-to-b from-accent to-transparent"
           />
         </motion.div>
       </section>
 
-      {/* ── MARQUEE ── */}
       <MarqueeStrip />
 
-      {/* ── FEATURED PRODUCTS ── */}
-      <section style={{
-        padding: '6rem 4rem',
-        maxWidth: '1400px',
-        margin: '0 auto',
-      }}>
+      <section className="max-w-container mx-auto px-6 md:px-12 py-24 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          style={{ textAlign: 'center', marginBottom: '5rem' }}
+          className="text-center mb-16 md:mb-20"
         >
-          <p style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '9px',
-            letterSpacing: '0.35em',
-            color: '#333',
-            textTransform: 'uppercase',
-            marginBottom: '1rem',
-          }}>Curated For You</p>
-          <h2 style={{
-            fontFamily: 'Cormorant Garamond, serif',
-            fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
-            fontWeight: 300,
-            color: '#e8e0d4',
-            margin: 0,
-          }}>The Collection</h2>
-          <div style={{
-            width: '36px', height: '1px',
-            background: '#b8922e',
-            margin: '1.5rem auto 0',
-          }} />
+          <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-4">
+            Curated For You
+          </p>
+          <h2 className="font-display text-4xl md:text-6xl font-light text-text">
+            The Collection
+          </h2>
+          <div className="h-px bg-accent w-10 mx-auto mt-6" />
         </motion.div>
 
-        {/* Product grid */}
         {loading ? (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '2rem',
-          }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[...Array(4)].map((_, i) => (
               <div key={i}>
-                <div className="skeleton" style={{
-                  aspectRatio: '3/4', marginBottom: '1rem',
-                }} />
-                <div className="skeleton" style={{
-                  height: '12px', width: '60%', marginBottom: '8px',
-                }} />
-                <div className="skeleton" style={{
-                  height: '20px', width: '80%',
-                }} />
+                <div className="aspect-[3/4] bg-surface animate-pulse mb-5" />
+                <div className="h-3 w-16 bg-surface animate-pulse mb-3" />
+                <div className="h-5 w-32 bg-surface animate-pulse" />
               </div>
             ))}
           </div>
         ) : products.length > 0 ? (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '2rem',
-          }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                index={index}
-              />
+              <ProductCard key={product.id} product={product} index={index} />
             ))}
           </div>
         ) : (
-          <p style={{
-            textAlign: 'center',
-            fontFamily: 'Cormorant Garamond, serif',
-            fontSize: '1.5rem',
-            fontStyle: 'italic',
-            color: '#333',
-          }}>No products found.</p>
+          <p className="font-display text-2xl italic text-muted text-center py-20">
+            No products found.
+          </p>
         )}
 
-        {/* View all */}
         {!loading && products.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            style={{ textAlign: 'center', marginTop: '4rem' }}
+            className="text-center mt-16 md:mt-20"
           >
-            <Link
-              to="/shop"
-              style={{
-                padding: '14px 48px',
-                background: 'transparent',
-                color: '#b8922e',
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '10px',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                border: '1px solid #1e1e1e',
-                display: 'inline-block',
-                transition: 'all 0.3s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = '#b8922e';
-                e.currentTarget.style.color = '#d4aa50';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = '#1e1e1e';
-                e.currentTarget.style.color = '#b8922e';
-              }}
-            >View All Pieces</Link>
+            <Link to="/shop" className="btn-secondary">
+              View All Pieces
+            </Link>
           </motion.div>
         )}
       </section>
 
-      {/* ── EDITORIAL QUOTE ── */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2 }}
-        style={{
-          padding: '10rem 2rem',
-          borderTop: '1px solid #111',
-          borderBottom: '1px solid #111',
-          textAlign: 'center',
-          background: '#0a0a0a',
-        }}
-      >
-        <p style={{
-          fontFamily: 'Cormorant Garamond, serif',
-          fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
-          fontWeight: 300,
-          fontStyle: 'italic',
-          color: '#e8e0d4',
-          maxWidth: '680px',
-          margin: '0 auto',
-          lineHeight: 1.5,
-        }}>
-          "Luxury is not about price.
-          <br />It's about{' '}
-          <span style={{ color: '#b8922e' }}>intent.</span>"
-        </p>
-        <div style={{
-          width: '36px', height: '1px',
-          background: '#b8922e',
-          margin: '2.5rem auto',
-        }} />
-        <p style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '9px',
-          letterSpacing: '0.32em',
-          color: '#2a2a2a',
-          textTransform: 'uppercase',
-        }}>Crafted for those who dress with purpose</p>
-      </motion.section>
-    </motion.div>
+      <section className="py-24 md:py-40 border-t border-border">
+        <div className="max-w-container mx-auto px-6 md:px-12 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="font-display text-2xl md:text-4xl lg:text-5xl italic text-text leading-relaxed max-w-4xl mx-auto"
+          >
+            "Style is a way to say who you are without having to speak."
+          </motion.p>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="h-px bg-accent w-12 mx-auto mt-10 origin-left"
+          />
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted mt-6"
+          >
+            — Rachel Zoe
+          </motion.p>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-container mx-auto px-6 md:px-12">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-4">
+                Our Philosophy
+              </p>
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-text mb-8 leading-tight">
+                Crafted With<br />
+                <span className="text-accent italic">Purpose</span>
+              </h2>
+              <div className="h-px bg-accent w-10 mb-8" />
+              <p className="font-sans text-muted leading-relaxed mb-6 max-w-md">
+                Each piece in our collection is thoughtfully designed to transcend seasons and trends. 
+                We believe in investing in quality over quantity, creating garments that become 
+                timeless staples in your wardrobe.
+              </p>
+              <p className="font-sans text-muted leading-relaxed mb-10 max-w-md">
+                Our commitment to sustainable practices ensures that every creation leaves 
+                minimal impact on the environment while maximizing style and comfort.
+              </p>
+              <Link to="/shop" className="btn-secondary">
+                Discover More
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="aspect-[4/5] bg-surface overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80"
+                  alt="Luxury fashion"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 border border-accent/30" />
+              <div className="absolute -top-6 -right-6 w-32 h-32 border border-accent/30" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 bg-surface border-t border-border">
+        <div className="max-w-container mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-4">
+              Why Choose Us
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl font-light text-text">
+              The NOIR & CO. Difference
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-12 md:gap-8">
+            {[
+              { title: 'Timeless Design', desc: 'Each piece is crafted to remain relevant beyond fleeting trends, becoming a lasting element of your personal style.' },
+              { title: 'Premium Quality', desc: 'We source only the finest materials and partner with skilled artisans who share our commitment to excellence.' },
+              { title: 'Sustainable Practice', desc: 'From production to packaging, we prioritize environmental responsibility at every step of our process.' },
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                className="text-center"
+              >
+                <div className="h-px w-12 bg-accent mx-auto mb-8" />
+                <h3 className="font-display text-2xl text-text mb-4">{item.title}</h3>
+                <p className="font-sans text-sm text-muted leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 

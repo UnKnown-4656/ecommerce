@@ -46,7 +46,7 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAttemptedSubmit(true);
-    
+
     if (!validateForm()) {
       return;
     }
@@ -57,7 +57,6 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
       const response = await api.post(`/products/${productId}/reviews`, formData);
       console.log('Review submitted:', response.data);
 
-      // Reset form
       setFormData({
         reviewer_name: '',
         rating: 0,
@@ -65,12 +64,9 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
       });
       setErrors({});
       setAttemptedSubmit(false);
-
-      // Show success message
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
 
-      // Refresh reviews list
       if (onReviewSubmitted) {
         onReviewSubmitted();
       }
@@ -82,42 +78,38 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
   };
 
   return (
-    <div className="bg-[#0a0a0a] w-full py-20 px-8 max-w-5xl mx-auto border-t border-[#1e1e1e] pt-16 mt-16">
-      {/* Section Heading */}
+    <div className="py-16 border-t border-border mt-16">
       <div className="mb-8">
-        <h2 className="font-serif text-[#e8e0d4] text-[2rem] font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+        <h2 className="font-display text-2xl text-text mb-4">
           Share Your Experience
         </h2>
-        <div className="h-px bg-[#b8922e] w-10"></div>
+        <div className="h-px w-10 bg-accent" />
       </div>
 
       {showSuccess ? (
-        <div className="text-center py-16 opacity-0 animate-fade-in" style={{ animation: 'fadeIn 0.5s forwards' }}>
-          <p className="font-serif italic text-[#b8922e] text-[1.5rem]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-            ✦ Thank you. Your review has been published.
+        <div className="text-center py-12">
+          <p className="font-display text-xl italic text-accent">
+            Thank you. Your review has been published.
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Name Input */}
+        <form onSubmit={handleSubmit} className="space-y-8 max-w-xl">
           <div>
             <input
               type="text"
               name="reviewer_name"
               value={formData.reviewer_name}
               onChange={handleInputChange}
-              className="w-full bg-transparent border-none border-b border-[#333] text-[#e8e0d4] font-sans text-sm py-3 focus:border-[#b8922e] focus:outline-none transition-colors placeholder-[#333]"
               placeholder="Your Name"
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              className="w-full bg-transparent border-b border-border text-text font-sans text-sm py-3 focus:border-accent focus:outline-none transition-colors placeholder-muted"
             />
             {attemptedSubmit && errors.reviewer_name && (
-              <p className="text-[#c0392b] font-sans text-xs mt-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+              <p className="text-red-400 font-sans text-xs mt-2">
                 {errors.reviewer_name}
               </p>
             )}
           </div>
 
-          {/* Interactive Star Picker */}
           <div>
             <StarRating
               rating={formData.rating}
@@ -125,42 +117,38 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
               onRatingChange={handleRatingChange}
               size="text-2xl"
             />
-            <div className="text-[#555] font-sans text-xs mt-2 mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
+            <p className="text-muted font-sans text-xs mt-2 mb-4">
               {formData.rating > 0 ? `${formData.rating} out of 5` : 'Select a rating'}
-            </div>
+            </p>
             {attemptedSubmit && errors.rating && (
-              <p className="text-[#c0392b] font-sans text-xs mt-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+              <p className="text-red-400 font-sans text-xs">
                 {errors.rating}
               </p>
             )}
           </div>
 
-          {/* Comment Textarea */}
           <div>
             <textarea
               name="comment"
               value={formData.comment}
               onChange={handleInputChange}
               rows={4}
-              className="w-full bg-transparent border-none border-b border-[#333] text-[#e8e0d4] font-sans text-sm py-3 focus:border-[#b8922e] focus:outline-none transition-colors placeholder-[#333] resize-none"
               placeholder="Tell us about your experience..."
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              className="w-full bg-transparent border-b border-border text-text font-sans text-sm py-3 focus:border-accent focus:outline-none transition-colors placeholder-muted resize-none"
             />
             {attemptedSubmit && errors.comment && (
-              <p className="text-[#c0392b] font-sans text-xs mt-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+              <p className="text-red-400 font-sans text-xs mt-2">
                 {errors.comment}
               </p>
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-[#b8922e] text-[#0a0a0a] py-4 font-sans text-xs tracking-[0.3em] transition-colors duration-300 hover:bg-[#d4aa50] disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ fontFamily: 'Inter, sans-serif', borderRadius: '0' }}
+            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
+            {isSubmitting ? 'Submitting...' : 'Submit Review'}
           </button>
         </form>
       )}

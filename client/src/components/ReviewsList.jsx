@@ -13,7 +13,6 @@ const ReviewsList = ({ productId, refreshTrigger }) => {
       setLoading(true);
       setError(null);
       const response = await api.get(`/products/${productId}/reviews`);
-      console.log('Reviews API response:', response.data);
       setReviews(response.data);
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -47,33 +46,28 @@ const ReviewsList = ({ productId, refreshTrigger }) => {
 
   if (loading) {
     return (
-      <div className="py-20 px-8 max-w-5xl mx-auto">
-        <div className="space-y-8">
-          <div className="animate-pulse">
-            <div className="h-16 bg-[#1a1a1a] w-40 mb-8"></div>
-            <div className="h-px bg-[#1a1a1a] w-40 mb-16"></div>
-          </div>
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="border-b border-[#1a1a1a] py-8">
-              <div className="flex justify-between mb-4">
-                <div className="w-32 h-4 bg-[#1a1a1a] animate-pulse"></div>
-                <div className="w-24 h-3 bg-[#1a1a1a] animate-pulse"></div>
-              </div>
-              <div className="w-full h-16 bg-[#1a1a1a] animate-pulse"></div>
+      <div className="py-16 space-y-8">
+        <div className="h-px bg-border w-40" />
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="pb-8 border-b border-border">
+            <div className="flex justify-between mb-4">
+              <div className="w-32 h-4 bg-surface animate-pulse" />
+              <div className="w-24 h-3 bg-surface animate-pulse" />
             </div>
-          ))}
-        </div>
+            <div className="w-full h-12 bg-surface animate-pulse" />
+          </div>
+        ))}
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="py-20 px-8 max-w-5xl mx-auto text-center">
-        <p className="text-red-400 mb-4">Failed to load reviews</p>
-        <button 
+      <div className="py-16 text-center">
+        <p className="font-sans text-sm text-accent mb-4">Unable to load reviews.</p>
+        <button
           onClick={fetchReviews}
-          className="text-[#b8922e] hover:text-[#d4aa50] transition-colors"
+          className="font-sans text-xs tracking-[0.2em] uppercase text-muted hover:text-accent transition-colors"
         >
           Try again
         </button>
@@ -82,78 +76,61 @@ const ReviewsList = ({ productId, refreshTrigger }) => {
   }
 
   return (
-    <div className="w-full py-20 px-8 max-w-5xl mx-auto">
-      {/* Section Heading */}
-      <div className="mb-16">
-        <h2 className="font-serif text-[#e8e0d4] text-[2.5rem] font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-          Customer Reviews
-        </h2>
-        <div className="h-px bg-[#b8922e] w-10"></div>
-      </div>
-
+    <div className="w-full">
       {reviews.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="font-serif italic text-[#333] text-[1.5rem]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+        <div className="py-16 text-center">
+          <p className="font-display text-2xl italic text-muted">
             Be the first to share your thoughts.
           </p>
         </div>
       ) : (
         <>
-          {/* Review Summary Bar */}
-          <div className="mb-16">
-            <div className="flex items-end gap-8 mb-6">
-              <div className="font-serif text-[#b8922e] text-[5rem] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          <div className="mb-16 pb-12 border-b border-border">
+            <div className="flex items-end gap-8 mb-8">
+              <div className="font-display text-[5rem] leading-none text-accent font-light">
                 {averageRating.toFixed(1)}
               </div>
-              <div>
-                <div className="text-[#555] text-sm mb-2">out of 5</div>
-                <div className="text-[#444] text-xs tracking-[0.2em] uppercase">
-                  {reviews.length} REVIEWS
+              <div className="pb-2">
+                <StarRating rating={averageRating} size="text-lg" />
+                <div className="font-sans text-[10px] tracking-[0.2em] uppercase text-muted mt-2">
+                  {reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}
                 </div>
               </div>
             </div>
-            
-            <StarRating rating={averageRating} size="text-lg" className="mb-8" />
-            
-            {/* Star Breakdown */}
-            <div className="space-y-2">
+
+            <div className="space-y-3">
               {ratingCounts.map(({ star, count, percentage }) => (
                 <div key={star} className="flex items-center gap-4">
-                  <span className="text-[#555] text-xs w-12">
-                    {star} ★
-                  </span>
-                  <div className="relative w-[200px] h-px bg-[#1e1e1e]">
-                    <div 
-                      className="absolute top-0 left-0 h-full bg-[#b8922e]"
+                  <span className="font-sans text-xs text-muted w-12">{star} ★</span>
+                  <div className="relative flex-1 h-px bg-border">
+                    <div
+                      className="absolute top-0 left-0 h-full bg-accent"
                       style={{ width: `${percentage}%` }}
-                    ></div>
+                    />
                   </div>
-                  <span className="text-[#555] text-xs w-8">
-                    {count}
-                  </span>
+                  <span className="font-sans text-xs text-muted w-8">{count}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Individual Reviews */}
           <div className="space-y-0">
             {reviews.map((review) => (
-              <div key={review.id} className="border-b border-[#1a1a1a] py-8">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-sans font-medium text-sm text-[#e8e0d4] uppercase tracking-[0.15em]">
-                    {review.reviewer_name}
-                  </h3>
-                  <span className="font-sans text-xs text-[#333]">
-                    {formatDate(review.created_at)}
-                  </span>
+              <div key={review.id} className="py-10 border-b border-border last:border-0">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                  <div>
+                    <h3 className="font-sans text-sm font-medium tracking-[0.15em] uppercase text-text">
+                      {review.reviewer_name}
+                    </h3>
+                    <div className="flex items-center gap-3 mt-2">
+                      <StarRating rating={review.rating} size="text-xs" />
+                      <span className="font-sans text-[10px] text-muted">
+                        {formatDate(review.created_at)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="mb-4">
-                  <StarRating rating={review.rating} size="text-xs" />
-                </div>
-                
-                <p className="font-sans text-sm text-[#666] leading-[1.9]">
+                <p className="font-sans text-muted leading-relaxed max-w-2xl">
                   {review.comment}
                 </p>
               </div>

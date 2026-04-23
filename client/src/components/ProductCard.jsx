@@ -8,128 +8,77 @@ const ProductCard = ({ product, index = 0 }) => {
 
   return (
     <motion.div
-      className="product-card"
+      className="product-card group"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: index * 0.1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.7, delay: index * 0.08 }}
     >
       <Link
         to={`/product/${product.id}`}
-        style={{ display: 'block', textDecoration: 'none' }}
+        className="block"
       >
-        {/* Image */}
-        <div style={{
-          position: 'relative',
-          overflow: 'hidden',
-          aspectRatio: '3/4',
-          background: '#0f0f0f',
-        }}>
+        <div className="relative overflow-hidden aspect-[3/4] bg-surface">
           <img
             src={imageUrl}
             alt={product.name}
-            className="card-image"
+            className="card-image w-full h-full object-cover"
             onError={e => {
-              e.target.src = 'https://placehold.co/400x533/0f0f0f/1e1e1e?text=NOIR';
+              e.target.src = 'https://placehold.co/400x533/111/1e1e1e?text=NOIR';
             }}
           />
 
-          {/* Overlay */}
-          <div className="card-overlay" style={{
-            position: 'absolute', inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <span style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '9px',
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.9)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              padding: '10px 24px',
-            }}>Quick View</span>
+          <div className="card-overlay absolute inset-0 bg-black/40 opacity-0 flex items-center justify-center">
+            <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-white/90 border border-white/30 px-6 py-3">
+              View Details
+            </span>
           </div>
 
-          {/* Badges */}
           {product.is_new && (
-            <div style={{
-              position: 'absolute', top: '14px', left: '14px',
-              background: '#b8922e', color: '#0a0a0a',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '8px', fontWeight: 600,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              padding: '5px 12px',
-            }}>New</div>
+            <div className="absolute top-4 left-4 bg-accent text-bg font-sans text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1.5">
+              New
+            </div>
           )}
+
           {product.stock === 0 && (
-            <div style={{
-              position: 'absolute', top: '14px', left: '14px',
-              background: 'rgba(10,10,10,0.8)',
-              color: '#444',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '8px',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              padding: '5px 12px',
-              border: '1px solid #1e1e1e',
-            }}>Sold Out</div>
+            <div className="absolute top-4 left-4 bg-bg/80 text-muted font-sans text-[8px] tracking-[0.2em] uppercase px-3 py-1.5 border border-border">
+              Sold Out
+            </div>
           )}
+
+          <div className="gold-line absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-accent to-transparent transition-all duration-500" />
         </div>
 
-        {/* Info */}
-        <div style={{ paddingTop: '18px', paddingBottom: '4px', position: 'relative' }}>
-          <p style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '9px',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#333',
-            marginBottom: '8px',
-          }}>{product.category}</p>
+        <div className="pt-5 pb-2 relative">
+          <p className="font-sans text-[9px] tracking-[0.25em] uppercase text-muted mb-2">
+            {product.category}
+          </p>
 
-          <h3 style={{
-            fontFamily: 'Cormorant Garamond, serif',
-            fontSize: '1.5rem',
-            fontWeight: 400,
-            color: '#e0d8cc',
-            marginBottom: '8px',
-            lineHeight: 1.2,
-            transition: 'color 0.3s',
-          }}>{product.name}</h3>
+          <h3 className="font-display text-xl text-text mb-2 leading-tight group-hover:text-accent transition-colors duration-300">
+            {product.name}
+          </h3>
 
-          <p style={{
-            fontFamily: 'Courier New, monospace',
-            fontSize: '13px',
-            color: '#b8922e',
-            marginBottom: '8px',
-            letterSpacing: '0.05em',
-          }}>${product.price?.toFixed(2)}</p>
+          <p className="font-mono text-sm text-accent tracking-wider">
+            ${product.price?.toFixed(2)}
+          </p>
 
-          {/* Stars */}
           {product.avg_rating > 0 && (
-            <p style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '11px',
-              color: '#444',
-              letterSpacing: '0.05em',
-            }}>
-              <span style={{ color: '#b8922e' }}>
-                {'★'.repeat(Math.round(product.avg_rating))}
-                {'☆'.repeat(5 - Math.round(product.avg_rating))}
-              </span>
-              {' '}
-              <span style={{ color: '#2a2a2a' }}>
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`text-xs ${i < Math.round(product.avg_rating) ? 'text-accent' : 'text-border'}`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-[10px] text-muted">
                 ({product.review_count || 0})
               </span>
-            </p>
+            </div>
           )}
-
-          {/* Gold slide line */}
-          <div className="gold-line" />
         </div>
       </Link>
     </motion.div>
