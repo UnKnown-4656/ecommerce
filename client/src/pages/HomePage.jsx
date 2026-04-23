@@ -22,8 +22,9 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero Section */}
-<section className="relative h-screen flex items-center justify-center text-center" 
+<section className="relative h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" 
   style={{ 
+    backgroundImage: 'url("/images/editorial-dark.jpg")',
     background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)'
   }}>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg z-10" />

@@ -17,7 +17,7 @@ const Footer = () => {
               <Link to="/shop" className="text-muted hover:text-accent text-sm">Shop All</Link>
               <Link to="/track-order" className="text-muted hover:text-accent text-sm">Track Order</Link>
               <Link to="/cart" className="text-muted hover:text-accent text-sm">Cart</Link>
-              <Link to="/admin/login" className="text-muted hover:text-accent text-sm">Admin</Link>
+
             </nav>
           </div>
           <div>

@@ -1,5 +1,10 @@
-In server/db/database.js, update the seed products to use real image URLs from unsplash.
-For each product add image_url like:
-https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400
-Use different unsplash photo IDs for each product.
-These are free clothing/fashion images.
+You are helping me improve my clothing ecommerce site called Noir & Co. Built with [your stack]. Work through each priority one at a time. Ask me for the relevant file/component before writing any code. Do not refactor anything outside the scope of each task.
+Priority 1 — Remove "Admin" from the footer Quick Links. Do not touch anything else in the footer.
+Priority 2 — Switch the shop/collection page from single-column to 2-column product grid on mobile using CSS grid.
+Priority 3 — Add a full-bleed dark editorial background image to the homepage hero. The text and buttons are already positioned correctly — only add a background-image to the hero container.
+Priority 4 — On the product page: (a) add "Free returns · Easy exchanges" as a small line directly above the Add to Cart button, (b) add a "Size Guide" text link next to the Size label — modal content can be placeholder text for now, (c) make the Add to Cart button sticky at the bottom of the screen on mobile scroll.
+Priority 5 — Add 6 hardcoded static reviews below the product description. Each review needs: reviewer name, star rating (4 or 5 stars only), one-line quote. Style with the existing black/gold aesthetic.
+Priority 6 — On the order tracking form, add an Order ID input field above the email field. Update the lookup logic to require both Order ID and email to return results.
+Priority 7 — On the order detail page: (a) replace the "Image" placeholder with the actual product thumbnail, (b) add a 4-step horizontal status stepper — Confirmed / Processing / Shipped / Delivered — with the current step highlighted in gold and future steps dimmed, (c) add estimated delivery date shown as order date + 7 days, (d) normalize status badge style to be consistent between list view and detail view, (e) fix "item(s)" to conditionally render "item" vs "items".
+Priority 8 — Add a thin full-width social proof bar on the homepage directly below the navbar: "4.8★ Rated by customers · Free shipping over ₹999 · 30-day easy returns". Style it in gold text on a slightly lighter dark background to separate it from the navbar.
+Do not start writing code until I share the relevant file for each task. Start with Priority 1 and ask me for the footer component

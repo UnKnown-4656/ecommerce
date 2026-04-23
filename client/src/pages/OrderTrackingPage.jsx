@@ -44,11 +44,25 @@ const OrderTrackingPage = () => {
   }
 
   const items = JSON.parse(order.items);
-  const statusColors = {
-    Pending: 'bg-yellow-500',
-    Shipped: 'bg-blue-500',
-    Delivered: 'bg-green-500'
+  
+  // Define order statuses for stepper
+  const orderStatuses = ['Confirmed', 'Processing', 'Shipped', 'Delivered'];
+  const currentStatusIndex = orderStatuses.indexOf(order.status);
+  
+  // Calculate estimated delivery date (order date + 7 days)
+  const orderDate = new Date(order.created_at);
+  const estimatedDeliveryDate = new Date(orderDate);
+  estimatedDeliveryDate.setDate(orderDate.getDate() + 7);
+  
+  // Status colors for consistency
+  const statusConfig = {
+    Confirmed: { bg: '#C9A94020', color: '#C9A96E', border: '#C9A96E' },
+    Processing: { bg: '#C9A94020', color: '#C9A96E', border: '#C9A96E' },
+    Shipped: { bg: '#5A7EC920', color: '#7EA8E9', border: '#5A7EC9' },
+    Delivered: { bg: '#5A9E6F20', color: '#7ABE8F', border: '#5A9E6F' }
   };
+  
+  const statusColors = statusConfig[order.status] || statusConfig.Confirmed;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -73,8 +87,21 @@ const OrderTrackingPage = () => {
           <div className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="flex gap-4">
-                <div className="w-16 h-20 bg-surface border border-border flex-shrink-0 flex items-center justify-center">
-                  <span className="text-xs text-muted">Image</span>
+                <div className="w-16 h-20 bg-surface border border-border flex-shrink-0 overflow-hidden">
+                  {item.image_url ? (
+                    <img 
+                      src={item.image_url.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center"><span class="text-xs text-muted">No Image</span></div>';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-xs text-muted">No Image</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium">{item.name}</h4>

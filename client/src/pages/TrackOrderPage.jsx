@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 const TrackOrderPage = () => {
+  const [orderId, setOrderId] = useState('');
   const [email, setEmail] = useState('');
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,12 +17,14 @@ const TrackOrderPage = () => {
     setSearched(true);
 
     try {
-      // Trim email to remove any accidental whitespace
+      // Trim inputs to remove any accidental whitespace
       const trimmedEmail = email.trim();
-      const response = await api.get(`/orders/track?email=${encodeURIComponent(trimmedEmail)}`);
+      const trimmedOrderId = orderId.trim();
+      
+      const response = await api.get(`/orders/track?email=${encodeURIComponent(trimmedEmail)}&orderId=${encodeURIComponent(trimmedOrderId)}`);
       setOrders(response.data);
     } catch (err) {
-      setError('Unable to find orders. Please check your email address.');
+      setError('Unable to find orders. Please check your email address and order ID.');
       setOrders([]);
     } finally {
       setLoading(false);
@@ -39,7 +42,17 @@ const TrackOrderPage = () => {
       <h1 className="font-display text-3xl md:text-4xl text-center mb-8">Track Your Order</h1>
       
       <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-12">
-        <label className="block text-sm uppercase tracking-widest text-muted mb-2">Enter your email address</label>
+        <label className="block text-sm uppercase tracking-widest text-muted mb-2">Order ID</label>
+        <input
+          type="text"
+          value={orderId}
+          onChange={(e) => setOrderId(e.target.value)}
+          placeholder="Enter your order ID"
+          required
+          className="w-full px-4 py-3 border-0 border-b border-border bg-transparent focus:outline-none focus:border-accent mb-6"
+        />
+        
+        <label className="block text-sm uppercase tracking-widest text-muted mb-2">Email Address</label>
         <input
           type="email"
           value={email}

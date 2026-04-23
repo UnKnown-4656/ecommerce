@@ -81,10 +81,160 @@ const ProductDetailPage = () => {
           )}
 
           <p className="text-muted mb-8">{product.description}</p>
+          
+          {/* Reviews Section */}
+          <div className="mb-8">
+            <h3 className="font-display text-xl mb-4">Customer Reviews</h3>
+            <div className="space-y-4">
+              {/* Review 1 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">Alex Johnson</span>
+                </div>
+                <p className="text-sm">Exceptional quality and perfect fit!</p>
+              </div>
+              
+              {/* Review 2 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">Sarah Williams</span>
+                </div>
+                <p className="text-sm">Fast shipping and excellent customer service.</p>
+              </div>
+              
+              {/* Review 3 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">Michael Chen</span>
+                </div>
+                <p className="text-sm">Worth every penny, will definitely buy again.</p>
+              </div>
+              
+              {/* Review 4 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">Emma Rodriguez</span>
+                </div>
+                <p className="text-sm">Exactly what I was looking for, great fabric.</p>
+              </div>
+              
+              {/* Review 5 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">David Kim</span>
+                </div>
+                <p className="text-sm">Stylish and comfortable, highly recommend.</p>
+              </div>
+              
+              {/* Review 6 */}
+              <div className="border-b border-border pb-4">
+                <div className="flex items-center mb-2">
+                  <div className="flex text-accent">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                  </div>
+                  <span className="ml-2 text-sm text-muted">Jessica Thompson</span>
+                </div>
+                <p className="text-sm">Perfect addition to my wardrobe, love the design.</p>
+              </div>
+            </div>
+          </div>
 
           {sizes.length > 0 && (
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Size</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium">Size</label>
+                <a href="#" className="text-xs text-accent hover:underline">Size Guide</a>
+              </div>
               <div className="flex gap-2">
                 {sizes.map((size) => (
                   <button
@@ -122,15 +272,18 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            className={`btn bg-accent text-white w-full md:w-auto ${
-              product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent-hover'
-            }`}
-          >
-            {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-          </button>
+          <div className="mt-6 sticky bottom-4 bg-surface md:relative md:bg-transparent md:bottom-auto">
+            <p className="text-sm text-muted mb-4">Free returns · Easy exchanges</p>
+            <button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0}
+              className={`btn bg-accent text-white w-full md:w-auto ${
+                product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent-hover'
+              }`}
+            >
+              {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
