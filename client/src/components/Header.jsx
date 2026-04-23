@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+  const { theme, toggleTheme } = useTheme();
   const { cartCount, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
