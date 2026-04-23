@@ -12,108 +12,124 @@ const ProductCard = ({ product, index = 0 }) => {
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: index * 0.08 }}
-      style={{ cursor: 'none' }}
+      transition={{ duration: 0.7, delay: index * 0.1 }}
     >
-      <Link to={`/product/${product.id}`}>
-        
-        {/* Image container */}
-        <div style={{ 
-          position: 'relative', overflow: 'hidden',
-          aspectRatio: '3/4', background: '#111'
+      <Link
+        to={`/product/${product.id}`}
+        style={{ display: 'block', textDecoration: 'none' }}
+      >
+        {/* Image */}
+        <div style={{
+          position: 'relative',
+          overflow: 'hidden',
+          aspectRatio: '3/4',
+          background: '#0f0f0f',
         }}>
           <img
             src={imageUrl}
             alt={product.name}
             className="card-image"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={e => e.target.src='https://placehold.co/400x533/111/1e1e1e?text=NOIR'}
+            onError={e => {
+              e.target.src = 'https://placehold.co/400x533/0f0f0f/1e1e1e?text=NOIR';
+            }}
           />
 
-          {/* Hover overlay */}
+          {/* Overlay */}
           <div className="card-overlay" style={{
             position: 'absolute', inset: 0,
-            background: 'rgba(0,0,0,0.45)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
             <span style={{
-              fontFamily: 'Inter', fontSize: '10px',
-              letterSpacing: '0.25em', textTransform: 'uppercase',
-              color: 'white', border: '1px solid rgba(255,255,255,0.5)',
-              padding: '10px 24px'
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '9px',
+              letterSpacing: '0.28em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.9)',
+              border: '1px solid rgba(255,255,255,0.3)',
+              padding: '10px 24px',
             }}>Quick View</span>
           </div>
 
-          {/* NEW badge */}
+          {/* Badges */}
           {product.is_new && (
             <div style={{
-              position: 'absolute', top: '12px', left: '12px',
+              position: 'absolute', top: '14px', left: '14px',
               background: '#b8922e', color: '#0a0a0a',
-              fontFamily: 'Inter', fontSize: '9px',
-              fontWeight: 600, letterSpacing: '0.15em',
-              textTransform: 'uppercase', padding: '4px 10px'
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '8px', fontWeight: 600,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              padding: '5px 12px',
             }}>New</div>
           )}
-
-          {/* SOLD OUT badge */}
           {product.stock === 0 && (
             <div style={{
-              position: 'absolute', top: '12px', left: '12px',
-              background: '#1a1a1a', color: '#555',
-              fontFamily: 'Inter', fontSize: '9px',
-              letterSpacing: '0.15em', textTransform: 'uppercase',
-              padding: '4px 10px'
+              position: 'absolute', top: '14px', left: '14px',
+              background: 'rgba(10,10,10,0.8)',
+              color: '#444',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '8px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              padding: '5px 12px',
+              border: '1px solid #1e1e1e',
             }}>Sold Out</div>
           )}
         </div>
 
-        {/* Product info */}
-        <div style={{ paddingTop: '16px', position: 'relative' }}>
+        {/* Info */}
+        <div style={{ paddingTop: '18px', paddingBottom: '4px', position: 'relative' }}>
           <p style={{
-            fontFamily: 'Inter', fontSize: '10px',
-            letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: '#444', marginBottom: '8px'
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '9px',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#333',
+            marginBottom: '8px',
           }}>{product.category}</p>
 
           <h3 style={{
-            fontFamily: 'Cormorant Garamond',
-            fontSize: '2rem', fontWeight: 400,
-            color: '#e0d8cc', marginBottom: '8px',
-            transition: 'color 0.3s'
-          }}
-          onMouseEnter={e => e.target.style.color='#b8922e'}
-          onMouseLeave={e => e.target.style.color='#e0d8cc'}
-          >{product.name}</h3>
+            fontFamily: 'Cormorant Garamond, serif',
+            fontSize: '1.5rem',
+            fontWeight: 400,
+            color: '#e0d8cc',
+            marginBottom: '8px',
+            lineHeight: 1.2,
+            transition: 'color 0.3s',
+          }}>{product.name}</h3>
 
           <p style={{
-            fontFamily: 'Courier New', fontSize: '16px',
-            color: '#b8922e', marginBottom: '8px',
-            fontWeight: 'bold'
+            fontFamily: 'Courier New, monospace',
+            fontSize: '13px',
+            color: '#b8922e',
+            marginBottom: '8px',
+            letterSpacing: '0.05em',
           }}>${product.price?.toFixed(2)}</p>
 
-          {/* Gold hover border */}
-          <div style={{
-            position: 'absolute', bottom: '0', left: '0',
-            width: '0', height: '1px',
-            background: '#b8922e',
-            transition: 'width 0.4s ease'
-          }}
-          className="gold-border"
-          />
-
-          {/* Star rating */}
-          {product.avg_rating && (
+          {/* Stars */}
+          {product.avg_rating > 0 && (
             <p style={{
-              fontFamily: 'Inter', fontSize: '11px', color: '#555'
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '11px',
+              color: '#444',
+              letterSpacing: '0.05em',
             }}>
-              {'★'.repeat(Math.round(product.avg_rating))}
-              {'☆'.repeat(5 - Math.round(product.avg_rating))}
+              <span style={{ color: '#b8922e' }}>
+                {'★'.repeat(Math.round(product.avg_rating))}
+                {'☆'.repeat(5 - Math.round(product.avg_rating))}
+              </span>
               {' '}
-              <span style={{ color: '#3a3a3a' }}>
-                ({product.review_count})
+              <span style={{ color: '#2a2a2a' }}>
+                ({product.review_count || 0})
               </span>
             </p>
           )}
+
+          {/* Gold slide line */}
+          <div className="gold-line" />
         </div>
       </Link>
     </motion.div>
