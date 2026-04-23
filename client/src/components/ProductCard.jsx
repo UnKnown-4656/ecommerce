@@ -56,8 +56,8 @@ const ProductCard = ({ product }) => {
           
           {averageRating > 0 && (
             <div className="flex items-center gap-2 mb-2">
-              <StarRating rating={averageRating} size="w-4 h-4" />
-              <span className="text-xs text-muted">
+              <span className="text-[#b8922e] text-xs">★</span>
+              <span className="text-[#555] text-xs font-sans">
                 {averageRating.toFixed(1)} ({reviews.length})
               </span>
             </div>
