@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import StarRating from './StarRating';
+import api from '../services/api';
 
 const ReviewForm = ({ productId, onReviewSubmitted }) => {
   const [formData, setFormData] = useState({
@@ -53,17 +54,8 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/products/${productId}/reviews`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit review');
-      }
+      const response = await api.post(`/products/${productId}/reviews`, formData);
+      console.log('Review submitted:', response.data);
 
       // Reset form
       setFormData({

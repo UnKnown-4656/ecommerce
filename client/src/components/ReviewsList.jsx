@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
 import StarRating from './StarRating';
 import { calculateAverageRating } from '../utils/reviews';
+import api from '../services/api';
 
 const ReviewsList = ({ productId, refreshTrigger }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`/api/products/${productId}/reviews`);
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Reviews API response:', data);
-        setReviews(data);
-      }
+      setLoading(true);
+      setError(null);
+      const response = await api.get(`/products/${productId}/reviews`);
+      console.log('Reviews API response:', response.data);
+      setReviews(response.data);
     } catch (error) {
       console.error('Error fetching reviews:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -61,6 +63,20 @@ const ReviewsList = ({ productId, refreshTrigger }) => {
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-20 px-8 max-w-5xl mx-auto text-center">
+        <p className="text-red-400 mb-4">Failed to load reviews</p>
+        <button 
+          onClick={fetchReviews}
+          className="text-[#b8922e] hover:text-[#d4aa50] transition-colors"
+        >
+          Try again
+        </button>
       </div>
     );
   }

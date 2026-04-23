@@ -40,4 +40,10 @@ initDb().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+}).catch((error) => {
+  console.error('Database initialization failed:', error.message);
+  console.log('Starting server without database connection...');
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} (without database)`);
+  });
 });

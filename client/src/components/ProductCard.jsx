@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import StarRating from './StarRating';
 import { calculateAverageRating } from '../utils/reviews';
+import api from '../services/api';
 
 const ProductCard = ({ product }) => {
   const [reviews, setReviews] = useState([]);
@@ -15,12 +16,9 @@ const ProductCard = ({ product }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`/api/products/${product.id}/reviews`);
-        if (response.ok) {
-          const data = await response.json();
-          setReviews(data);
-          setAverageRating(calculateAverageRating(data));
-        }
+        const response = await api.get(`/products/${product.id}/reviews`);
+        setReviews(response.data);
+        setAverageRating(calculateAverageRating(response.data));
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }

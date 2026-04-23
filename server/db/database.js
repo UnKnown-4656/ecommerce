@@ -11,27 +11,51 @@ const pool = new Pool({
 const dbWrapper = {
   prepare: (sql) => ({
     run: async (...params) => {
-      const pgSql = convertToPostgres(sql);
-      const result = await pool.query(pgSql + ' RETURNING id', params);
-      return { lastInsertRowid: result.rows[0]?.id };
+      try {
+        const pgSql = convertToPostgres(sql);
+        const result = await pool.query(pgSql + ' RETURNING id', params);
+        return { lastInsertRowid: result.rows[0]?.id };
+      } catch (error) {
+        console.error('Database query failed:', error.message);
+        throw new Error('Database not available');
+      }
     },
     get: async (...params) => {
-      const pgSql = convertToPostgres(sql);
-      const result = await pool.query(pgSql, params);
-      return result.rows[0];
+      try {
+        const pgSql = convertToPostgres(sql);
+        const result = await pool.query(pgSql, params);
+        return result.rows[0];
+      } catch (error) {
+        console.error('Database query failed:', error.message);
+        return null;
+      }
     },
     all: async (...params) => {
-      const pgSql = convertToPostgres(sql);
-      const result = await pool.query(pgSql, params);
-      return result.rows;
+      try {
+        const pgSql = convertToPostgres(sql);
+        const result = await pool.query(pgSql, params);
+        return result.rows;
+      } catch (error) {
+        console.error('Database query failed:', error.message);
+        return [];
+      }
     }
   }),
   exec: async (sql) => {
-    await pool.query(sql);
+    try {
+      await pool.query(sql);
+    } catch (error) {
+      console.error('Database query failed:', error.message);
+    }
   },
   query: async (sql, params = []) => {
-    const result = await pool.query(sql, params);
-    return result.rows;
+    try {
+      const result = await pool.query(sql, params);
+      return result.rows;
+    } catch (error) {
+      console.error('Database query failed:', error.message);
+      return [];
+    }
   }
 };
 
@@ -42,7 +66,8 @@ function convertToPostgres(sql) {
 }
 
 const initDb = async () => {
-  await pool.query(`
+  try {
+    await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
@@ -154,9 +179,14 @@ const initDb = async () => {
       );
     }
     console.log('Sample products seeded');
-  }
+    }
 
-  console.log('Database initialized');
+    console.log('Database initialized');
+  } catch (error) {
+    console.error('Database connection failed:', error.message);
+    console.log('Server will continue without database connection for local development');
+    // Don't exit the process, allow server to start without DB
+  }
 };
 
 module.exports = { db: dbWrapper, initDb };
