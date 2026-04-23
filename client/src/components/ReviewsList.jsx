@@ -82,7 +82,7 @@ const ReviewsList = ({ productId, refreshTrigger }) => {
   }
 
   return (
-    <div className="bg-[#0a0a0a] w-full py-20 px-8 max-w-5xl mx-auto border-t border-[#1e1e1e]">
+    <div className="w-full py-20 px-8 max-w-5xl mx-auto">
       {/* Section Heading */}
       <div className="mb-16">
         <h2 className="font-serif text-[#e8e0d4] text-[2.5rem] font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>

@@ -29,11 +29,23 @@ const HomePage = () => {
     >
       {/* Hero Section */}
 <section style={{ 
-  minHeight: '100vh', background: '#0a0a0a',
+  height: '100vh', background: '#0a0a0a',
   display: 'flex', flexDirection: 'column',
   alignItems: 'center', justifyContent: 'center',
   position: 'relative', overflow: 'hidden'
 }}>
+  {/* Editorial 2026 background */}
+  <div style={{
+    position: 'absolute',
+    top: '50%', left: '50%',
+    transform: 'translate(-50%, -50%)',
+    fontSize: '20vw',
+    fontFamily: 'Cormorant Garamond',
+    color: '#111111',
+    zIndex: 0,
+    fontWeight: 300
+  }}>2026</div>
+
   {/* Radial gold glow */}
   <div style={{
     position: 'absolute',
@@ -41,95 +53,99 @@ const HomePage = () => {
     transform: 'translate(-50%, -50%)',
     width: '700px', height: '700px',
     background: 'radial-gradient(ellipse, rgba(184,146,46,0.05) 0%, transparent 70%)',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+    zIndex: 0
   }} />
 
-  {/* Season tag */}
-  <motion.p
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.2, duration: 0.8 }}
-    style={{ 
-      fontFamily: 'Inter', fontSize: '11px',
-      letterSpacing: '0.3em', color: '#3a3a3a',
-      textTransform: 'uppercase', marginBottom: '2rem'
-    }}
-  >SS 2026 Collection</motion.p>
+  {/* Content wrapper */}
+  <div style={{ zIndex: 1, position: 'relative' }}>
+    {/* Season tag */}
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.8 }}
+      style={{ 
+        fontFamily: 'Inter', fontSize: '11px',
+        letterSpacing: '0.3em', color: '#3a3a3a',
+        textTransform: 'uppercase', marginBottom: '1rem'
+      }}
+    >SS 2026 Collection</motion.p>
 
-  {/* Main headline */}
-  <motion.h1
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
-    style={{
-      fontFamily: 'Cormorant Garamond',
-      fontSize: 'clamp(4rem, 10vw, 9rem)',
-      fontWeight: 300,
-      letterSpacing: '-0.02em',
-      color: '#e8e0d4',
-      textAlign: 'center',
-      lineHeight: 1
-    }}
-  >
-    Dress With{' '}
-    <em style={{ color: '#b8922e', fontStyle: 'italic' }}>Intent</em>
-  </motion.h1>
+    {/* Main headline */}
+    <motion.h1
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+      style={{
+        fontFamily: 'Cormorant Garamond',
+        fontSize: 'clamp(5rem, 12vw, 10rem)',
+        fontWeight: 300,
+        letterSpacing: '-0.02em',
+        color: '#e8e0d4',
+        textAlign: 'center',
+        lineHeight: 1
+      }}
+    >
+      Dress With{' '}
+      <em style={{ color: '#b8922e', fontStyle: 'italic' }}>Intent</em>
+    </motion.h1>
 
-  {/* Gold divider */}
-  <motion.div
-    initial={{ scaleX: 0 }}
-    animate={{ scaleX: 1 }}
-    transition={{ delay: 0.8, duration: 0.8 }}
-    style={{ 
-      width: '48px', height: '1px',
-      background: '#b8922e', margin: '2rem auto'
-    }}
-  />
+    {/* Gold divider */}
+    <motion.div
+      initial={{ scaleX: 0 }}
+      animate={{ scaleX: 1 }}
+      transition={{ delay: 0.8, duration: 0.8 }}
+      style={{ 
+        width: '48px', height: '1px',
+        background: '#b8922e', margin: '1rem auto'
+      }}
+    />
 
-  {/* Subtitle */}
-  <motion.p
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 1, duration: 0.8 }}
-    style={{
-      fontFamily: 'Inter', fontSize: '11px',
-      letterSpacing: '0.25em', color: '#444',
-      textTransform: 'uppercase', marginBottom: '3rem'
-    }}
-  >Premium clothing for the modern wardrobe</motion.p>
+    {/* Subtitle */}
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1, duration: 0.8 }}
+      style={{
+        fontFamily: 'Inter', fontSize: '11px',
+        letterSpacing: '0.25em', color: '#444',
+        textTransform: 'uppercase', marginBottom: '2rem'
+      }}
+    >Premium clothing for the modern wardrobe</motion.p>
 
-  {/* CTA buttons */}
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 1.2, duration: 0.6 }}
-    style={{ display: 'flex', gap: '1rem' }}
-  >
+    {/* CTA buttons */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.2, duration: 0.6 }}
+      style={{ display: 'flex', gap: '1rem' }}
+    >
     <Link to="/shop" style={{
-      padding: '14px 36px',
+      padding: '12px 40px',
       background: '#b8922e', color: '#0a0a0a',
       fontFamily: 'Inter', fontSize: '11px',
       letterSpacing: '0.2em', textTransform: 'uppercase',
       fontWeight: 500, border: 'none',
       transition: 'background 0.3s'
     }}
-    onMouseEnter={e => e.target.style.background='#d4aa50'}
+    onMouseEnter={e => e.target.style.background='rgba(184,146,46,0.8)'}
     onMouseLeave={e => e.target.style.background='#b8922e'}
     >Explore Collection</Link>
 
     <Link to="/shop" style={{
-      padding: '14px 36px',
+      padding: '12px 40px',
       background: 'transparent',
       color: '#b8922e',
       fontFamily: 'Inter', fontSize: '11px',
       letterSpacing: '0.2em', textTransform: 'uppercase',
-      border: '1px solid #b8922e',
+      border: 'none',
       transition: 'all 0.3s'
     }}
-    onMouseEnter={e => { e.target.style.background='#b8922e'; e.target.style.color='#0a0a0a'; }}
-    onMouseLeave={e => { e.target.style.background='transparent'; e.target.style.color='#b8922e'; }}
+    onMouseEnter={e => e.target.style.color='#d4aa50'}
+    onMouseLeave={e => e.target.style.color='#b8922e'}
     >New Arrivals</Link>
   </motion.div>
+  </div>
 
   {/* Scroll indicator */}
   <motion.div
@@ -139,7 +155,8 @@ const HomePage = () => {
     style={{
       position: 'absolute', bottom: '3rem',
       display: 'flex', flexDirection: 'column',
-      alignItems: 'center', gap: '8px'
+      alignItems: 'center', gap: '8px',
+      zIndex: 1
     }}
   >
     <span style={{ 
@@ -182,7 +199,7 @@ const HomePage = () => {
         </motion.div>
 
         {/* Product grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
           {products.map((product, index) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}

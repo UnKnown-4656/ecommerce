@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-  const { theme, toggleTheme } = useTheme();
   const { cartCount, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -36,36 +34,32 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="font-serif tracking-[0.15em] text-[1.1rem]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          <Link to="/" className="font-serif tracking-[0.2em]" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.3rem' }}>
             NOIR & CO.
           </Link>
 
           <nav className="hidden md:flex space-x-8 items-center">
-            <Link to="/" className="text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300">Home</Link>
-            <Link to="/shop" className="text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300">Shop</Link>
-            <Link to="/track-order" className="text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300">Track Order</Link>
+            <Link to="/" className="nav-link text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300 relative" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Home
+              <span className="nav-underline" style={{ position: 'absolute', bottom: '-4px', left: '0', width: '0', height: '1px', background: '#b8922e', transition: 'width 0.3s ease' }}></span>
+            </Link>
+            <Link to="/shop" className="nav-link text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300 relative" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Shop
+              <span className="nav-underline" style={{ position: 'absolute', bottom: '-4px', left: '0', width: '0', height: '1px', background: '#b8922e', transition: 'width 0.3s ease' }}></span>
+            </Link>
+            <Link to="/track-order" className="nav-link text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300 relative" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Track Order
+              <span className="nav-underline" style={{ position: 'absolute', bottom: '-4px', left: '0', width: '0', height: '1px', background: '#b8922e', transition: 'width 0.3s ease' }}></span>
+            </Link>
             {user?.role === 'admin' && (
-              <Link to="/admin" className="text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300">Admin</Link>
+              <Link to="/admin" className="nav-link text-[11px] tracking-[0.18em] uppercase text-[#666] hover:text-[#e8e0d4] transition-colors duration-300 relative" style={{ fontFamily: 'Inter, sans-serif' }}>
+                Admin
+                <span className="nav-underline" style={{ position: 'absolute', bottom: '-4px', left: '0', width: '0', height: '1px', background: '#b8922e', transition: 'width 0.3s ease' }}></span>
+              </Link>
             )}
           </nav>
 
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded hover:bg-[#1a1a1a] transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              )}
-            </button>
-
             <button
               onClick={() => setIsCartOpen(true)}
               className="p-2 rounded hover:bg-[#1a1a1a] transition-colors relative"

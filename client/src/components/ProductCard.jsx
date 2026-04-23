@@ -68,17 +68,17 @@ const ProductCard = ({ product, index = 0 }) => {
         </div>
 
         {/* Product info */}
-        <div style={{ paddingTop: '16px' }}>
+        <div style={{ paddingTop: '16px', position: 'relative' }}>
           <p style={{
             fontFamily: 'Inter', fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: '#444', marginBottom: '6px'
+            color: '#444', marginBottom: '8px'
           }}>{product.category}</p>
 
           <h3 style={{
             fontFamily: 'Cormorant Garamond',
-            fontSize: '1.25rem', fontWeight: 400,
-            color: '#e0d8cc', marginBottom: '6px',
+            fontSize: '2rem', fontWeight: 400,
+            color: '#e0d8cc', marginBottom: '8px',
             transition: 'color 0.3s'
           }}
           onMouseEnter={e => e.target.style.color='#b8922e'}
@@ -86,9 +86,20 @@ const ProductCard = ({ product, index = 0 }) => {
           >{product.name}</h3>
 
           <p style={{
-            fontFamily: 'Courier New', fontSize: '13px',
-            color: '#b8922e', marginBottom: '6px'
+            fontFamily: 'Courier New', fontSize: '16px',
+            color: '#b8922e', marginBottom: '8px',
+            fontWeight: 'bold'
           }}>${product.price?.toFixed(2)}</p>
+
+          {/* Gold hover border */}
+          <div style={{
+            position: 'absolute', bottom: '0', left: '0',
+            width: '0', height: '1px',
+            background: '#b8922e',
+            transition: 'width 0.4s ease'
+          }}
+          className="gold-border"
+          />
 
           {/* Star rating */}
           {product.avg_rating && (
