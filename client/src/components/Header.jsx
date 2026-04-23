@@ -63,6 +63,31 @@ const Header = () => {
 
           <div className="flex items-center space-x-4">
             <button
+              onClick={toggleTheme}
+              className="p-2 rounded hover:bg-[#1a1a1a] transition-colors"
+              aria-label="Toggle theme"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#666',
+                cursor: 'none',
+                transition: 'color 0.3s'
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#b8922e'}
+              onMouseLeave={e => e.currentTarget.style.color = '#666'}
+            >
+              {theme === 'light' ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h6m-6 0h6a2 2 0 002 2v6a2 2 0 00-2-2h6a2 2 0 00-2-2z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
+
+            <button
               onClick={() => setIsCartOpen(true)}
               className="p-2 rounded hover:bg-[#1a1a1a] transition-colors relative"
               aria-label="Open cart"
