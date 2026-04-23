@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
+import MarqueeStrip from '../components/MarqueeStrip';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -20,94 +21,223 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4 }}
+    >
       {/* Hero Section */}
-<section className="relative h-screen flex items-center justify-center text-center bg-cover bg-center bg-no-repeat" 
-  style={{ 
-    backgroundImage: 'url("/images/editorial-dark.jpg")',
-    background: 'radial-gradient(ellipse at center, #1A1508 0%, #0A0A0A 100%)'
-  }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg z-10" />
-        <div className="relative z-20 px-4 max-w-5xl mx-auto">
-          <motion.h1 
-            className="font-display text-[clamp(3rem,8vw,7rem)] font-semibold leading-[1.1] mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0 }}
-          >
-            Dress With <span className="text-accent">Intent</span>
-          </motion.h1>
-          
-          <motion.p 
-            className="text-lg md:text-xl text-muted font-light mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Premium clothing for the modern wardrobe
-          </motion.p>
+<section style={{ 
+  minHeight: '100vh', background: '#0a0a0a',
+  display: 'flex', flexDirection: 'column',
+  alignItems: 'center', justifyContent: 'center',
+  position: 'relative', overflow: 'hidden'
+}}>
+  {/* Radial gold glow */}
+  <div style={{
+    position: 'absolute',
+    top: '50%', left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '700px', height: '700px',
+    background: 'radial-gradient(ellipse, rgba(184,146,46,0.05) 0%, transparent 70%)',
+    pointerEvents: 'none'
+  }} />
 
-          <div className="w-[60px] h-[1px] bg-accent mx-auto mb-8" />
+  {/* Season tag */}
+  <motion.p
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2, duration: 0.8 }}
+    style={{ 
+      fontFamily: 'Inter', fontSize: '11px',
+      letterSpacing: '0.3em', color: '#3a3a3a',
+      textTransform: 'uppercase', marginBottom: '2rem'
+    }}
+  >SS 2026 Collection</motion.p>
 
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <Link to="/shop" className="btn btn-primary">
-              Explore Collection
-            </Link>
-            <Link to="/shop?category=Outerwear" className="btn btn-outline">
-              New Arrivals
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+  {/* Main headline */}
+  <motion.h1
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+    style={{
+      fontFamily: 'Cormorant Garamond',
+      fontSize: 'clamp(4rem, 10vw, 9rem)',
+      fontWeight: 300,
+      letterSpacing: '-0.02em',
+      color: '#e8e0d4',
+      textAlign: 'center',
+      lineHeight: 1
+    }}
+  >
+    Dress With{' '}
+    <em style={{ color: '#b8922e', fontStyle: 'italic' }}>Intent</em>
+  </motion.h1>
 
-      {/* New Arrivals */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="font-display text-4xl text-center mb-12">New Arrivals</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {/* Gold divider */}
+  <motion.div
+    initial={{ scaleX: 0 }}
+    animate={{ scaleX: 1 }}
+    transition={{ delay: 0.8, duration: 0.8 }}
+    style={{ 
+      width: '48px', height: '1px',
+      background: '#b8922e', margin: '2rem auto'
+    }}
+  />
+
+  {/* Subtitle */}
+  <motion.p
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 1, duration: 0.8 }}
+    style={{
+      fontFamily: 'Inter', fontSize: '11px',
+      letterSpacing: '0.25em', color: '#444',
+      textTransform: 'uppercase', marginBottom: '3rem'
+    }}
+  >Premium clothing for the modern wardrobe</motion.p>
+
+  {/* CTA buttons */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 1.2, duration: 0.6 }}
+    style={{ display: 'flex', gap: '1rem' }}
+  >
+    <Link to="/shop" style={{
+      padding: '14px 36px',
+      background: '#b8922e', color: '#0a0a0a',
+      fontFamily: 'Inter', fontSize: '11px',
+      letterSpacing: '0.2em', textTransform: 'uppercase',
+      fontWeight: 500, border: 'none',
+      transition: 'background 0.3s'
+    }}
+    onMouseEnter={e => e.target.style.background='#d4aa50'}
+    onMouseLeave={e => e.target.style.background='#b8922e'}
+    >Explore Collection</Link>
+
+    <Link to="/shop" style={{
+      padding: '14px 36px',
+      background: 'transparent',
+      color: '#b8922e',
+      fontFamily: 'Inter', fontSize: '11px',
+      letterSpacing: '0.2em', textTransform: 'uppercase',
+      border: '1px solid #b8922e',
+      transition: 'all 0.3s'
+    }}
+    onMouseEnter={e => { e.target.style.background='#b8922e'; e.target.style.color='#0a0a0a'; }}
+    onMouseLeave={e => { e.target.style.background='transparent'; e.target.style.color='#b8922e'; }}
+    >New Arrivals</Link>
+  </motion.div>
+
+  {/* Scroll indicator */}
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 1.8 }}
+    style={{
+      position: 'absolute', bottom: '3rem',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', gap: '8px'
+    }}
+  >
+    <span style={{ 
+      fontFamily: 'Inter', fontSize: '9px',
+      letterSpacing: '0.3em', color: '#2a2a2a',
+      textTransform: 'uppercase'
+    }}>Scroll</span>
+    <motion.div
+      animate={{ y: [0, 10, 0] }}
+      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+      style={{ width: '1px', height: '40px',
+        background: 'linear-gradient(to bottom, #b8922e, transparent)'
+      }}
+    />
+  </motion.div>
+</section>
+
+      <MarqueeStrip />
+
+      {/* Featured Products */}
+      <section style={{ padding: '4rem 1rem', maxWidth: '1400px', margin: '0 auto' }}>
+        {/* Section heading */}
+        <motion.div
+          initial={{ opacity:0, y:30 }}
+          whileInView={{ opacity:1, y:0 }}
+          viewport={{ once:true }}
+          style={{ textAlign:'center', marginBottom:'4rem' }}
+        >
+          <p style={{ fontFamily:'Inter', fontSize:'10px',
+            letterSpacing:'0.3em', color:'#444',
+            textTransform:'uppercase', marginBottom:'1rem'
+          }}>Curated For You</p>
+          <h2 style={{ fontFamily:'Cormorant Garamond',
+            fontSize:'clamp(2.5rem, 5vw, 4rem)',
+            fontWeight:300, color:'#e8e0d4'
+          }}>The Collection</h2>
+          <div style={{ width:'40px', height:'1px',
+            background:'#b8922e', margin:'1.5rem auto 0'
+          }} />
+        </motion.div>
+
+        {/* Product grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
           {products.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.1 * index }}
-            >
-              <ProductCard product={product} />
-            </motion.div>
+            <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
-        <div className="text-center mt-12">
-          <Link to="/shop" className="btn btn-outline inline-block">
-            View All
-          </Link>
+
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <Link to="/shop" style={{
+            padding: '14px 36px',
+            background: 'transparent',
+            color: '#b8922e',
+            fontFamily: 'Inter', fontSize: '11px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            border: '1px solid #b8922e',
+            transition: 'all 0.3s',
+            display: 'inline-block'
+          }}
+          onMouseEnter={e => { e.target.style.background='#b8922e'; e.target.style.color='#0a0a0a'; }}
+          onMouseLeave={e => { e.target.style.background='transparent'; e.target.style.color='#b8922e'; }}
+          >View All</Link>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="bg-surface py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="p-6">
-              <h3 className="font-display text-2xl mb-2">Premium Materials</h3>
-              <p className="text-muted">Only the finest fabrics sourced from around the world.</p>
-            </div>
-            <div className="p-6">
-              <h3 className="font-display text-2xl mb-2">Crafted with Care</h3>
-              <p className="text-muted">Every piece is meticulously constructed for longevity.</p>
-            </div>
-            <div className="p-6">
-              <h3 className="font-display text-2xl mb-2">Timeless Design</h3>
-              <p className="text-muted">Styles that transcend seasons and trends.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      {/* Editorial quote strip */}
+      <motion.section
+        initial={{ opacity:0 }}
+        whileInView={{ opacity:1 }}
+        viewport={{ once:true }}
+        transition={{ duration:1.2 }}
+        style={{
+          padding:'8rem 2rem',
+          borderTop:'1px solid #1a1a1a',
+          borderBottom:'1px solid #1a1a1a',
+          textAlign:'center', background:'#0a0a0a'
+        }}
+      >
+        <p style={{
+          fontFamily:'Cormorant Garamond',
+          fontSize:'clamp(1.8rem, 4vw, 3.5rem)',
+          fontWeight:300, fontStyle:'italic',
+          color:'#e8e0d4', maxWidth:'700px',
+          margin:'0 auto', lineHeight:1.4
+        }}>
+          "Luxury is not about price.
+          <br/>It's about{' '}
+          <span style={{ color:'#b8922e' }}>intent.</span>"
+        </p>
+        <div style={{ width:'40px', height:'1px',
+          background:'#b8922e', margin:'2rem auto'
+        }} />
+        <p style={{ fontFamily:'Inter', fontSize:'10px',
+          letterSpacing:'0.3em', color:'#333',
+          textTransform:'uppercase'
+        }}>Crafted for those who dress with purpose</p>
+      </motion.section>
+    </motion.div>
   );
 };
 

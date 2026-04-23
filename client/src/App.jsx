@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -18,9 +19,11 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import Toast from './components/Toast';
+import CustomCursor from './components/CustomCursor';
 import { useCart } from './context/CartContext';
 
 function App() {
+  const location = useLocation();
   const { isCartOpen } = useCart();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -44,25 +47,28 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
       <Header />
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-success" element={<OrderSuccessPage />} />
-          <Route path="/track-order" element={<TrackOrderPage />} />
-          <Route path="/order/:id" element={<OrderTrackingPage />} />
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/orders" element={<AdminOrdersPage />} />
-          <Route path="/admin/products" element={<AdminProductsPage />} />
-          <Route path="/admin/products/add" element={<AdminAddProductPage />} />
-          <Route path="/admin/products/edit/:id" element={<AdminEditProductPage />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/shop" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
+            <Route path="/track-order" element={<TrackOrderPage />} />
+            <Route path="/order/:id" element={<OrderTrackingPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/orders" element={<AdminOrdersPage />} />
+            <Route path="/admin/products" element={<AdminProductsPage />} />
+            <Route path="/admin/products/add" element={<AdminAddProductPage />} />
+            <Route path="/admin/products/edit/:id" element={<AdminEditProductPage />} />
+          </Routes>
+        </AnimatePresence>
       </main>
       <Footer />
       <CartDrawer isOpen={isCartOpen} />
