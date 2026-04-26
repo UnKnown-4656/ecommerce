@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const observerRef = useRef(null);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -12,34 +14,63 @@ const CustomCursor = () => {
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+
+  const attachListeners = useCallback((root = document) => {
+    const elements = root.querySelectorAll('a, button, input, select, textarea, .interactive, [role="button"]');
+    elements.forEach(el => {
+      if (!el.dataset.cursorAttached) {
+        el.addEventListener('mouseenter', handleMouseEnter);
+        el.addEventListener('mouseleave', handleMouseLeave);
+        el.dataset.cursorAttached = 'true';
+      }
+    });
+  }, [handleMouseEnter, handleMouseLeave]);
+
   useEffect(() => {
+    // Skip custom cursor on touch devices
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      setIsTouchDevice(true);
+      return;
+    }
+
     const moveCursor = (e) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
       if (!isVisible) setIsVisible(true);
     };
 
-    const handleMouseEnter = () => setIsHovered(true);
-    const handleMouseLeave = () => setIsHovered(false);
+    window.addEventListener('mousemove', moveCursor, { passive: true });
+    attachListeners();
 
-    window.addEventListener('mousemove', moveCursor);
+    // Use MutationObserver to handle dynamically added elements
+    observerRef.current = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              attachListeners(node);
+            }
+          });
+        }
+      }
+    });
 
-    const interactiveElements = document.querySelectorAll('a, button, .interactive');
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
+    observerRef.current.observe(document.body, {
+      childList: true,
+      subtree: true,
     });
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
     };
-  }, [isVisible]);
+  }, [isVisible, attachListeners, cursorX, cursorY]);
 
-  if (!isVisible) return null;
+  if (isTouchDevice || !isVisible) return null;
 
   return (
     <>

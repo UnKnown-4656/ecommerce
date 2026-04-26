@@ -1,30 +1,27 @@
-const MarqueeStrip = () => {
-  const items = ['Free Returns','Handcrafted','Worldwide Shipping','SS 2026','Premium Quality','Noir & Co.'];
-  const repeated = [...items,...items,...items,...items];
+import { memo } from 'react';
+
+const MarqueeStrip = memo(() => {
+  const items = ['Free Returns', 'Handcrafted', 'Worldwide Shipping', 'SS 2026', 'Premium Quality', 'Noir & Co.', 'Sustainable Fashion', 'Limited Editions'];
+  const repeated = [...items, ...items, ...items, ...items];
 
   return (
-    <div style={{ 
-      borderTop: '1px solid #1a1a1a',
-      borderBottom: '1px solid #1a1a1a',
-      padding: '12px 0', overflow: 'hidden',
-      background: '#0a0a0a'
-    }}>
+    <div className="border-t border-b border-border/60 py-3.5 overflow-hidden bg-bg relative">
+      {/* Fade edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-bg to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-bg to-transparent z-10 pointer-events-none" />
+
       <div className="marquee-track">
         {repeated.map((item, i) => (
-          <span key={i} style={{
-            display: 'flex', alignItems: 'center',
-            gap: '1.5rem', padding: '0 1.5rem',
-            fontFamily: 'Inter', fontSize: '10px',
-            letterSpacing: '0.25em', textTransform: 'uppercase',
-            color: '#2e2e2e', whiteSpace: 'nowrap'
-          }}>
+          <span key={i} className="flex items-center gap-6 px-6 font-sans text-[10px] tracking-[0.25em] uppercase text-muted/30 whitespace-nowrap select-none">
             {item}
-            <span style={{ color: '#b8922e', fontSize: '8px' }}>✦</span>
+            <span className="text-accent/40 text-[7px]">✦</span>
           </span>
         ))}
       </div>
     </div>
   );
-};
+});
+
+MarqueeStrip.displayName = 'MarqueeStrip';
 
 export default MarqueeStrip;

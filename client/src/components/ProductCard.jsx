@@ -1,21 +1,22 @@
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { useCart } from '../context/CartContext';
 
-const ProductCard = ({ product, index = 0 }) => {
+const ProductCard = memo(({ product, index = 0 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { addToCart } = useCart();
-  
+
   const imageUrl = product.image_url?.startsWith('http')
     ? product.image_url
     : `https://ecommerce-ahmv.onrender.com${product.image_url}`;
 
-  const handleQuickAdd = (e) => {
+  const handleQuickAdd = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product);
-  };
+  }, [addToCart, product]);
 
   return (
     <motion.div
@@ -29,21 +30,29 @@ const ProductCard = ({ product, index = 0 }) => {
     >
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative overflow-hidden aspect-[3/4] bg-surface">
+          {/* Skeleton loader */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-surface animate-pulse" />
+          )}
+
           <motion.img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0"
+            className={`w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-[filter] duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
             onError={e => {
               e.target.src = 'https://placehold.co/400x533/111/1e1e1e?text=NOIR';
+              setImageLoaded(true);
             }}
           />
 
           {/* Overlay elements */}
           <AnimatePresence>
             {isHovered && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -97,7 +106,7 @@ const ProductCard = ({ product, index = 0 }) => {
           )}
 
           {/* Animated line at bottom */}
-          <motion.div 
+          <motion.div
             className="absolute bottom-0 left-0 h-[2px] bg-accent z-20"
             initial={{ width: 0 }}
             animate={{ width: isHovered ? '100%' : '0%' }}
@@ -128,6 +137,8 @@ const ProductCard = ({ product, index = 0 }) => {
       </Link>
     </motion.div>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;
