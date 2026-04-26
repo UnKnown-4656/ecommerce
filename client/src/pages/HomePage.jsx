@@ -8,14 +8,14 @@ import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
 
 const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=2032&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1976&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070&auto=format&fit=crop',
 ];
 
 const SIDE_IMAGES = [
-  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=687&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1581044777550-4cfa60707998?q=80&w=686&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=687&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=687&auto=format&fit=crop',
 ];
 
 const HomePage = () => {
@@ -365,8 +365,8 @@ const HomePage = () => {
             className="relative overflow-hidden"
           >
             <img
-              src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop"
-              alt="Editorial fashion"
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"
+              alt="Fashion store editorial"
               className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000"
               loading="lazy"
             />
@@ -486,8 +486,8 @@ const HomePage = () => {
               className="relative aspect-[4/5] overflow-hidden"
             >
               <img
-                src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1974&auto=format&fit=crop"
-                alt="Philosophy"
+                src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1974&auto=format&fit=crop"
+                alt="Fashion craftsmanship"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                 loading="lazy"
               />

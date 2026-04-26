@@ -51,8 +51,25 @@ const CheckoutPage = () => {
   };
 
   if (cart.length === 0) {
-    navigate('/shop');
-    return null;
+    return (
+      <div style={{ background: '#0a0a0a', minHeight: '100vh' }}>
+        <div className="max-w-md mx-auto px-6 py-32 text-center">
+          <div className="w-20 h-20 mx-auto mb-6 border border-border rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h1 className="font-display text-3xl text-text mb-3">Your Cart is Empty</h1>
+          <p className="text-muted text-sm mb-8">Add some items to your cart before checking out.</p>
+          <button
+            onClick={() => navigate('/shop')}
+            className="btn-primary"
+          >
+            Browse Collection
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
