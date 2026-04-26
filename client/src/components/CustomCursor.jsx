@@ -1,58 +1,73 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+
+  const springConfig = { damping: 25, stiffness: 200 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
   useEffect(() => {
-    const dot = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    
     const moveCursor = (e) => {
-      dot.style.left = e.clientX - 2 + 'px';
-      dot.style.top = e.clientY - 2 + 'px';
-      ring.style.left = e.clientX - 9 + 'px';
-      ring.style.top = e.clientY - 9 + 'px';
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      if (!isVisible) setIsVisible(true);
     };
 
-    const growCursor = () => {
-      ring.style.width = '40px';
-      ring.style.height = '40px';
-      ring.style.left = 'calc(' + ring.style.left + ' - 11px)';
-      ring.style.top = 'calc(' + ring.style.top + ' - 11px)';
-      ring.style.background = 'rgba(184,146,46,0.15)';
-    };
-
-    const shrinkCursor = () => {
-      ring.style.width = '18px';
-      ring.style.height = '18px';
-      ring.style.left = 'calc(' + ring.style.left + ' + 11px)';
-      ring.style.top = 'calc(' + ring.style.top + ' + 11px)';
-      ring.style.background = 'transparent';
-    };
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
 
     window.addEventListener('mousemove', moveCursor);
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', growCursor);
-      el.addEventListener('mouseleave', shrinkCursor);
+
+    const interactiveElements = document.querySelectorAll('a, button, .interactive');
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', handleMouseEnter);
+      el.addEventListener('mouseleave', handleMouseLeave);
     });
 
-    return () => window.removeEventListener('mousemove', moveCursor);
-  }, []);
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      interactiveElements.forEach(el => {
+        el.removeEventListener('mouseenter', handleMouseEnter);
+        el.removeEventListener('mouseleave', handleMouseLeave);
+      });
+    };
+  }, [isVisible]);
+
+  if (!isVisible) return null;
 
   return (
     <>
-      <div id="cursor-dot" style={{
-        width: '4px', height: '4px',
-        background: '#b8922e', borderRadius: '50%',
-        position: 'fixed', pointerEvents: 'none', zIndex: 9999,
-        mixBlendMode: 'difference'
-      }} />
-      <div id="cursor-ring" style={{
-        width: '18px', height: '18px',
-        border: '2px solid #b8922e',
-        borderRadius: '50%', position: 'fixed',
-        pointerEvents: 'none', zIndex: 9998,
-        transition: 'all 0.15s ease',
-        mixBlendMode: 'difference'
-      }} />
+      <motion.div
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent rounded-full pointer-events-none z-[9999]"
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: '-50%',
+          translateY: '-50%',
+        }}
+      />
+      <motion.div
+        className="fixed top-0 left-0 border border-accent rounded-full pointer-events-none z-[9998]"
+        animate={{
+          width: isHovered ? 60 : 30,
+          height: isHovered ? 60 : 30,
+          backgroundColor: isHovered ? 'rgba(184, 146, 46, 0.1)' : 'rgba(184, 146, 46, 0)',
+          borderColor: isHovered ? 'rgba(184, 146, 46, 0.5)' : 'rgba(184, 146, 46, 0.3)',
+        }}
+        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: '-50%',
+          translateY: '-50%',
+        }}
+      />
     </>
   );
 };

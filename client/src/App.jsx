@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -22,67 +22,58 @@ import Toast from './components/Toast';
 import CustomCursor from './components/CustomCursor';
 import { useCart } from './context/CartContext';
 
+const PageTransition = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 function App() {
   const location = useLocation();
-  const { isCartOpen } = useCart();
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const { isCartOpen, setIsCartOpen } = useCart();
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
-      setScrollProgress(scrollPercent);
-      setShowScrollTop(scrollTop > 300);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-bg text-text font-sans selection:bg-accent/30 selection:text-accent">
       <CustomCursor />
-      <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
-      <Header />
-      <main className="flex-1">
+      <Header onOpenCart={() => setIsCartOpen(true)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <Toast />
+      
+      <main className="pt-20">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/shop" element={<ShopPage />} />
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/order-success" element={<OrderSuccessPage />} />
-            <Route path="/track-order" element={<TrackOrderPage />} />
-            <Route path="/order/:id" element={<OrderTrackingPage />} />
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/orders" element={<AdminOrdersPage />} />
-            <Route path="/admin/products" element={<AdminProductsPage />} />
-            <Route path="/admin/products/add" element={<AdminAddProductPage />} />
-            <Route path="/admin/products/edit/:id" element={<AdminEditProductPage />} />
+            <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+            <Route path="/shop" element={<PageTransition><ShopPage /></PageTransition>} />
+            <Route path="/product/:id" element={<PageTransition><ProductDetailPage /></PageTransition>} />
+            <Route path="/cart" element={<PageTransition><CartPage /></PageTransition>} />
+            <Route path="/checkout" element={<PageTransition><CheckoutPage /></PageTransition>} />
+            <Route path="/order-success" element={<PageTransition><OrderSuccessPage /></PageTransition>} />
+            <Route path="/order/:id" element={<PageTransition><OrderTrackingPage /></PageTransition>} />
+            <Route path="/track-order" element={<PageTransition><TrackOrderPage /></PageTransition>} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<PageTransition><AdminLoginPage /></PageTransition>} />
+            <Route path="/admin" element={<PageTransition><AdminDashboard /></PageTransition>} />
+            <Route path="/admin/orders" element={<PageTransition><AdminOrdersPage /></PageTransition>} />
+            <Route path="/admin/products" element={<PageTransition><AdminProductsPage /></PageTransition>} />
+            <Route path="/admin/products/add" element={<PageTransition><AdminAddProductPage /></PageTransition>} />
+            <Route path="/admin/products/edit/:id" element={<PageTransition><AdminEditProductPage /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
+
       <Footer />
-      <CartDrawer isOpen={isCartOpen} />
-      <Toast />
-      <button
-        onClick={scrollToTop}
-        className={`scroll-to-top w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-lg hover:bg-accent-hover transition-all ${showScrollTop ? '' : 'hidden'}`}
-        aria-label="Scroll to top"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
-      <div className="grain-overlay" />
     </div>
   );
 }
