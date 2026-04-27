@@ -70,7 +70,7 @@ const ProductDetailPage = () => {
   }
 
   const imageUrl = product.image_url?.startsWith('http')
-    ? `${product.image_url}${product.image_url.includes('?') ? '&' : '?'}q=80&w=1200`
+    ? `${product.image_url}${product.image_url.includes('?') ? '&' : '?'}q=70&w=1200`
     : `https://ecommerce-ahmv.onrender.com${product.image_url}`;
 
   return (
@@ -94,6 +94,10 @@ const ProductDetailPage = () => {
                   src={imageUrl}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                  width="600"
+                  height="800"
                   onError={(e) => {
                     e.target.src = 'https://placehold.co/600x800/111/1e1e1e?text=NOIR';
                   }}

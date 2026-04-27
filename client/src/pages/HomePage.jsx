@@ -6,14 +6,14 @@ import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
 
 const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1920',
-  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=80&w=1920',
-  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1920'
+  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=70&w=1920',
+  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=70&w=1920',
+  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=70&w=1920'
 ];
 
 const SIDE_IMAGES = [
-  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600'
+  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=70&w=600',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=70&w=600'
 ];
 
 const HomePage = () => {
@@ -66,6 +66,7 @@ const HomePage = () => {
               className="w-full h-full object-cover grayscale-[20%]"
               fetchPriority="high"
               loading="eager"
+              decoding="async"
               width="1920"
               height="1080"
               onLoad={(e) => {
@@ -96,6 +97,7 @@ const HomePage = () => {
                 width="176"
                 height="256"
                 loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="absolute -bottom-4 -right-4 w-24 h-32 border border-accent/10 bg-surface -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
@@ -117,6 +119,7 @@ const HomePage = () => {
                 width="144"
                 height="208"
                 loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="absolute -top-4 -left-4 w-20 h-28 border border-accent/10 bg-surface -z-10 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-transform duration-700" />
@@ -265,9 +268,9 @@ const HomePage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: 'Outerwear', desc: 'Timeless coats & jackets', img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop' },
-              { title: 'Essentials', desc: 'Refined basics', img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop' },
-              { title: 'Accessories', desc: 'Finishing touches', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop' },
+              { title: 'Outerwear', desc: 'Timeless coats & jackets', img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=70&w=800&auto=format&fit=crop' },
+              { title: 'Essentials', desc: 'Refined basics', img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=70&w=800&auto=format&fit=crop' },
+              { title: 'Accessories', desc: 'Finishing touches', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=70&w=800&auto=format&fit=crop' },
             ].map((category, i) => (
               <motion.div
                 key={category.title}
@@ -282,6 +285,7 @@ const HomePage = () => {
                     alt={category.title}
                     className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
                     loading="lazy"
+                    decoding="async"
                     width="400"
                     height="533"
                   />
