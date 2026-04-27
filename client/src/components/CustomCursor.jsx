@@ -1,18 +1,14 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const observerRef = useRef(null);
-
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const springConfig = { damping: 25, stiffness: 200 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
+  const posRef = useRef({ x: -100, y: -100 });
+  const ringPosRef = useRef({ x: -100, y: -100 });
+  const rafRef = useRef(null);
 
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
@@ -29,23 +25,20 @@ const CustomCursor = () => {
   }, [handleMouseEnter, handleMouseLeave]);
 
   useEffect(() => {
-    // Skip custom cursor on touch devices
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
       setIsTouchDevice(true);
       return;
     }
 
     const moveCursor = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+      posRef.current = { x: e.clientX, y: e.clientY };
       if (!isVisible) setIsVisible(true);
     };
 
     window.addEventListener('mousemove', moveCursor, { passive: true });
     attachListeners();
 
-    // Use MutationObserver to handle dynamically added elements
-    observerRef.current = new MutationObserver((mutations) => {
+    const observerRef = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.addedNodes.length > 0) {
           mutation.addedNodes.forEach((node) => {
@@ -57,47 +50,48 @@ const CustomCursor = () => {
       }
     });
 
-    observerRef.current.observe(document.body, {
+    observerRef.observe(document.body, {
       childList: true,
       subtree: true,
     });
 
+    const animate = () => {
+      const { x, y } = posRef.current;
+      const ring = ringRef.current;
+      const dot = dotRef.current;
+
+      if (ring && dot) {
+        ringPosRef.current.x += (x - ringPosRef.current.x) * 0.12;
+        ringPosRef.current.y += (y - ringPosRef.current.y) * 0.12;
+
+        ring.style.transform = `translate(${ringPosRef.current.x - 20}px, ${ringPosRef.current.y - 20}px)`;
+        dot.style.transform = `translate(${x - 2}px, ${y - 2}px)`;
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+      observerRef.disconnect();
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [isVisible, attachListeners, cursorX, cursorY]);
+  }, [isVisible, attachListeners]);
 
   if (isTouchDevice || !isVisible) return null;
 
   return (
     <>
-      <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent rounded-full pointer-events-none z-[9999]"
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 w-1 h-1 bg-accent rounded-full pointer-events-none z-[9999] transition-opacity duration-200"
+        style={{ opacity: isVisible ? 1 : 0 }}
       />
-      <motion.div
-        className="fixed top-0 left-0 border border-accent rounded-full pointer-events-none z-[9998]"
-        animate={{
-          width: isHovered ? 60 : 30,
-          height: isHovered ? 60 : 30,
-          backgroundColor: isHovered ? 'rgba(184, 146, 46, 0.1)' : 'rgba(184, 146, 46, 0)',
-          borderColor: isHovered ? 'rgba(184, 146, 46, 0.5)' : 'rgba(184, 146, 46, 0.3)',
-        }}
-        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
+      <div
+        ref={ringRef}
+        className={`fixed top-0 left-0 w-10 h-10 border border-accent/40 rounded-full pointer-events-none z-[9998] transition-all duration-150 ${isHovered ? 'w-14 h-14 bg-accent/10 border-accent/60' : ''}`}
       />
     </>
   );

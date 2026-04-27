@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
+import { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
@@ -21,7 +19,6 @@ const SIDE_IMAGES = [
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [init, setInit] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [heroLoaded, setHeroLoaded] = useState(false);
 
@@ -30,7 +27,6 @@ const HomePage = () => {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.15]);
 
-  // Cycle hero images
   useEffect(() => {
     const interval = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
@@ -38,7 +34,6 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Preload hero images
   useEffect(() => {
     let loaded = 0;
     HERO_IMAGES.forEach((src) => {
@@ -52,12 +47,6 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
@@ -71,67 +60,35 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-  const particlesOptions = useMemo(() => ({
-    background: { color: { value: "transparent" } },
-    fpsLimit: 60,
-    interactivity: {
-      events: {
-        onHover: { enable: true, mode: "grab" },
-      },
-      modes: {
-        grab: { distance: 140, links: { opacity: 0.5 } },
-      },
-    },
-    particles: {
-      color: { value: "#b8922e" },
-      links: { color: "#b8922e", distance: 150, enable: false, opacity: 0.15, width: 1 },
-      move: { direction: "none", enable: true, outModes: { default: "out" }, random: true, speed: 0.3, straight: false },
-      number: { density: { enable: true, area: 1200 }, value: 25 },
-      opacity: { value: { min: 0.1, max: 0.3 } },
-      shape: { type: "circle" },
-      size: { value: { min: 1, max: 2 } },
-    },
-    detectRetina: true,
-  }), []);
-
   return (
     <div className="bg-bg">
-      {/* ═══════════════════════ HERO SECTION ═══════════════════════ */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background Slideshow */}
         <motion.div style={{ scale }} className="absolute inset-0 z-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={heroIndex}
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.8, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <img
-                src={HERO_IMAGES[heroIndex]}
-                alt="Hero Background"
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
-            </motion.div>
-          </AnimatePresence>
-          {/* Dark gradient overlays for text legibility */}
+          <motion.div
+            key={heroIndex}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
+            className="absolute inset-0"
+          >
+            <img
+              src={HERO_IMAGES[heroIndex]}
+              alt="Hero Background"
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
         </motion.div>
 
-        {/* Particles */}
-        {init && (
-          <Particles
-            id="tsparticles"
-            options={particlesOptions}
-            className="absolute inset-0 z-10 pointer-events-none"
-          />
-        )}
+        <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/5 rounded-full blur-[60px] animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
 
-        {/* Floating Side Fashion Images (desktop only) */}
         <motion.div
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
@@ -172,13 +129,11 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        {/* Content Layer */}
         <div className="relative z-20 text-center px-6">
           <motion.div
             style={{ opacity }}
             className="max-w-5xl mx-auto"
           >
-            {/* Top decorative line */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -215,7 +170,6 @@ const HomePage = () => {
                 <span className="italic font-normal">CO.</span>
               </motion.h1>
 
-              {/* Ghost watermark text */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.04 }}
@@ -226,7 +180,6 @@ const HomePage = () => {
               </motion.div>
             </div>
 
-            {/* Animated accent line */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -265,7 +218,6 @@ const HomePage = () => {
               </Link>
             </motion.div>
 
-            {/* Hero image slideshow indicators */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -288,7 +240,6 @@ const HomePage = () => {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -303,14 +254,12 @@ const HomePage = () => {
           />
         </motion.div>
 
-        {/* Corner decorative elements */}
         <div className="absolute top-8 left-8 w-16 h-16 border-l border-t border-accent/15 z-20 hidden md:block" />
         <div className="absolute bottom-8 right-8 w-16 h-16 border-r border-b border-accent/15 z-20 hidden md:block" />
       </section>
 
       <MarqueeStrip />
 
-      {/* ═══════════════════════ FEATURED GALLERY ═══════════════════════ */}
       <section className="py-24 md:py-40 border-t border-border relative overflow-hidden">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
@@ -347,213 +296,114 @@ const HomePage = () => {
               ))}
             </div>
           ) : (
-            <p className="font-display text-2xl italic text-muted text-center py-20">
-              No products found.
-            </p>
+            <div className="text-center py-20">
+              <p className="text-muted text-sm tracking-wider uppercase">No products available</p>
+            </div>
           )}
         </div>
       </section>
 
-      {/* ═══════════════════════ EDITORIAL SPLIT SECTION ═══════════════════════ */}
-      <section className="py-0 border-t border-border">
-        <div className="grid lg:grid-cols-2 min-h-[80vh]">
+      <section className="py-32 md:py-48 relative overflow-hidden bg-surface">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2 }}
-            className="relative overflow-hidden"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"
-              alt="Fashion store editorial"
-              className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-10 left-10 right-10">
-              <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-accent mb-3">Editorial</p>
-              <h3 className="font-display text-3xl md:text-4xl text-white leading-tight">
-                The Art of<br /><span className="italic">Understated Luxury</span>
-              </h3>
-            </div>
-          </motion.div>
-          <div className="flex items-center justify-center px-12 md:px-20 py-20 lg:py-0 bg-surface/20">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-md"
-            >
-              <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-6">Our Vision</p>
-              <h2 className="font-display text-4xl md:text-5xl font-light text-text mb-8 leading-tight">
-                Where Fashion <br />Meets <span className="text-accent italic">Intention</span>
-              </h2>
-              <div className="h-px bg-accent/40 w-16 mb-8" />
-              <p className="text-muted font-sans text-sm leading-relaxed mb-6">
-                We don't follow trends — we set them. Every stitch, every fabric choice,
-                every silhouette is deliberately crafted to empower those who wear our pieces
-                with quiet confidence.
-              </p>
-              <p className="text-muted font-sans text-sm leading-relaxed mb-10">
-                From sustainably sourced textiles to zero-waste production, NOIR & CO.
-                proves that luxury and responsibility can coexist beautifully.
-              </p>
-              <Link to="/shop" className="btn-secondary">
-                Explore the Vision
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════ QUOTE SECTION ═══════════════════════ */}
-      <section className="py-24 md:py-40 bg-surface/30">
-        <div className="max-w-container mx-auto px-6 md:px-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            className="relative"
           >
-            <span className="font-display text-[15vw] text-white/[0.03] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none italic">
-              Legacy
-            </span>
-            <p className="font-display text-2xl md:text-4xl lg:text-5xl italic text-text leading-relaxed max-w-4xl mx-auto relative z-10">
-              "Style is a way to say who you are without having to speak."
+            <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-accent mb-8">Our Philosophy</p>
+            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-12">
+              "Luxury is in the <br />
+              <span className="italic text-accent">details</span>"
+            </h2>
+            <p className="text-muted/70 text-sm md:text-base tracking-wide max-w-2xl mx-auto leading-relaxed">
+              Every stitch, every fabric choice, every silhouette is meticulously crafted to embody 
+              the essence of modern elegance. We believe in pieces that transcend seasons and speak 
+              to the soul of discerning individuals.
             </p>
           </motion.div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="h-px bg-accent w-12 mx-auto mt-12 origin-left"
-          />
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted mt-8"
-          >
-            — Rachel Zoe
-          </motion.p>
         </div>
       </section>
 
-      {/* ═══════════════════════ PHILOSOPHY ═══════════════════════ */}
-      <section className="py-32 md:py-48 border-t border-border">
+      <section className="py-24 md:py-40 border-t border-border">
         <div className="max-w-container mx-auto px-6 md:px-12">
-          <div className="grid lg:grid-cols-2 gap-20 lg:gap-32 items-center">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, ease: "easeOut" }}
+              transition={{ duration: 0.8 }}
             >
-              <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-6">Our Philosophy</p>
-              <h2 className="font-display text-5xl md:text-6xl lg:text-7xl font-light text-text mb-10 leading-[1.1]">
-                Crafted With<br />
-                <span className="text-accent italic">Purpose</span>
+              <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted mb-4">Categories</p>
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-text">
+                Shop by <span className="italic text-accent">Style</span>
               </h2>
-              <div className="h-px bg-accent w-12 mb-10" />
-              <div className="space-y-6 text-muted font-sans text-sm md:text-base leading-relaxed max-w-md">
-                <p>
-                  Each piece in our collection is thoughtfully designed to transcend seasons and trends.
-                  We believe in investing in quality over quantity, creating garments that become
-                  timeless staples in your wardrobe.
-                </p>
-                <p>
-                  Our commitment to sustainable practices ensures that every creation leaves
-                  minimal impact on the environment while maximizing style and comfort.
-                </p>
-              </div>
-              <motion.div className="mt-12" whileHover={{ x: 10 }}>
-                <Link to="/shop" className="btn-secondary">
-                  Discover Our Story
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2 }}
-              className="relative aspect-[4/5] overflow-hidden"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1974&auto=format&fit=crop"
-                alt="Fashion craftsmanship"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 border-[20px] border-bg/50 pointer-events-none" />
             </motion.div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══════════════════════ VALUES ═══════════════════════ */}
-      <section className="py-24 md:py-32 border-t border-border">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <div className="grid md:grid-cols-3 gap-16 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { num: '01', title: 'Timeless Design', desc: 'Each piece is crafted to remain relevant beyond fleeting trends, becoming a lasting element of your personal style.' },
-              { num: '02', title: 'Premium Quality', desc: 'We source only the finest materials and partner with skilled artisans who share our commitment to excellence.' },
-              { num: '03', title: 'Sustainable Practice', desc: 'From production to packaging, we prioritize environmental responsibility at every step of our process.' },
-            ].map((item, index) => (
+              { title: 'Outerwear', desc: 'Timeless coats & jackets', img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop' },
+              { title: 'Essentials', desc: 'Refined basics', img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop' },
+              { title: 'Accessories', desc: 'Finishing touches', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop' },
+            ].map((category, i) => (
               <motion.div
-                key={item.title}
+                key={category.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="text-center group"
+                transition={{ delay: i * 0.15, duration: 0.8 }}
               >
-                <span className="font-mono text-accent/30 text-xs tracking-widest mb-6 block">{item.num}</span>
-                <div className="h-px w-8 bg-accent/30 mx-auto mb-8 group-hover:w-16 transition-all duration-500" />
-                <h3 className="font-display text-2xl text-text mb-6 tracking-wide group-hover:text-accent transition-colors">{item.title}</h3>
-                <p className="font-sans text-[13px] text-muted leading-relaxed px-4">{item.desc}</p>
+                <Link to="/shop" className="group block relative aspect-[3/4] overflow-hidden">
+                  <img
+                    src={category.img}
+                    alt={category.title}
+                    className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-8">
+                    <p className="text-[9px] uppercase tracking-[0.3em] text-accent mb-2">{category.desc}</p>
+                    <h3 className="font-display text-2xl md:text-3xl text-text">{category.title}</h3>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════ NEWSLETTER CTA ═══════════════════════ */}
-      <section className="py-24 md:py-32 bg-surface/40 border-t border-border">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <p className="font-sans text-[9px] tracking-[0.4em] uppercase text-muted mb-6">Stay Connected</p>
-            <h2 className="font-display text-3xl md:text-5xl font-light text-text mb-6">
-              Join the <span className="italic text-accent">Inner Circle</span>
-            </h2>
-            <p className="font-sans text-sm text-muted leading-relaxed mb-10">
-              Be the first to know about new collections, exclusive events, and special offers.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <section className="py-24 border-t border-border bg-surface/50">
+        <div className="max-w-container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-center md:text-left"
+            >
+              <h3 className="font-display text-2xl md:text-3xl text-text mb-4">Join the NOIR Circle</h3>
+              <p className="text-muted text-sm tracking-wide">Be the first to know about new collections and exclusive offers.</p>
+            </motion.div>
+            <motion.form
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex w-full md:w-auto"
+            >
               <input
                 type="email"
-                placeholder="Your email address"
-                className="flex-1 px-6 py-4 bg-bg border border-border text-text placeholder:text-muted/40 text-sm focus:outline-none focus:border-accent transition-colors"
+                placeholder="Your email"
+                className="flex-1 md:w-80 px-6 py-4 bg-transparent border border-border text-text text-sm focus:border-accent focus:outline-none transition-colors"
               />
-              <button className="btn-primary px-8 py-4 whitespace-nowrap">
+              <button
+                type="submit"
+                className="px-10 py-4 bg-accent text-bg text-[10px] uppercase tracking-[0.2em] hover:bg-accent-hover transition-colors"
+              >
                 Subscribe
               </button>
-            </div>
-            <p className="font-sans text-[10px] text-muted/50 mt-4 tracking-wide">
-              No spam. Unsubscribe anytime.
-            </p>
-          </motion.div>
+            </motion.form>
+          </div>
         </div>
       </section>
     </div>
