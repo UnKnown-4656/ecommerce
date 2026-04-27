@@ -70,7 +70,7 @@ const ProductDetailPage = () => {
   }
 
   const imageUrl = product.image_url?.startsWith('http')
-    ? product.image_url
+    ? `${product.image_url}${product.image_url.includes('?') ? '&' : '?'}fm=webp&q=80&w=1200`
     : `https://ecommerce-ahmv.onrender.com${product.image_url}`;
 
   return (

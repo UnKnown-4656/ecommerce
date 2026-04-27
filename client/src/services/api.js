@@ -26,11 +26,15 @@ class ApiClient {
     const response = await fetch(`${this.baseURL}${url}`, config);
     
     if (!response.ok) {
+      // Don't throw error for 401 - it's expected for unauthenticated users
+      if (response.status === 401) {
+        return { data: null, status: 401, error: 'Unauthorized' };
+      }
       const error = await response.json().catch(() => ({ message: 'Request failed' }));
       throw new Error(error.message || error.errors?.[0]?.msg || 'Request failed');
     }
 
-    return { data: await response.json() };
+    return { data: await response.json(), status: response.status };
   }
 
   get(url, options) {

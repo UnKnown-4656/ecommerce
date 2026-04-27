@@ -6,14 +6,14 @@ import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
 
 const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1920&fm=webp',
+  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=80&w=1920&fm=webp',
+  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1920&fm=webp'
 ];
 
 const SIDE_IMAGES = [
-  'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=687&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=687&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600&fm=webp',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600&fm=webp'
 ];
 
 const HomePage = () => {
@@ -24,6 +24,7 @@ const HomePage = () => {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
+  const textY = useTransform(scrollY, [0, 500], [0, 150]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,50 +48,46 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="bg-bg">
-      {/* ═══════════════════════ HERO SECTION ═══════════════════════ */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
-        {/* Animated Background Slideshow - Optimized for CLS */}
-        <motion.div style={{ scale }} className="absolute inset-0 z-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={heroIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-              className="absolute inset-0 bg-black"
-            >
-              <img
-                src={HERO_IMAGES[heroIndex]}
-                alt="Noir & Co Luxury Fashion"
-                className="w-full h-full object-cover grayscale-[20%]"
-                fetchPriority={heroIndex === 0 ? "high" : "low"}
-                loading={heroIndex === 0 ? "eager" : "lazy"}
-                width="1920"
-                height="1080"
-              />
-            </motion.div>
-          </AnimatePresence>
-          {/* Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
-        </motion.div>
+  <div className="bg-bg overflow-x-hidden">
+      
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"><AnimatePresence mode="wait">
+          <motion.div
+            key={heroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute inset-0 bg-black"
+          >
+            <img
+              src={HERO_IMAGES[heroIndex]}
+              alt="Noir & Co Luxury Fashion"
+              className="w-full h-full object-cover grayscale-[20%]"
+              fetchPriority="high"
+              loading="eager"
+              width="1920"
+              height="1080"
+              onLoad={(e) => {
+                // Preload next image
+                const nextIndex = (heroIndex + 1) % HERO_IMAGES.length;
+                const img = new Image();
+                img.src = HERO_IMAGES[nextIndex];
+              }}
+            />
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Lightweight Gradient Blurs (Alternative to Particles) */}
-        <div className="absolute inset-0 z-[11] pointer-events-none overflow-hidden opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
 
-        {/* Side Images - Floating */}
-        <motion.div
-          initial={{ opacity: 0, x: -60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1, duration: 1.5, ease: "easeOut" }}
-          className="hidden xl:block absolute left-12 top-1/2 -translate-y-1/2 z-20"
-        >
-          <div className="relative group">
+        {/* Floating Editorial Images (Fixed positions to avoid shift) */}
+        <div className="absolute top-1/4 left-12 z-20 hidden lg:block">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="group relative"
+          >
             <div className="w-44 h-64 overflow-hidden border border-accent/20 bg-surface">
               <img
                 src={SIDE_IMAGES[0]}
@@ -101,18 +98,17 @@ const HomePage = () => {
                 loading="lazy"
               />
             </div>
-            <div className="absolute -bottom-3 -right-3 w-full h-full border border-accent/10 -z-10" />
-            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">Collection 26</p>
-          </div>
-        </motion.div>
+            <div className="absolute -bottom-4 -right-4 w-24 h-32 border border-accent/10 bg-surface -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
+          </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.3, duration: 1.5, ease: "easeOut" }}
-          className="hidden xl:block absolute right-12 top-1/2 -translate-y-[40%] z-20"
-        >
-          <div className="relative group">
+        <div className="absolute bottom-1/4 right-12 z-20 hidden lg:block">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7, duration: 1 }}
+            className="group relative"
+          >
             <div className="w-36 h-52 overflow-hidden border border-accent/20 bg-surface">
               <img
                 src={SIDE_IMAGES[1]}
@@ -123,114 +119,47 @@ const HomePage = () => {
                 loading="lazy"
               />
             </div>
-            <div className="absolute -top-3 -left-3 w-full h-full border border-accent/10 -z-10" />
-            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">Haute Couture</p>
-          </div>
-        </motion.div>
-
-        {/* Main Content */}
-        <div className="relative z-20 text-center px-6">
-          <motion.div style={{ opacity }} className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 0.2, duration: 1.2 }}
-              className="h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent w-48 mx-auto mb-10"
-            />
-
-            <motion.p
-              initial={{ opacity: 0, letterSpacing: "1.5em" }}
-              animate={{ opacity: 1, letterSpacing: "0.6em" }}
-              transition={{ duration: 1.5 }}
-              className="font-sans text-[10px] md:text-[12px] uppercase text-accent mb-8"
-            >
-              The 2026 Collection
-            </motion.p>
-
-            <div className="relative mb-10">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 1.2 }}
-                className="font-display text-[clamp(3rem,10vw,10rem)] font-light leading-[0.85] tracking-tight text-text"
-              >
-                NOIR
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="text-accent mx-4 inline-block"
-                >
-                  &
-                </motion.span>
-                <br />
-                <span className="italic font-normal">CO.</span>
-              </motion.h1>
-
-              {/* Ghost watermark text */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.05 }}
-                transition={{ delay: 1, duration: 2 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[25vw] font-bold text-white select-none pointer-events-none leading-none z-[-1]"
-              >
-                NOIR
-              </motion.div>
-            </div>
-
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 1 }}
-              className="h-px bg-accent/50 w-24 mx-auto mb-10"
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-              className="font-sans text-[11px] md:text-[13px] tracking-[0.2em] uppercase text-muted/80 mb-14 max-w-lg mx-auto leading-relaxed"
-            >
-              Defining the future of luxury through minimal design <br className="hidden md:block" /> and impeccable craftsmanship.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-            >
-              <Link
-                to="/shop"
-                className="group relative overflow-hidden px-14 py-5 text-[11px] tracking-[0.3em] uppercase font-medium bg-accent text-bg transition-all duration-500"
-              >
-                <span className="relative z-10">Shop Collection</span>
-                <div className="absolute inset-0 bg-accent-hover transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              </Link>
-              <Link
-                to="/shop"
-                className="group flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-text hover:text-accent transition-colors"
-              >
-                <span>Our Story</span>
-                <div className="w-8 h-px bg-text group-hover:bg-accent group-hover:w-14 transition-all duration-300" />
-              </Link>
-            </motion.div>
-
-            {/* Slideshow indicators */}
-            <div className="flex items-center gap-3 justify-center mt-16">
-              {HERO_IMAGES.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setHeroIndex(i)}
-                  className={`transition-all duration-500 h-[2px] ${
-                    i === heroIndex ? 'w-8 bg-accent' : 'w-3 bg-muted/30 hover:bg-muted/60'
-                  }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
+            <div className="absolute -top-4 -left-4 w-20 h-28 border border-accent/10 bg-surface -z-10 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-transform duration-700" />
           </motion.div>
         </div>
+
+        <motion.div 
+          style={{ y: textY }}
+          className="relative z-20 text-center px-4 max-w-4xl mx-auto"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="mb-8"
+          >
+            <span className="font-sans text-[10px] md:text-xs tracking-[0.6em] uppercase text-accent mb-4 block">
+              Redefining Modern Elegance
+            </span>
+            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-text leading-none tracking-tighter mb-6">
+              NOIR <span className="italic text-muted/30">&</span> CO.
+            </h1>
+            <p className="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-muted/80 max-w-xl mx-auto leading-relaxed">
+              Where minimal design meets impeccable craftsmanship.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-8 mt-12"
+          >
+            <Link to="/shop" className="group relative overflow-hidden px-14 py-5 text-[11px] tracking-[0.3em] uppercase font-medium bg-accent text-bg transition-all duration-500">
+              <span className="relative z-10">Explore Collection</span>
+              <div className="absolute inset-0 bg-accent-hover transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </Link>
+            <Link to="/shop" className="group flex items-center gap-4 text-text/60 hover:text-accent transition-colors duration-300">
+              <span className="font-sans text-[10px] tracking-[0.4em] uppercase">View Lookbook</span>
+              <div className="w-10 h-[1px] bg-accent/30 group-hover:w-16 transition-all duration-500" />
+            </Link>
+          </motion.div>
+        </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
@@ -271,12 +200,12 @@ const HomePage = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-surface mb-5" />
-                  <div className="h-3 w-16 bg-surface mb-3" />
-                  <div className="h-5 w-32 bg-surface" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="space-y-4">
+                  <div className="aspect-[3/4] bg-surface overflow-hidden animate-pulse rounded-sm" />
+                  <div className="h-4 bg-surface w-2/3 animate-pulse rounded-sm" />
+                  <div className="h-4 bg-surface w-1/3 animate-pulse rounded-sm" />
                 </div>
               ))}
             </div>

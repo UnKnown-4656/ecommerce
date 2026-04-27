@@ -10,6 +10,7 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'esnext',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -25,7 +26,9 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
       }
-    }
+    },
+    reportCompressedSize: false
   }
 });

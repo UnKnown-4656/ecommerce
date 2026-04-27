@@ -13,8 +13,13 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await api.get('/auth/me');
-        setUser(response.data);
+        if (response.status === 401) {
+          setUser(null);
+        } else {
+          setUser(response.data);
+        }
       } catch (error) {
+        // Silently handle auth check failure - user is not logged in
         setUser(null);
       } finally {
         setLoading(false);
