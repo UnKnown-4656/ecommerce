@@ -1,28 +1,22 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const dotRef = useRef(null);
-  const ringRef = useRef(null);
-  const posRef = useRef({ x: -100, y: -100 });
-  const ringPosRef = useRef({ x: -100, y: -100 });
-  const rafRef = useRef(null);
+
+  // High-performance motion values
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  // Smooth springs for the outer ring
+  const springConfig = { damping: 30, stiffness: 250, mass: 0.5 };
+  const ringX = useSpring(mouseX, springConfig);
+  const ringY = useSpring(mouseY, springConfig);
 
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
-
-  const attachListeners = useCallback((root = document) => {
-    const elements = root.querySelectorAll('a, button, input, select, textarea, .interactive, [role="button"]');
-    elements.forEach(el => {
-      if (!el.dataset.cursorAttached) {
-        el.addEventListener('mouseenter', handleMouseEnter);
-        el.addEventListener('mouseleave', handleMouseLeave);
-        el.dataset.cursorAttached = 'true';
-      }
-    });
-  }, [handleMouseEnter, handleMouseLeave]);
 
   useEffect(() => {
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -31,69 +25,94 @@ const CustomCursor = () => {
     }
 
     const moveCursor = (e) => {
-      posRef.current = { x: e.clientX, y: e.clientY };
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
       if (!isVisible) setIsVisible(true);
+    };
+
+    const attachListeners = (root = document) => {
+      const elements = root.querySelectorAll('a, button, input, select, textarea, .interactive, [role="button"]');
+      elements.forEach(el => {
+        if (!el.dataset.cursorAttached) {
+          el.addEventListener('mouseenter', handleMouseEnter);
+          el.addEventListener('mouseleave', handleMouseLeave);
+          el.dataset.cursorAttached = 'true';
+        }
+      });
     };
 
     window.addEventListener('mousemove', moveCursor, { passive: true });
     attachListeners();
 
-    const observerRef = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
         if (mutation.addedNodes.length > 0) {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1) {
-              attachListeners(node);
-            }
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) attachListeners(node);
           });
         }
-      }
+      });
     });
 
-    observerRef.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    const animate = () => {
-      const { x, y } = posRef.current;
-      const ring = ringRef.current;
-      const dot = dotRef.current;
-
-      if (ring && dot) {
-        ringPosRef.current.x += (x - ringPosRef.current.x) * 0.12;
-        ringPosRef.current.y += (y - ringPosRef.current.y) * 0.12;
-
-        ring.style.transform = `translate(${ringPosRef.current.x - 20}px, ${ringPosRef.current.y - 20}px)`;
-        dot.style.transform = `translate(${x - 2}px, ${y - 2}px)`;
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
+    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      observerRef.disconnect();
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
     };
-  }, [isVisible, attachListeners]);
+  }, [isVisible, handleMouseEnter, handleMouseLeave, mouseX, mouseY]);
 
   if (isTouchDevice || !isVisible) return null;
 
   return (
-    <>
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 w-1 h-1 bg-accent rounded-full pointer-events-none z-[9999] transition-opacity duration-200"
-        style={{ opacity: isVisible ? 1 : 0 }}
+    <div className="fixed inset-0 pointer-events-none z-[9999]">
+      {/* Inner Dot - follows mouse exactly */}
+      <motion.div
+        className="absolute w-1.5 h-1.5 bg-accent rounded-full"
+        style={{
+          x: mouseX,
+          y: mouseY,
+          translateX: '-50%',
+          translateY: '-50%',
+          willChange: 'transform',
+        }}
       />
-      <div
-        ref={ringRef}
-        className={`fixed top-0 left-0 w-10 h-10 border border-accent/40 rounded-full pointer-events-none z-[9998] transition-all duration-150 ${isHovered ? 'w-14 h-14 bg-accent/10 border-accent/60' : ''}`}
+      
+      {/* Outer Ring - smooth trailing effect */}
+      <motion.div
+        className="absolute rounded-full border border-accent/40"
+        animate={{
+          width: isHovered ? 60 : 30,
+          height: isHovered ? 60 : 30,
+          backgroundColor: isHovered ? 'rgba(184, 146, 46, 0.15)' : 'rgba(184, 146, 46, 0)',
+          borderColor: isHovered ? 'rgba(184, 146, 46, 0.6)' : 'rgba(184, 146, 46, 0.3)',
+          borderWidth: isHovered ? '1.5px' : '1px',
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        style={{
+          x: ringX,
+          y: ringY,
+          translateX: '-50%',
+          translateY: '-50%',
+          willChange: 'transform, width, height',
+        }}
       />
-    </>
+
+      {/* Luxury Backdrop Blur for the ring on hover */}
+      {isHovered && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute w-20 h-20 bg-accent/5 blur-xl rounded-full"
+          style={{
+            x: ringX,
+            y: ringY,
+            translateX: '-50%',
+            translateY: '-50%',
+          }}
+        />
+      )}
+    </div>
   );
 };
 

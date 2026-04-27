@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
@@ -19,34 +21,20 @@ const SIDE_IMAGES = [
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [init, setInit] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [heroLoaded, setHeroLoaded] = useState(false);
 
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const scale = useTransform(scrollY, [0, 500], [1, 1.15]);
+  const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    let loaded = 0;
-    HERO_IMAGES.forEach((src) => {
-      const img = new Image();
-      img.onload = () => {
-        loaded++;
-        if (loaded === HERO_IMAGES.length) setHeroLoaded(true);
-      };
-      img.src = src;
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
     });
-  }, []);
 
-  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
@@ -60,91 +48,126 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const particlesOptions = useMemo(() => ({
+    background: { color: { value: "transparent" } },
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: { enable: true, mode: "bubble" },
+      },
+      modes: {
+        bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, color: "#b8922e" },
+      },
+    },
+    particles: {
+      color: { value: "#b8922e" },
+      move: { direction: "none", enable: true, outModes: { default: "out" }, random: true, speed: 0.4, straight: false },
+      number: { density: { enable: true, area: 1200 }, value: 30 },
+      opacity: { value: { min: 0.1, max: 0.3 } },
+      shape: { type: "circle" },
+      size: { value: { min: 1, max: 2 } },
+    },
+    detectRetina: true,
+  }), []);
+
   return (
     <div className="bg-bg">
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* ═══════════════════════ HERO SECTION ═══════════════════════ */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        {/* Animated Background Slideshow - Optimized for CLS */}
         <motion.div style={{ scale }} className="absolute inset-0 z-0">
-          <motion.div
-            key={heroIndex}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.8, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <img
-              src={HERO_IMAGES[heroIndex]}
-              alt="Hero Background"
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-10" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={heroIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <img
+                src={HERO_IMAGES[heroIndex]}
+                alt="Noir & Co Luxury Fashion"
+                className="w-full h-full object-cover grayscale-[20%]"
+                fetchpriority={heroIndex === 0 ? "high" : "low"}
+                loading={heroIndex === 0 ? "eager" : "lazy"}
+              />
+            </motion.div>
+          </AnimatePresence>
+          {/* Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
         </motion.div>
 
-        <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[100px] animate-pulse" />
-          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/5 rounded-full blur-[60px] animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
+        {/* Particles - Only init when engine is ready */}
+        {init && (
+          <Particles
+            id="tsparticles"
+            options={particlesOptions}
+            className="absolute inset-0 z-10 pointer-events-none"
+          />
+        )}
 
+        {/* Side Images - Floating */}
         <motion.div
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2, duration: 1.5, ease: "easeOut" }}
+          transition={{ delay: 1, duration: 1.5, ease: "easeOut" }}
           className="hidden xl:block absolute left-12 top-1/2 -translate-y-1/2 z-20"
         >
-          <div className="relative">
+          <div className="relative group">
             <div className="w-44 h-64 overflow-hidden border border-accent/20">
               <img
                 src={SIDE_IMAGES[0]}
-                alt="Fashion piece"
-                className="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition-all duration-1000"
-                loading="eager"
+                alt="Editorial Look 1"
+                className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
               />
             </div>
             <div className="absolute -bottom-3 -right-3 w-full h-full border border-accent/10 -z-10" />
-            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">SS 2026</p>
+            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">Collection 26</p>
           </div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2.3, duration: 1.5, ease: "easeOut" }}
+          transition={{ delay: 1.3, duration: 1.5, ease: "easeOut" }}
           className="hidden xl:block absolute right-12 top-1/2 -translate-y-[40%] z-20"
         >
-          <div className="relative">
+          <div className="relative group">
             <div className="w-36 h-52 overflow-hidden border border-accent/20">
               <img
                 src={SIDE_IMAGES[1]}
-                alt="Fashion piece"
-                className="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition-all duration-1000"
-                loading="eager"
+                alt="Editorial Look 2"
+                className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
               />
             </div>
             <div className="absolute -top-3 -left-3 w-full h-full border border-accent/10 -z-10" />
-            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">Exclusive</p>
+            <p className="font-sans text-[8px] tracking-[0.4em] uppercase text-muted/50 mt-4 text-center">Haute Couture</p>
           </div>
         </motion.div>
 
+        {/* Main Content */}
         <div className="relative z-20 text-center px-6">
-          <motion.div
-            style={{ opacity }}
-            className="max-w-5xl mx-auto"
-          >
+          <motion.div style={{ opacity }} className="max-w-5xl mx-auto">
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 0.3, duration: 1.2, ease: "easeInOut" }}
-              className="h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent w-48 mx-auto mb-10 origin-center"
+              transition={{ delay: 0.2, duration: 1.2 }}
+              className="h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent w-48 mx-auto mb-10"
             />
 
             <motion.p
               initial={{ opacity: 0, letterSpacing: "1.5em" }}
               animate={{ opacity: 1, letterSpacing: "0.6em" }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              transition={{ duration: 1.5 }}
               className="font-sans text-[10px] md:text-[12px] uppercase text-accent mb-8"
             >
               The 2026 Collection
@@ -152,16 +175,16 @@ const HomePage = () => {
 
             <div className="relative mb-10">
               <motion.h1
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: 0.4, duration: 1.2 }}
                 className="font-display text-[clamp(3rem,10vw,10rem)] font-light leading-[0.85] tracking-tight text-text"
               >
                 NOIR
                 <motion.span
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1, duration: 1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
                   className="text-accent mx-4 inline-block"
                 >
                   &
@@ -170,10 +193,11 @@ const HomePage = () => {
                 <span className="italic font-normal">CO.</span>
               </motion.h1>
 
+              {/* Ghost watermark text */}
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 0.04 }}
-                transition={{ delay: 1.2, duration: 2 }}
+                animate={{ opacity: 0.05 }}
+                transition={{ delay: 1, duration: 2 }}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[25vw] font-bold text-white select-none pointer-events-none leading-none z-[-1]"
               >
                 NOIR
@@ -183,14 +207,14 @@ const HomePage = () => {
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 1.2, duration: 1, ease: "easeInOut" }}
+              transition={{ delay: 1 }}
               className="h-px bg-accent/50 w-24 mx-auto mb-10"
             />
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.5, duration: 1 }}
+              transition={{ delay: 1.2 }}
               className="font-sans text-[11px] md:text-[13px] tracking-[0.2em] uppercase text-muted/80 mb-14 max-w-lg mx-auto leading-relaxed"
             >
               Defining the future of luxury through minimal design <br className="hidden md:block" /> and impeccable craftsmanship.
@@ -199,12 +223,12 @@ const HomePage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8, duration: 0.8 }}
+              transition={{ delay: 1.4 }}
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             >
               <Link
                 to="/shop"
-                className="group relative overflow-hidden px-14 py-5 text-[11px] tracking-[0.3em] uppercase font-medium bg-accent text-bg transition-all duration-500 hover:shadow-[0_0_40px_rgba(184,146,46,0.3)]"
+                className="group relative overflow-hidden px-14 py-5 text-[11px] tracking-[0.3em] uppercase font-medium bg-accent text-bg transition-all duration-500"
               >
                 <span className="relative z-10">Shop Collection</span>
                 <div className="absolute inset-0 bg-accent-hover transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
@@ -218,48 +242,41 @@ const HomePage = () => {
               </Link>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.5, duration: 1 }}
-              className="flex items-center gap-3 justify-center mt-16"
-            >
+            {/* Slideshow indicators */}
+            <div className="flex items-center gap-3 justify-center mt-16">
               {HERO_IMAGES.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setHeroIndex(i)}
-                  className={`transition-all duration-500 ${
-                    i === heroIndex
-                      ? 'w-8 h-[2px] bg-accent'
-                      : 'w-3 h-[2px] bg-muted/30 hover:bg-muted/60'
+                  className={`transition-all duration-500 h-[2px] ${
+                    i === heroIndex ? 'w-8 bg-accent' : 'w-3 bg-muted/30 hover:bg-muted/60'
                   }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
-            </motion.div>
+            </div>
           </motion.div>
         </div>
 
+        {/* Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 1 }}
+          transition={{ delay: 2 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
         >
           <span className="font-sans text-[9px] uppercase tracking-[0.4em] text-muted vertical-text">Scroll</span>
           <motion.div
             animate={{ height: [12, 24, 12] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            transition={{ repeat: Infinity, duration: 2 }}
             className="w-px bg-gradient-to-b from-accent to-transparent"
           />
         </motion.div>
-
-        <div className="absolute top-8 left-8 w-16 h-16 border-l border-t border-accent/15 z-20 hidden md:block" />
-        <div className="absolute bottom-8 right-8 w-16 h-16 border-r border-b border-accent/15 z-20 hidden md:block" />
       </section>
 
       <MarqueeStrip />
 
+      {/* ═══════════════════════ FEATURED GALLERY ═══════════════════════ */}
       <section className="py-24 md:py-40 border-t border-border relative overflow-hidden">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
@@ -303,6 +320,7 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* ═══════════════════════ PHILOSOPHY ═══════════════════════ */}
       <section className="py-32 md:py-48 relative overflow-hidden bg-surface">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
@@ -312,7 +330,7 @@ const HomePage = () => {
             transition={{ duration: 1 }}
           >
             <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-accent mb-8">Our Philosophy</p>
-            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-12">
+            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-12 text-text">
               "Luxury is in the <br />
               <span className="italic text-accent">details</span>"
             </h2>
@@ -325,6 +343,7 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* ═══════════════════════ CATEGORIES ═══════════════════════ */}
       <section className="py-24 md:py-40 border-t border-border">
         <div className="max-w-container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
@@ -373,6 +392,7 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* ═══════════════════════ NEWSLETTER ═══════════════════════ */}
       <section className="py-24 border-t border-border bg-surface/50">
         <div className="max-w-container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
