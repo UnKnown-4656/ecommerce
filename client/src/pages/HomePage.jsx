@@ -7,7 +7,7 @@ import MarqueeStrip from '../components/MarqueeStrip';
 
 const HERO_IMAGES = [
   'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=70&w=1920',
-  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=70&w=1920',
+  'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=70&w=1920',
   'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=70&w=1920'
 ];
 
