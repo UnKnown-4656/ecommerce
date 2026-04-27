@@ -6,14 +6,14 @@ import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
 
 const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1920&fm=webp',
-  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=80&w=1920&fm=webp',
-  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1920&fm=webp'
+  'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1920',
+  'https://images.unsplash.com/photo-1445205170230-053b83e26dd7?auto=format&fit=crop&q=80&w=1920',
+  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=1920'
 ];
 
 const SIDE_IMAGES = [
-  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600&fm=webp',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600&fm=webp'
+  'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600'
 ];
 
 const HomePage = () => {

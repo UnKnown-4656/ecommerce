@@ -71,7 +71,7 @@ const CartDrawer = ({ isOpen }) => {
                       <div className="w-20 h-24 bg-surface overflow-hidden flex-shrink-0">
                         <img
                           src={item.image_url?.startsWith('http') 
-                            ? `${item.image_url}${item.image_url.includes('?') ? '&' : '?'}fm=webp&q=60&w=160` 
+                            ? `${item.image_url}${item.image_url.includes('?') ? '&' : '?'}q=60&w=160` 
                             : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                           alt={item.name}
                           className="w-full h-full object-cover"
