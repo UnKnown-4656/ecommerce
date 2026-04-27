@@ -73,6 +73,9 @@ const CartDrawer = ({ isOpen }) => {
                           src={item.image_url?.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                           alt={item.name}
                           className="w-full h-full object-cover"
+                          width="80"
+                          height="96"
+                          loading="lazy"
                           onError={(e) => {
                             e.target.src = 'https://placehold.co/80x96/111/1e1e1e?text=NOIR';
                           }}

@@ -5,7 +5,7 @@ const MarqueeStrip = memo(() => {
   const repeated = [...items, ...items, ...items, ...items];
 
   return (
-    <div className="border-t border-b border-border/60 py-3.5 overflow-hidden bg-bg relative">
+    <div className="border-t border-b border-border/60 py-3.5 overflow-hidden bg-bg relative min-h-[50px]">
       {/* Fade edges */}
       <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-bg to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-bg to-transparent z-10 pointer-events-none" />

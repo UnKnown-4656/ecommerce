@@ -42,6 +42,8 @@ const ProductCard = memo(({ product, index = 0 }) => {
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             loading="lazy"
+            width="400"
+            height="533"
             onLoad={() => setImageLoaded(true)}
             onError={e => {
               e.target.src = 'https://placehold.co/400x533/111/1e1e1e?text=NOIR';

@@ -59,14 +59,16 @@ const HomePage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 2, ease: "easeInOut" }}
-              className="absolute inset-0"
+              className="absolute inset-0 bg-black"
             >
               <img
                 src={HERO_IMAGES[heroIndex]}
                 alt="Noir & Co Luxury Fashion"
                 className="w-full h-full object-cover grayscale-[20%]"
-                fetchpriority={heroIndex === 0 ? "high" : "low"}
+                fetchPriority={heroIndex === 0 ? "high" : "low"}
                 loading={heroIndex === 0 ? "eager" : "lazy"}
+                width="1920"
+                height="1080"
               />
             </motion.div>
           </AnimatePresence>
@@ -89,11 +91,14 @@ const HomePage = () => {
           className="hidden xl:block absolute left-12 top-1/2 -translate-y-1/2 z-20"
         >
           <div className="relative group">
-            <div className="w-44 h-64 overflow-hidden border border-accent/20">
+            <div className="w-44 h-64 overflow-hidden border border-accent/20 bg-surface">
               <img
                 src={SIDE_IMAGES[0]}
                 alt="Editorial Look 1"
                 className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
+                width="176"
+                height="256"
+                loading="lazy"
               />
             </div>
             <div className="absolute -bottom-3 -right-3 w-full h-full border border-accent/10 -z-10" />
@@ -108,11 +113,14 @@ const HomePage = () => {
           className="hidden xl:block absolute right-12 top-1/2 -translate-y-[40%] z-20"
         >
           <div className="relative group">
-            <div className="w-36 h-52 overflow-hidden border border-accent/20">
+            <div className="w-36 h-52 overflow-hidden border border-accent/20 bg-surface">
               <img
                 src={SIDE_IMAGES[1]}
                 alt="Editorial Look 2"
                 className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
+                width="144"
+                height="208"
+                loading="lazy"
               />
             </div>
             <div className="absolute -top-3 -left-3 w-full h-full border border-accent/10 -z-10" />
@@ -339,12 +347,14 @@ const HomePage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.8 }}
               >
-                <Link to="/shop" className="group block relative aspect-[3/4] overflow-hidden">
+                <Link to="/shop" className="group block relative aspect-[3/4] overflow-hidden bg-surface">
                   <img
                     src={category.img}
                     alt={category.title}
                     className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
                     loading="lazy"
+                    width="400"
+                    height="533"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-8">
