@@ -350,7 +350,7 @@ const CheckoutPage = () => {
                   textTransform: 'uppercase',
                   border: 'none',
                   borderRadius: '4px',
-                  cursor: 'none',
+                  cursor: 'default',
                   transition: 'background 0.3s'
                 }}
                 onMouseEnter={e => e.target.style.background = '#d4aa50'}
