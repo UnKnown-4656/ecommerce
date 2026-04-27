@@ -29,6 +29,8 @@ const CartPage = () => {
                   src={item.image_url?.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                   alt={item.name}
                   className="w-24 h-32 object-cover"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/96x128?text=No+Image';
                   }}

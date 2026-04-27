@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
@@ -22,8 +22,6 @@ const HomePage = () => {
   const [heroIndex, setHeroIndex] = useState(0);
 
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
   const textY = useTransform(scrollY, [0, 500], [0, 150]);
 
   useEffect(() => {
@@ -69,12 +67,6 @@ const HomePage = () => {
               decoding="async"
               width="1920"
               height="1080"
-              onLoad={(e) => {
-                // Preload next image
-                const nextIndex = (heroIndex + 1) % HERO_IMAGES.length;
-                const img = new Image();
-                img.src = HERO_IMAGES[nextIndex];
-              }}
             />
           </motion.div>
         </AnimatePresence>
@@ -98,6 +90,9 @@ const HomePage = () => {
                 height="256"
                 loading="lazy"
                 decoding="async"
+                onError={(e) => {
+                  e.target.src = 'https://placehold.co/176x256/111/1e1e1e?text=NOIR';
+                }}
               />
             </div>
             <div className="absolute -bottom-4 -right-4 w-24 h-32 border border-accent/10 bg-surface -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
@@ -120,6 +115,9 @@ const HomePage = () => {
                 height="208"
                 loading="lazy"
                 decoding="async"
+                onError={(e) => {
+                  e.target.src = 'https://placehold.co/144x208/111/1e1e1e?text=NOIR';
+                }}
               />
             </div>
             <div className="absolute -top-4 -left-4 w-20 h-28 border border-accent/10 bg-surface -z-10 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-transform duration-700" />
@@ -288,6 +286,9 @@ const HomePage = () => {
                     decoding="async"
                     width="400"
                     height="533"
+                    onError={(e) => {
+                      e.target.src = 'https://placehold.co/400x533/111/1e1e1e?text=NOIR';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-8">

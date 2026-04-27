@@ -1,6 +1,5 @@
-import { memo } from 'react';
 
-const MarqueeStrip = memo(() => {
+const MarqueeStrip = () => {
   const items = ['Free Returns', 'Handcrafted', 'Worldwide Shipping', 'SS 2026', 'Premium Quality', 'Noir & Co.', 'Sustainable Fashion', 'Limited Editions'];
   const repeated = [...items, ...items, ...items, ...items];
 
@@ -20,7 +19,7 @@ const MarqueeStrip = memo(() => {
       </div>
     </div>
   );
-});
+};
 
 MarqueeStrip.displayName = 'MarqueeStrip';
 

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useCallback, memo } from 'react';
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
-const ProductCard = memo(({ product, index = 0 }) => {
+const ProductCard = ({ product, index = 0 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { addToCart } = useCart();
@@ -12,11 +12,11 @@ const ProductCard = memo(({ product, index = 0 }) => {
     ? product.image_url
     : `https://ecommerce-ahmv.onrender.com${product.image_url}`;
 
-  const handleQuickAdd = useCallback((e) => {
+  const handleQuickAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product);
-  }, [addToCart, product]);
+  };
 
   return (
     <motion.div
@@ -140,8 +140,6 @@ const ProductCard = memo(({ product, index = 0 }) => {
       </Link>
     </motion.div>
   );
-});
-
-ProductCard.displayName = 'ProductCard';
+};
 
 export default ProductCard;

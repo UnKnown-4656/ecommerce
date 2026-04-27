@@ -78,6 +78,7 @@ const CartDrawer = ({ isOpen }) => {
                           width="80"
                           height="96"
                           loading="lazy"
+                          decoding="async"
                           onError={(e) => {
                             e.target.src = 'https://placehold.co/80x96/111/1e1e1e?text=NOIR';
                           }}

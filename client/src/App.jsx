@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
@@ -39,14 +39,7 @@ const PageTransition = ({ children }) => {
 
 const PageLoader = () => (
   <div className="fixed inset-0 z-[100] bg-bg flex items-center justify-center">
-    <div className="flex flex-col items-center gap-6">
-      <div className="relative w-12 h-12">
-        <div className="absolute inset-0 border border-accent/30 rounded-full animate-ping" />
-        <div className="absolute inset-2 border border-accent rounded-full animate-pulse" />
-        <div className="absolute inset-4 bg-accent rounded-full" />
-      </div>
-      <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted animate-pulse">Loading</p>
-    </div>
+    <div className="w-8 h-8 border border-accent border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -59,17 +52,23 @@ function App() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const handleScroll = useCallback(() => {
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (totalHeight > 0) {
-      setScrollProgress((window.scrollY / totalHeight) * 100);
-    }
-  }, []);
-
   useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (totalHeight > 0) {
+            setScrollProgress((window.scrollY / totalHeight) * 100);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-text font-sans selection:bg-accent/30 selection:text-accent">
