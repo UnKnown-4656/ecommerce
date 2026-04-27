@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { useAuth } from '../context/AuthContext';
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -23,8 +25,14 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-    fetchStats();
-  }, []);
+    
+    // Only fetch stats if user is authenticated and has admin role
+    if (user && user.role === 'admin') {
+      fetchStats();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const statCards = [
     { label: 'Total Products', value: stats.totalProducts, color: 'bg-blue-500' },

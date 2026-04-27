@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { useAuth } from '../context/AuthContext';
 
 const AdminOrdersPage = () => {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,8 +19,14 @@ const AdminOrdersPage = () => {
         setLoading(false);
       }
     };
-    fetchOrders();
-  }, []);
+    
+    // Only fetch orders if user is authenticated and has admin role
+    if (user && user.role === 'admin') {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {

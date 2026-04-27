@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import ProtectedRoute from '../components/ProtectedRoute';
+import { useAuth } from '../context/AuthContext';
 
 const AdminProductsPage = () => {
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,8 +20,14 @@ const AdminProductsPage = () => {
         setLoading(false);
       }
     };
-    fetchProducts();
-  }, []);
+    
+    // Only fetch products if user is authenticated and has admin role
+    if (user && user.role === 'admin') {
+      fetchProducts();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const handleDelete = async (productId) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
