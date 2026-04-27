@@ -1,117 +1,107 @@
-import { useEffect, useState, useCallback } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 const CustomCursor = () => {
-  const [isHovered, setIsHovered] = useState(false);
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  // High-performance motion values
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-
-  // Smooth springs for the outer ring
-  const springConfig = { damping: 30, stiffness: 250, mass: 0.5 };
-  const ringX = useSpring(mouseX, springConfig);
-  const ringY = useSpring(mouseY, springConfig);
-
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const mousePos = useRef({ x: 0, y: 0 });
+  const ringPos = useRef({ x: 0, y: 0 });
+  const rafId = useRef(null);
+  const isInitialized = useRef(false);
 
   useEffect(() => {
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    // Check for touch device - standard check
+    const touchCheck = () => {
+      return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
+    };
+
+    if (touchCheck()) {
       setIsTouchDevice(true);
       return;
     }
 
-    const moveCursor = (e) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+    const onMouseMove = (e) => {
+      mousePos.current = { x: e.clientX, y: e.clientY };
+      
+      // On first move, snap the ring to the mouse to avoid "trailing from zero"
+      if (!isInitialized.current) {
+        ringPos.current = { x: e.clientX, y: e.clientY };
+        isInitialized.current = true;
+        setIsVisible(true);
+      }
     };
 
-    const attachListeners = (root = document) => {
-      const elements = root.querySelectorAll('a, button, input, select, textarea, .interactive, [role="button"]');
-      elements.forEach(el => {
-        if (!el.dataset.cursorAttached) {
-          el.addEventListener('mouseenter', handleMouseEnter);
-          el.addEventListener('mouseleave', handleMouseLeave);
-          el.dataset.cursorAttached = 'true';
-        }
-      });
+    const onMouseOver = (e) => {
+      const target = e.target;
+      if (target.closest('a, button, input, select, textarea, .interactive, [role="button"]')) {
+        dotRef.current?.classList.add('hovering');
+        ringRef.current?.classList.add('hovering');
+      }
     };
 
-    window.addEventListener('mousemove', moveCursor, { passive: true });
-    attachListeners();
+    const onMouseOut = (e) => {
+      const target = e.target;
+      if (target.closest('a, button, input, select, textarea, .interactive, [role="button"]')) {
+        dotRef.current?.classList.remove('hovering');
+        ringRef.current?.classList.remove('hovering');
+      }
+    };
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.addedNodes.length > 0) {
-          mutation.addedNodes.forEach(node => {
-            if (node.nodeType === 1) attachListeners(node);
-          });
-        }
-      });
-    });
+    const updateCursor = () => {
+      if (!isInitialized.current) {
+        rafId.current = requestAnimationFrame(updateCursor);
+        return;
+      }
 
-    observer.observe(document.body, { childList: true, subtree: true });
+      // Smooth interpolation for the ring (0.15 is the "lag" factor)
+      const lerp = (start, end, factor) => start + (end - start) * factor;
+      
+      ringPos.current.x = lerp(ringPos.current.x, mousePos.current.x, 0.15);
+      ringPos.current.y = lerp(ringPos.current.y, mousePos.current.y, 0.15);
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0) translate(-50%, -50%)`;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%)`;
+      }
+
+      rafId.current = requestAnimationFrame(updateCursor);
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mouseover', onMouseOver);
+    window.addEventListener('mouseout', onMouseOut);
+    rafId.current = requestAnimationFrame(updateCursor);
+
+    // Clean up visibility if mouse leaves window
+    const onMouseLeaveWindow = () => setIsVisible(false);
+    const onMouseEnterWindow = () => setIsVisible(true);
+    document.addEventListener('mouseleave', onMouseLeaveWindow);
+    document.addEventListener('mouseenter', onMouseEnterWindow);
 
     return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      observer.disconnect();
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseover', onMouseOver);
+      window.removeEventListener('mouseout', onMouseOut);
+      document.removeEventListener('mouseleave', onMouseLeaveWindow);
+      document.removeEventListener('mouseenter', onMouseEnterWindow);
+      cancelAnimationFrame(rafId.current);
     };
-  }, [isVisible, handleMouseEnter, handleMouseLeave, mouseX, mouseY]);
+  }, []);
 
-  if (isTouchDevice || !isVisible) return null;
+  if (isTouchDevice) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999]">
-      {/* Inner Dot - follows mouse exactly */}
-      <motion.div
-        className="absolute w-1.5 h-1.5 bg-accent rounded-full"
-        style={{
-          x: mouseX,
-          y: mouseY,
-          translateX: '-50%',
-          translateY: '-50%',
-          willChange: 'transform',
-        }}
-      />
-      
-      {/* Outer Ring - smooth trailing effect */}
-      <motion.div
-        className="absolute rounded-full border border-accent/40"
-        animate={{
-          width: isHovered ? 60 : 30,
-          height: isHovered ? 60 : 30,
-          backgroundColor: isHovered ? 'rgba(184, 146, 46, 0.15)' : 'rgba(184, 146, 46, 0)',
-          borderColor: isHovered ? 'rgba(184, 146, 46, 0.6)' : 'rgba(184, 146, 46, 0.3)',
-          borderWidth: isHovered ? '1.5px' : '1px',
-        }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        style={{
-          x: ringX,
-          y: ringY,
-          translateX: '-50%',
-          translateY: '-50%',
-          willChange: 'transform, width, height',
-        }}
-      />
-
-      {/* Luxury Backdrop Blur for the ring on hover */}
-      {isHovered && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute w-20 h-20 bg-accent/5 blur-xl rounded-full"
-          style={{
-            x: ringX,
-            y: ringY,
-            translateX: '-50%',
-            translateY: '-50%',
-          }}
-        />
-      )}
+    <div 
+      className={`fixed inset-0 pointer-events-none z-[10001] transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      style={{ mixBlendMode: 'normal' }}
+    >
+      <div id="cursor-dot" ref={dotRef} className="absolute left-0 top-0 will-change-transform" />
+      <div id="cursor-ring" ref={ringRef} className="absolute left-0 top-0 will-change-transform" />
     </div>
   );
 };

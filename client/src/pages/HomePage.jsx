@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
@@ -21,7 +19,6 @@ const SIDE_IMAGES = [
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [init, setInit] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
 
   const { scrollY } = useScroll();
@@ -29,12 +26,6 @@ const HomePage = () => {
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
 
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
@@ -54,28 +45,6 @@ const HomePage = () => {
     }, 6000);
     return () => clearInterval(interval);
   }, []);
-
-  const particlesOptions = useMemo(() => ({
-    background: { color: { value: "transparent" } },
-    fpsLimit: 60,
-    interactivity: {
-      events: {
-        onHover: { enable: true, mode: "bubble" },
-      },
-      modes: {
-        bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, color: "#b8922e" },
-      },
-    },
-    particles: {
-      color: { value: "#b8922e" },
-      move: { direction: "none", enable: true, outModes: { default: "out" }, random: true, speed: 0.4, straight: false },
-      number: { density: { enable: true, area: 1200 }, value: 30 },
-      opacity: { value: { min: 0.1, max: 0.3 } },
-      shape: { type: "circle" },
-      size: { value: { min: 1, max: 2 } },
-    },
-    detectRetina: true,
-  }), []);
 
   return (
     <div className="bg-bg">
@@ -106,14 +75,11 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
         </motion.div>
 
-        {/* Particles - Only init when engine is ready */}
-        {init && (
-          <Particles
-            id="tsparticles"
-            options={particlesOptions}
-            className="absolute inset-0 z-10 pointer-events-none"
-          />
-        )}
+        {/* Lightweight Gradient Blurs (Alternative to Particles) */}
+        <div className="absolute inset-0 z-[11] pointer-events-none overflow-hidden opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+        </div>
 
         {/* Side Images - Floating */}
         <motion.div
