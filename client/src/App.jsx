@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import Toast from './components/Toast';
-import CustomCursor from './components/CustomCursor';
 import { useCart } from './context/CartContext';
 
 // Lazy-load all page components for performance
@@ -68,8 +67,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    return () => window.removeEventListener('scroll', throttledScroll);
   }, [handleScroll]);
 
   return (
@@ -80,13 +90,9 @@ function App() {
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <CustomCursor />
       <Header onOpenCart={() => setIsCartOpen(true)} />
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Toast />
-
-      {/* Film grain overlay */}
-      <div className="grain-overlay" />
 
       <main className="pt-20">
         <Suspense fallback={<PageLoader />}>
