@@ -81,6 +81,8 @@ const AdminProductsPage = () => {
                       <img
                         src={product.image_url?.startsWith('http') ? product.image_url : `https://ecommerce-ahmv.onrender.com${product.image_url}`}
                         alt={product.name}
+                        width="48"
+                        height="64"
                         className="w-12 h-16 object-cover"
                         loading="lazy"
                         decoding="async"

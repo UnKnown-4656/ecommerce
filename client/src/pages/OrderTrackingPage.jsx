@@ -199,12 +199,15 @@ const OrderTrackingPage = () => {
               {items.map((item, index) => (
                 <div key={index} className="flex gap-4 pb-5 border-b border-border/30 last:border-0 last:pb-0">
                   <div className="w-16 h-20 bg-surface border border-border flex-shrink-0 overflow-hidden">
-                    {item.image_url ? (
+                     {item.image_url ? (
                       <img
                         src={item.image_url.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
                         alt={item.name}
+                        width="64"
+                        height="80"
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           e.target.style.display = 'none';
                         }}

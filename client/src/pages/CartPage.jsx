@@ -30,6 +30,8 @@ const CartPage = () => {
                   src={item.image_url}
                   alt={item.name}
                   className="w-16 h-16 object-cover"
+                  width="64"
+                  height="64"
                 />
                 <div className="flex-1">
                   <h3 className="font-display text-lg">{item.name}</h3>

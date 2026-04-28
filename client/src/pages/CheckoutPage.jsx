@@ -404,10 +404,14 @@ const CheckoutPage = () => {
                         <img
                           src={imageUrl}
                           alt={item.name}
+                          width="80"
+                          height="100"
                           style={{
                             width: '100%', height: '100%',
                             objectFit: 'cover'
                           }}
+                          loading="lazy"
+                          decoding="async"
                           onError={e => {
                             e.target.src = 'https://placehold.co/80x100/0f0f0f/1e1e1e?text=NOIR';
                           }}
