@@ -70,6 +70,22 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   white-space: nowrap;
   will-change: transform;
+  contain: layout style;
+}
+
+/* Performance optimizations */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+img {
+  content-visibility: auto;
+}
+
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }
 
 /* Animations */

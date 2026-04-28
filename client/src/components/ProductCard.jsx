@@ -36,16 +36,14 @@ const ProductCard = ({ product, index = 0 }) => {
             <div className="absolute inset-0 bg-surface animate-pulse" />
           )}
 
-          <ImageComponent
-            src={product.image_url}
-            alt={product.name}
-            className={`w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-[filter] duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            width="400"
-            height="533"
-            onLoad={() => setImageLoaded(true)}
-          />
+<ImageComponent
+             src={product.image_url}
+             alt={product.name}
+             className={`w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-[filter_transform] duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+             width="400"
+             height="533"
+             onLoad={() => setImageLoaded(true)}
+           />
 
           {/* Overlay elements */}
           <AnimatePresence>

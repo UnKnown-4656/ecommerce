@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const HERO_IMAGES = [
   'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop',
@@ -21,20 +23,19 @@ const SIDE_IMAGES = [
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [init, setInit] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+
+  // GSAP refs for scroll animations
+  const featuredRef = useRef(null);
+  const philosophyRef = useRef(null);
+  const categoriesRef = useRef(null);
+  const newsletterRef = useRef(null);
 
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
 
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
@@ -46,6 +47,71 @@ const HomePage = () => {
       }
     };
     fetchProducts();
+
+    // GSAP ScrollTrigger animations for better performance
+    const ctx = gsap.context(() => {
+      // Featured Gallery section
+      if (featuredRef.current) {
+        gsap.from(featuredRef.current, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+      }
+
+      // Philosophy section
+      if (philosophyRef.current) {
+        gsap.from(philosophyRef.current, {
+          opacity: 0,
+          y: 40,
+          duration: 1,
+          scrollTrigger: {
+            trigger: philosophyRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+      }
+
+      // Categories section
+      if (categoriesRef.current) {
+        const categoryCards = categoriesRef.current.querySelectorAll('.category-card');
+        if (categoryCards.length > 0) {
+          gsap.from(categoryCards, {
+            opacity: 0,
+            y: 30,
+            duration: 0.8,
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: categoriesRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          });
+        }
+      }
+
+      // Newsletter section
+      if (newsletterRef.current) {
+        gsap.from(newsletterRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: newsletterRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   useEffect(() => {
@@ -55,31 +121,9 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const particlesOptions = useMemo(() => ({
-    background: { color: { value: "transparent" } },
-    fpsLimit: 60,
-    interactivity: {
-      events: {
-        onHover: { enable: true, mode: "bubble" },
-      },
-      modes: {
-        bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, color: "#b8922e" },
-      },
-    },
-    particles: {
-      color: { value: "#b8922e" },
-      move: { direction: "none", enable: true, outModes: { default: "out" }, random: true, speed: 0.4, straight: false },
-      number: { density: { enable: true, area: 1200 }, value: 30 },
-      opacity: { value: { min: 0.1, max: 0.3 } },
-      shape: { type: "circle" },
-      size: { value: { min: 1, max: 2 } },
-    },
-    detectRetina: true,
-  }), []);
-
   return (
     <div className="bg-bg">
-      {/* ═══════════════════════ HERO SECTION ═══════════════════════ */}
+      {/* ══════════════════════ HERO SECTION ══════════════════════ */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
         {/* Animated Background Slideshow - Optimized for CLS */}
         <motion.div style={{ scale }} className="absolute inset-0 z-0">
@@ -108,15 +152,6 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
         </motion.div>
-
-        {/* Particles - Only init when engine is ready */}
-        {init && (
-          <Particles
-            id="tsparticles"
-            options={particlesOptions}
-            className="absolute inset-0 z-10 pointer-events-none"
-          />
-        )}
 
         {/* Side Images - Floating */}
         <motion.div
@@ -287,21 +322,16 @@ const HomePage = () => {
 
       <MarqueeStrip />
 
-      {/* ═══════════════════════ FEATURED GALLERY ═══════════════════════ */}
+      {/* ══════════════════════ FEATURED GALLERY ══════════════════════ */}
       <section className="py-24 md:py-40 border-t border-border relative overflow-hidden">
-        <div className="max-w-container mx-auto px-6 md:px-12">
+        <div ref={featuredRef} className="max-w-container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted mb-4">Curated Pieces</p>
               <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-text">
                 Featured <span className="italic text-accent">Gallery</span>
               </h2>
-            </motion.div>
+            </div>
             <Link to="/shop" className="text-[10px] uppercase tracking-[0.3em] text-muted hover:text-accent transition-colors mb-2">
               View All Arrivals
             </Link>
@@ -331,44 +361,34 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════════════════════ PHILOSOPHY ═══════════════════════ */}
+      {/* ══════════════════════ PHILOSOPHY ══════════════════════ */}
       <section className="py-32 md:py-48 relative overflow-hidden bg-surface">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
+        <div ref={philosophyRef} className="max-w-4xl mx-auto px-6 text-center">
+          <div>
             <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-accent mb-8">Our Philosophy</p>
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-12 text-text">
               "Luxury is in the <br />
               <span className="italic text-accent">details</span>"
             </h2>
             <p className="text-muted/70 text-sm md:text-base tracking-wide max-w-2xl mx-auto leading-relaxed">
-              Every stitch, every fabric choice, every silhouette is meticulously crafted to embody 
-              the essence of modern elegance. We believe in pieces that transcend seasons and speak 
+              Every stitch, every fabric choice, every silhouette is meticulously crafted to embody
+              the essence of modern elegance. We believe in pieces that transcend seasons and speak
               to the soul of discerning individuals.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ═══════════════════════ CATEGORIES ═══════════════════════ */}
+      {/* ══════════════════════ CATEGORIES ══════════════════════ */}
       <section className="py-24 md:py-40 border-t border-border">
-        <div className="max-w-container mx-auto px-6 md:px-12">
+        <div ref={categoriesRef} className="max-w-container mx-auto px-6 md:px-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted mb-4">Categories</p>
               <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-text">
                 Shop by <span className="italic text-accent">Style</span>
               </h2>
-            </motion.div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -377,12 +397,9 @@ const HomePage = () => {
               { title: 'Essentials', desc: 'Refined basics', img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop' },
               { title: 'Accessories', desc: 'Finishing touches', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop' },
             ].map((category, i) => (
-              <motion.div
+              <div
                 key={category.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.8 }}
+                className="category-card"
               >
                 <Link to="/shop" className="group block relative aspect-[3/4] overflow-hidden">
                   <img
@@ -400,31 +417,21 @@ const HomePage = () => {
                     <h3 className="font-display text-2xl md:text-3xl text-text">{category.title}</h3>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════ NEWSLETTER ═══════════════════════ */}
+      {/* ══════════════════════ NEWSLETTER ══════════════════════ */}
       <section className="py-24 border-t border-border bg-surface/50">
-        <div className="max-w-container mx-auto px-6">
+        <div ref={newsletterRef} className="max-w-container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-center md:text-left"
-            >
+            <div className="text-center md:text-left">
               <h3 className="font-display text-2xl md:text-3xl text-text mb-4">Join the NOIR Circle</h3>
               <p className="text-muted text-sm tracking-wide">Be the first to know about new collections and exclusive offers.</p>
-            </motion.div>
-            <motion.form
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="flex w-full md:w-auto"
-            >
+            </div>
+            <form className="flex w-full md:w-auto">
               <input
                 type="email"
                 placeholder="Your email"
@@ -436,7 +443,7 @@ const HomePage = () => {
               >
                 Subscribe
               </button>
-            </motion.form>
+            </form>
           </div>
         </div>
       </section>
