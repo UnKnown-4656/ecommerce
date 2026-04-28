@@ -36,10 +36,7 @@
     <link rel="dns-prefetch" href="https://images.unsplash.com" />
     <link rel="dns-prefetch" href="https://ecommerce-ahmv.onrender.com" />
     
-    <!-- Preload critical resources with explicit dimensions -->
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1920&h=1080&auto=format&fit=crop" fetchpriority="high" />
-
-    <!-- Font loading - simplified to prevent 404 errors -->
+    <!-- Font loading -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     
     <!-- Preconnect to font servers -->
@@ -61,15 +58,16 @@
     }
     </script>
     
-    <!-- Prevent CLS from font loading - use system fonts as fallbacks -->
+    <!-- Critical CSS -->
     <style>
-      /* Critical CSS to prevent CLS */
       body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
       }
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Cormorant Garamond', Georgia, serif;
       }
+      /* Prevent CLS */
+      img { max-width: 100%; height: auto; }
     </style>
   </head>
   <body>
