@@ -5,13 +5,13 @@ import api from '../services/api';
 import ProductCard from '../components/ProductCard';
 import MarqueeStrip from '../components/MarqueeStrip';
 
-const HERO_IMAGES = [
+const heroImages = [
   'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=70&w=1920',
   'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=70&w=1920',
   'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=70&w=1920'
 ];
 
-const SIDE_IMAGES = [
+const sideImages = [
   'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=70&w=600',
   'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=70&w=600'
 ];
@@ -40,7 +40,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+      setHeroIndex((prev) => (prev + 1) % heroImages.length);
     }, 6000);
     return () => clearInterval(interval);
   }, []);
@@ -54,7 +54,7 @@ const HomePage = () => {
             key={index}
             className="absolute inset-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: index === currentHero ? 1 : 0 }}
+            animate={{ opacity: index === heroIndex ? 1 : 0 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
             style={{ contain: 'layout style' }}
           >
