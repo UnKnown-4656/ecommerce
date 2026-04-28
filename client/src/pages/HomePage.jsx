@@ -124,7 +124,7 @@ const HomePage = () => {
   return (
     <div className="bg-bg">
       {/* ══════════════════════ HERO SECTION ══════════════════════ */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <section className="relative flex items-center justify-center overflow-hidden bg-black" style={{ height: '100vh', contain: 'layout style' }}>
         {/* Animated Background Slideshow - Optimized for CLS */}
         <motion.div style={{ scale }} className="absolute inset-0 z-0">
           <AnimatePresence mode="wait">

@@ -1,3 +1,5 @@
+@import './styles/font-optimization.css';
+
 /* Add local font face for better control if needed, but display=swap in URL is usually enough */
 
 @tailwind base;
@@ -31,10 +33,14 @@ html {
 body {
   background: #0a0a0a;
   color: #e8e0d4;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter Fallback', 'Inter', sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond Fallback', 'Cormorant Garamond', serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -81,6 +87,24 @@ h1, h2, h3, h4, h5, h6 {
 
 img {
   content-visibility: auto;
+  /* Prevent layout shifts from images */
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reserve space for images without dimensions */
+img:not([width]):not([height]) {
+  min-height: 100px;
+  background-color: #111;
+}
+
+/* Prevent CLS from font loading */
+.font-loading {
+  visibility: hidden;
+}
+
+.font-loaded {
+  visibility: visible;
 }
 
 section {

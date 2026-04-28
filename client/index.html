@@ -36,16 +36,12 @@
     <link rel="dns-prefetch" href="https://images.unsplash.com" />
     <link rel="dns-prefetch" href="https://ecommerce-ahmv.onrender.com" />
     
-    <!-- Preload critical resources -->
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=70&w=1920" fetchpriority="high" />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" />
+    <!-- Preload critical resources with explicit dimensions -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1920&h=1080&auto=format&fit=crop" fetchpriority="high" />
     
-    <!-- Font loading with display swap and preload -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript>
-      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    </noscript>
+    <!-- Font loading with font-display: optional to prevent layout shifts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=optional" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=optional" rel="stylesheet" />
     
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
@@ -61,6 +57,33 @@
         "https://facebook.com/noirandco"
       ]
     }
+    </script>
+    
+    <!-- Prevent CLS from font loading -->
+    <style>
+      /* Critical CSS to prevent CLS */
+      body { visibility: hidden; }
+      .fonts-loaded body { visibility: visible; }
+    </style>
+    <script>
+      // Font loading optimization
+      if ('fonts' in document) {
+        Promise.all([
+          document.fonts.load('300 1em Inter'),
+          document.fonts.load('400 1em Inter'),
+          document.fonts.load('300 1em "Cormorant Garamond"'),
+          document.fonts.load('400 1em "Cormorant Garamond"')
+        ]).then(() => {
+          document.documentElement.classList.add('fonts-loaded');
+        });
+        
+        // Fallback: show content after 1 second even if fonts haven't loaded
+        setTimeout(() => {
+          document.documentElement.classList.add('fonts-loaded');
+        }, 1000);
+      } else {
+        document.documentElement.classList.add('fonts-loaded');
+      }
     </script>
   </head>
   <body>
