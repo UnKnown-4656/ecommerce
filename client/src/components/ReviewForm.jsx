@@ -53,18 +53,12 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch(`/api/products/${productId}/reviews`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      try {
+        const response = await api.post(`/products/${productId}/reviews`, formData);
 
-      if (!response.ok) {
-        throw new Error('Failed to submit review');
-      }
+        if (!response || response.status !== 201) {
+          throw new Error('Failed to submit review');
+        }
 
       // Reset form
       setFormData({
@@ -91,10 +85,10 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
   };
 
   return (
-    <div className="bg-[#0a0a0a] w-full py-20 px-8 max-w-5xl mx-auto border-t border-[#1e1e1e] pt-16 mt-16">
+    <div className="bg-[#0a0a0a] w-full py-16 px-4 sm:px-8 max-w-5xl mx-auto border-t border-[#1e1e1e] pt-12 mt-12">
       {/* Section Heading */}
-      <div className="mb-8">
-        <h2 className="font-serif text-[#e8e0d4] text-[2rem] font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+      <div className="mb-6 sm:mb-8">
+        <h2 className="font-serif text-[#e8e0d4] text-2xl sm:text-[2rem] font-light mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           Share Your Experience
         </h2>
         <div className="h-px bg-[#b8922e] w-10"></div>

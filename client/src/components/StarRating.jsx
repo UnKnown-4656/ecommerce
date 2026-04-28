@@ -11,9 +11,15 @@ const StarRating = ({ rating = 0, interactive = false, onRatingChange, size = 't
         <button
           key={starNumber}
           onClick={() => onRatingChange && onRatingChange(starNumber)}
-          className={`${size} ${starColor} hover:text-[#b8922e] transition-colors cursor-pointer`}
+          className={`${size} ${starColor} hover:text-[#b8922e] transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#b8922e] focus:ring-opacity-50`}
           aria-label={`Rate ${starNumber} stars`}
-          style={{ fontSize: interactive ? '2rem' : undefined }}
+          style={{ 
+            fontSize: interactive ? '2rem' : undefined,
+            touchAction: 'manipulation',
+            minWidth: '2rem',
+            minHeight: '2rem',
+            padding: '0.25rem'
+          }}
         >
           {starSymbol}
         </button>

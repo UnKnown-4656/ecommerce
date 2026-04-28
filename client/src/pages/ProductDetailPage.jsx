@@ -87,9 +87,9 @@ const ProductDetailPage = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="sticky top-32"
+              className="sticky top-24 sm:top-32"
             >
-              <div className="aspect-[3/4] bg-surface overflow-hidden">
+              <div className="aspect-[3/4] bg-surface overflow-hidden rounded-lg">
                 <img
                   src={imageUrl}
                   alt={product.name}
@@ -113,12 +113,12 @@ const ProductDetailPage = () => {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:py-12"
-          >
+<motion.div
+  initial={{ opacity: 0, x: 30 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8, delay: 0.2 }}
+  className="lg:py-12 px-4 sm:px-0"
+>
             <p className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted mb-4">
               {product.category}
             </p>
@@ -231,18 +231,20 @@ const ProductDetailPage = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="py-16 border-t border-border"
+          className="py-12 sm:py-16 border-t border-border"
         >
-          <div className="max-w-3xl">
-            <h2 className="font-display text-3xl text-text mb-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-0">
+            <h2 className="font-display text-2xl sm:text-3xl text-text mb-6 sm:mb-8">
               Customer Reviews
             </h2>
-            <div className="h-px w-10 bg-accent mb-12" />
+            <div className="h-px w-10 bg-accent mb-8 sm:mb-12" />
             <ReviewsList productId={id} refreshTrigger={refreshReviews} />
           </div>
         </motion.div>
 
-        <ReviewForm productId={id} onReviewSubmitted={handleReviewSubmitted} />
+        <div className="px-4 sm:px-0 max-w-3xl mx-auto">
+          <ReviewForm productId={id} onReviewSubmitted={handleReviewSubmitted} />
+        </div>
 
         {relatedProducts.length > 0 && (
           <motion.section
