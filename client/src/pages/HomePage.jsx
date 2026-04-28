@@ -49,7 +49,7 @@ const HomePage = () => {
     <div className="bg-bg">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {heroImages.map((img, index) => (
+      {heroImages.map((img, index) => (
           <motion.div
             key={index}
             className="absolute inset-0"
@@ -69,8 +69,7 @@ const HomePage = () => {
               style={{ contentVisibility: 'auto' }}
             />
           </motion.div>
-        )}
-        </div>
+        ))}
       </section>
 
       {/* ═══════════════════════ PHILOSOPHY ═══════════════════════ */}
