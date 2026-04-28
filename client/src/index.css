@@ -210,6 +210,8 @@ h1, h2, h3, h4, h5, h6 {
   .product-card {
     position: relative;
     overflow: hidden;
+    /* Prevent layout shifts */
+    contain: layout style;
   }
 
   .product-card .card-image {
@@ -253,5 +255,36 @@ h1, h2, h3, h4, h5, h6 {
 
   .input-luxury {
     @apply w-full px-4 py-3 bg-surface border border-border text-text placeholder-muted outline-none transition-all duration-300 focus:border-accent;
+  }
+  
+  /* Accessibility improvements */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 2px solid #b8922e;
+    outline-offset: 2px;
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    body {
+      background: #000;
+      color: #fff;
+    }
+    
+    .text-muted {
+      color: #ccc;
+    }
   }
 }

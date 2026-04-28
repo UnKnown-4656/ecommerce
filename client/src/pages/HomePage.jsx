@@ -46,181 +46,30 @@ const HomePage = () => {
   }, []);
 
   return (
-  <div className="bg-bg overflow-x-hidden">
-      
+    <div className="bg-bg">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"><AnimatePresence mode="wait">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {heroImages.map((img, index) => (
           <motion.div
-            key={heroIndex}
+            key={index}
+            className="absolute inset-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0 bg-black"
+            animate={{ opacity: index === currentHero ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            style={{ contain: 'layout style' }}
           >
+            <div className="absolute inset-0 bg-gradient-to-b from-bg/20 via-transparent to-bg" />
             <img
-              src={HERO_IMAGES[heroIndex]}
-              alt="Noir & Co Luxury Fashion"
-              className="w-full h-full object-cover grayscale-[20%]"
-              fetchPriority="high"
-              loading="eager"
-              decoding="async"
+              src={img}
+              alt=""
+              className="w-full h-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
               width="1920"
               height="1080"
+              style={{ contentVisibility: 'auto' }}
             />
           </motion.div>
-        </AnimatePresence>
-
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
-
-        {/* Floating Editorial Images (Fixed positions to avoid shift) */}
-        <div className="absolute top-1/4 left-12 z-20 hidden lg:block">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="group relative"
-          >
-            <div className="w-44 h-64 overflow-hidden border border-accent/20 bg-surface">
-              <img
-                src={SIDE_IMAGES[0]}
-                alt="Editorial Look 1"
-                className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
-                width="176"
-                height="256"
-                loading="lazy"
-                decoding="async"
-                onError={(e) => {
-                  e.target.src = 'https://placehold.co/176x256/111/1e1e1e?text=NOIR';
-                }}
-              />
-            </div>
-            <div className="absolute -bottom-4 -right-4 w-24 h-32 border border-accent/10 bg-surface -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
-          </motion.div>
-        </div>
-
-        <div className="absolute bottom-1/4 right-12 z-20 hidden lg:block">
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.7, duration: 1 }}
-            className="group relative"
-          >
-            <div className="w-36 h-52 overflow-hidden border border-accent/20 bg-surface">
-              <img
-                src={SIDE_IMAGES[1]}
-                alt="Editorial Look 2"
-                className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000"
-                width="144"
-                height="208"
-                loading="lazy"
-                decoding="async"
-                onError={(e) => {
-                  e.target.src = 'https://placehold.co/144x208/111/1e1e1e?text=NOIR';
-                }}
-              />
-            </div>
-            <div className="absolute -top-4 -left-4 w-20 h-28 border border-accent/10 bg-surface -z-10 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-transform duration-700" />
-          </motion.div>
-        </div>
-
-        <motion.div 
-          style={{ y: textY }}
-          className="relative z-20 text-center px-4 max-w-4xl mx-auto"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="mb-8"
-          >
-            <span className="font-sans text-[10px] md:text-xs tracking-[0.6em] uppercase text-accent mb-4 block">
-              Redefining Modern Elegance
-            </span>
-            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-text leading-none tracking-tighter mb-6">
-              NOIR <span className="italic text-muted/30">&</span> CO.
-            </h1>
-            <p className="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-muted/80 max-w-xl mx-auto leading-relaxed">
-              Where minimal design meets impeccable craftsmanship.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-8 mt-12"
-          >
-            <Link to="/shop" className="group relative overflow-hidden px-14 py-5 text-[11px] tracking-[0.3em] uppercase font-medium bg-accent text-bg transition-all duration-500">
-              <span className="relative z-10">Explore Collection</span>
-              <div className="absolute inset-0 bg-accent-hover transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </Link>
-            <Link to="/shop" className="group flex items-center gap-4 text-text/60 hover:text-accent transition-colors duration-300">
-              <span className="font-sans text-[10px] tracking-[0.4em] uppercase">View Lookbook</span>
-              <div className="w-10 h-[1px] bg-accent/30 group-hover:w-16 transition-all duration-500" />
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-        >
-          <span className="font-sans text-[9px] uppercase tracking-[0.4em] text-muted vertical-text">Scroll</span>
-          <motion.div
-            animate={{ height: [12, 24, 12] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-px bg-gradient-to-b from-accent to-transparent"
-          />
-        </motion.div>
-      </section>
-
-      <MarqueeStrip />
-
-      {/* ═══════════════════════ FEATURED GALLERY ═══════════════════════ */}
-      <section className="py-24 md:py-40 border-t border-border relative overflow-hidden">
-        <div className="max-w-container mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-muted mb-4">Curated Pieces</p>
-              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-text">
-                Featured <span className="italic text-accent">Gallery</span>
-              </h2>
-            </motion.div>
-            <Link to="/shop" className="text-[10px] uppercase tracking-[0.3em] text-muted hover:text-accent transition-colors mb-2">
-              View All Arrivals
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="space-y-4">
-                  <div className="aspect-[3/4] bg-surface overflow-hidden animate-pulse rounded-sm" />
-                  <div className="h-4 bg-surface w-2/3 animate-pulse rounded-sm" />
-                  <div className="h-4 bg-surface w-1/3 animate-pulse rounded-sm" />
-                </div>
-              ))}
-            </div>
-          ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-              {products.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-muted text-sm tracking-wider uppercase">No products available</p>
-            </div>
-          )}
+        )}
         </div>
       </section>
 

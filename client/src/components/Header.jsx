@@ -73,12 +73,13 @@ const Header = () => {
 
             <div className="flex items-center gap-6 md:gap-8">
               {user && (
-                <button
-                  onClick={handleLogout}
-                  className="hidden md:block text-[10px] tracking-[0.15em] uppercase text-muted hover:text-accent transition-colors duration-300"
-                >
-                  Logout
-                </button>
+               <button
+                 onClick={handleLogout}
+                 className="hidden md:block text-[10px] tracking-[0.15em] uppercase text-muted hover:text-accent transition-colors duration-300"
+                 aria-label="Logout from your account"
+               >
+                 Logout
+               </button>
               )}
 
               <button

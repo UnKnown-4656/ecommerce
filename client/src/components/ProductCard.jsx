@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import ImageComponent from './ImageComponent';
 
 const ProductCard = ({ product, index = 0 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -29,26 +30,20 @@ const ProductCard = ({ product, index = 0 }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/product/${product.id}`} className="block">
-        <div className="relative overflow-hidden aspect-[3/4] bg-surface">
+        <div className="relative overflow-hidden aspect-[3/4] bg-surface" style={{ contain: 'layout style' }}>
           {/* Skeleton loader */}
           {!imageLoaded && (
             <div className="absolute inset-0 bg-surface animate-pulse" />
           )}
 
-          <motion.img
-            src={imageUrl}
+          <ImageComponent
+            src={product.image_url}
             alt={product.name}
             className={`w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-[filter] duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            loading="lazy"
-            decoding="async"
             width="400"
             height="533"
-            onError={e => {
-              e.target.src = 'https://placehold.co/400x533/0f0f0f/1e1e1e?text=NOIR';
-              setImageLoaded(true);
-            }}
             onLoad={() => setImageLoaded(true)}
           />
 

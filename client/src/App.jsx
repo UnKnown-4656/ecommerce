@@ -7,7 +7,7 @@ import CartDrawer from './components/CartDrawer';
 import Toast from './components/Toast';
 import { useCart } from './context/CartContext';
 
-// Lazy-load all page components for performance
+// Lazy-load all page components for performance with error boundaries
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ShopPage = lazy(() => import('./pages/ShopPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
@@ -16,6 +16,7 @@ const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage'));
 const OrderTrackingPage = lazy(() => import('./pages/OrderTrackingPage'));
 const TrackOrderPage = lazy(() => import('./pages/TrackOrderPage'));
+// Admin pages - separate chunk for non-admin users
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminOrdersPage = lazy(() => import('./pages/AdminOrdersPage'));

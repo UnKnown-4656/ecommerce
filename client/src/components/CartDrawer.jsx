@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import ImageComponent from './ImageComponent';
 
 const CartDrawer = ({ isOpen }) => {
   const { cart, removeFromCart, updateQuantity, cartTotal, setIsCartOpen, cartCount } = useCart();
@@ -69,19 +70,10 @@ const CartDrawer = ({ isOpen }) => {
                       className="flex gap-5 pb-6 border-b border-border last:border-0"
                     >
                       <div className="w-20 h-24 bg-surface overflow-hidden flex-shrink-0">
-                        <img
-                          src={item.image_url?.startsWith('http') 
-                            ? `${item.image_url}${item.image_url.includes('?') ? '&' : '?'}q=60&w=160` 
-                            : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
+                        <ImageComponent
+                          src={item.image_url}
                           alt={item.name}
-                          className="w-full h-full object-cover"
-                          width="80"
-                          height="96"
-                          loading="lazy"
-                          decoding="async"
-                          onError={(e) => {
-                            e.target.src = 'https://placehold.co/80x96/111/1e1e1e?text=NOIR';
-                          }}
+                          className="w-16 h-16 object-cover"
                         />
                       </div>
 

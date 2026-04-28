@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import ReviewsList from '../components/ReviewsList';
 import ReviewForm from '../components/ReviewForm';
 import ProductCard from '../components/ProductCard';
+import ImageComponent from '../components/ImageComponent';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -90,17 +91,12 @@ const ProductDetailPage = () => {
               className="sticky top-24 sm:top-32"
             >
               <div className="aspect-[3/4] bg-surface overflow-hidden rounded-lg">
-                <img
-                  src={imageUrl}
+                <ImageComponent
+                  src={product.image_url}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                  loading="eager"
-                  decoding="async"
                   width="600"
                   height="800"
-                  onError={(e) => {
-                    e.target.src = 'https://placehold.co/600x800/111/1e1e1e?text=NOIR';
-                  }}
                 />
               </div>
               {product.stock === 0 && (

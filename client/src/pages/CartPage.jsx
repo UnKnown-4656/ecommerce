@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import ImageComponent from '../components/ImageComponent';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal } = useCart();
@@ -25,15 +26,10 @@ const CartPage = () => {
           <div className="space-y-4">
             {cart.map((item, index) => (
               <div key={`${item.id}-${item.size}-${index}`} className="flex gap-4 p-4 bg-surface border border-border">
-                <img
-                  src={item.image_url?.startsWith('http') ? item.image_url : `https://ecommerce-ahmv.onrender.com${item.image_url}`}
+                <ImageComponent
+                  src={item.image_url}
                   alt={item.name}
-                  className="w-24 h-32 object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/96x128?text=No+Image';
-                  }}
+                  className="w-16 h-16 object-cover"
                 />
                 <div className="flex-1">
                   <h3 className="font-display text-lg">{item.name}</h3>
