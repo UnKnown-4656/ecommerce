@@ -1,28 +1,30 @@
 /* Font optimization to prevent FOUT layout shifts */
-/* These descriptors help match fallback fonts to the actual fonts */
+/* These descriptors help match fallback fonts to the actual fonts exactly */
 
-/* Inter font metric overrides */
+/* Inter font metric overrides - generated from https://wakamaifondue.com/ */
 @font-face {
   font-family: 'Inter Fallback';
   font-style: normal;
   font-weight: 300 600;
-  src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
+  src: local('Arial');
   ascent-override: 90.44%;
   descent-override: 22.52%;
   line-gap-override: 0%;
   size-adjust: 107.32%;
+  font-display: optional;
 }
 
-/* Cormorant Garamond fallback */
+/* Cormorant Garamond fallback - using Georgia as it's similar in metrics */
 @font-face {
   font-family: 'Cormorant Garamond Fallback';
   font-style: normal;
   font-weight: 300 600;
-  src: local('Georgia'), local('Times New Roman'), local('Times');
+  src: local('Georgia');
   ascent-override: 99.44%;
   descent-override: 21.52%;
   line-gap-override: 0%;
   size-adjust: 106.05%;
+  font-display: optional;
 }
 
 /* Cormorant Garamond italic fallback */
@@ -30,9 +32,10 @@
   font-family: 'Cormorant Garamond Fallback';
   font-style: italic;
   font-weight: 300 600;
-  src: local('Georgia'), local('Times New Roman'), local('Times');
+  src: local('Georgia Italic');
   ascent-override: 99.44%;
   descent-override: 21.52%;
   line-gap-override: 0%;
   size-adjust: 106.05%;
+  font-display: optional;
 }

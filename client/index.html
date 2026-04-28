@@ -43,6 +43,9 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=optional" />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=optional" rel="stylesheet" />
     
+    <!-- Preconnect to font servers with higher priority -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
     {
@@ -59,28 +62,42 @@
     }
     </script>
     
-    <!-- Prevent CLS from font loading -->
+    <!-- Prevent CLS from font loading - show fallback fonts immediately -->
     <style>
-      /* Critical CSS to prevent CLS */
-      body { visibility: hidden; }
-      .fonts-loaded body { visibility: visible; }
+      /* Critical CSS to prevent CLS - use fallback fonts initially */
+      body {
+        font-family: 'Inter Fallback', 'Inter', system-ui, -apple-system, sans-serif;
+        visibility: visible;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Cormorant Garamond Fallback', 'Cormorant Garamond', Georgia, serif;
+      }
+      /* Only hide if fonts fail to load */
+      .fonts-failed body { visibility: visible; }
     </style>
     <script>
-      // Font loading optimization
+      // Font loading optimization - use fallback fonts to prevent CLS
       if ('fonts' in document) {
+        // Load fonts in background without blocking rendering
+        document.fonts.load('300 1em Inter').then(() => {
+          document.documentElement.classList.add('inter-loaded');
+        });
+        document.fonts.load('400 1em Inter').then(() => {
+          document.documentElement.classList.add('inter-loaded');
+        });
         Promise.all([
-          document.fonts.load('300 1em Inter'),
-          document.fonts.load('400 1em Inter'),
           document.fonts.load('300 1em "Cormorant Garamond"'),
           document.fonts.load('400 1em "Cormorant Garamond"')
         ]).then(() => {
           document.documentElement.classList.add('fonts-loaded');
+        }).catch(() => {
+          document.documentElement.classList.add('fonts-failed');
         });
         
-        // Fallback: show content after 1 second even if fonts haven't loaded
+        // Force show content after 500ms even if fonts haven't loaded
         setTimeout(() => {
           document.documentElement.classList.add('fonts-loaded');
-        }, 1000);
+        }, 500);
       } else {
         document.documentElement.classList.add('fonts-loaded');
       }

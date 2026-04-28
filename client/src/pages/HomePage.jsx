@@ -126,7 +126,7 @@ const HomePage = () => {
       {/* ══════════════════════ HERO SECTION ══════════════════════ */}
         <section className="relative flex items-center justify-center overflow-hidden bg-black" style={{ height: '100vh', contain: 'layout style' }}>
         {/* Animated Background Slideshow - Optimized for CLS */}
-        <motion.div style={{ scale }} className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0" style={{ height: '100vh', contain: 'layout style' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={heroIndex}
@@ -135,6 +135,7 @@ const HomePage = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 2, ease: "easeInOut" }}
               className="absolute inset-0"
+              style={{ willChange: 'opacity' }}
             >
               <img
                 src={HERO_IMAGES[heroIndex]}
@@ -145,6 +146,7 @@ const HomePage = () => {
                 fetchpriority={heroIndex === 0 ? "high" : "low"}
                 loading={heroIndex === 0 ? "eager" : "lazy"}
                 decoding="async"
+                style={{ contain: 'layout style', willChange: 'opacity' }}
               />
             </motion.div>
           </AnimatePresence>
