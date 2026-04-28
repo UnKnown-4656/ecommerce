@@ -338,9 +338,9 @@ const HomePage = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8" style={{ minHeight: '800px' }}>
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse">
+                <div key={i} className="animate-pulse" style={{ contain: 'layout style' }}>
                   <div className="aspect-[3/4] bg-surface mb-5" />
                   <div className="h-3 w-16 bg-surface mb-3" />
                   <div className="h-5 w-32 bg-surface" />
@@ -348,7 +348,7 @@ const HomePage = () => {
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8" style={{ minHeight: '800px' }}>
               {products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}

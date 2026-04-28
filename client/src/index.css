@@ -20,6 +20,34 @@
   box-sizing: border-box;
 }
 
+/* Aggressive CLS prevention */
+section, main, div[class*="min-h"], div[class*="h-screen"] {
+  contain: layout style;
+}
+
+/* Prevent CLS from images without dimensions */
+img:not([width]):not([height]) {
+  min-height: 200px;
+  background-color: #111;
+  contain: strict;
+}
+
+/* Reserve space for dynamic content */
+.product-grid, .grid {
+  contain: layout style;
+  min-height: 400px;
+}
+
+/* Prevent CLS from font loading - use system font metrics */
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: 'Inter Fallback', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond Fallback', 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
 @media (pointer: coarse) {
   * {
     cursor: auto;
