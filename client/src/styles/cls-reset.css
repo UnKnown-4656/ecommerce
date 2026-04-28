@@ -1,0 +1,78 @@
+/* Aggressive CLS reset - target CLS 0.1 */
+
+/* Reserve exact space for all media elements */
+img, video, svg, canvas, iframe {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Images with explicit dimensions - prevent any shift */
+img[width][height] {
+  contain: layout style;
+}
+
+/* Reserve space for lazy images */
+img[loading="lazy"]:not([width]):not([height]) {
+  min-height: 300px;
+  background: #111;
+  contain: strict;
+}
+
+/* Prevent CLS from font loading - use system fonts as fallbacks */
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond Fallback', Georgia, 'Times New Roman', serif;
+  }
+}
+
+/* Contain all motion elements to prevent layout shifts */
+[class*="motion-"], [class*="framer-"] {
+  contain: layout style paint;
+  will-change: transform, opacity;
+}
+
+/* Reserve space for product grids exactly */
+.grid-cols-2 > *, .grid-cols-3 > *, .grid-cols-4 > * {
+  contain: layout style;
+}
+
+/* Fix for aspect ratio boxes - reserve exact space */
+.aspect-\[3\/4\] {
+  contain: layout style paint;
+  height: 0;
+  padding-bottom: 133.33%; /* 4/3 aspect ratio */
+  position: relative;
+}
+
+.aspect-\[3\/4\] > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Prevent CLS from fixed/sticky elements */
+header, [class*="sticky"], [class*="fixed"] {
+  contain: layout style;
+}
+
+/* Prevent CLS from scrollbar changes */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Ensure all sections have stable dimensions */
+section, main, article, aside {
+  contain: layout style;
+}
+
+/* Prevent CLS from dynamic text */
+h1, h2, h3, h4, h5, h6, p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}

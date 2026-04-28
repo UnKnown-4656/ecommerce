@@ -1,4 +1,5 @@
 @import './styles/font-optimization.css';
+@import './styles/cls-reset.css';
 
 /* Add local font face for better control if needed, but display=swap in URL is usually enough */
 
