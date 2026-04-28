@@ -123,10 +123,10 @@ const HomePage = () => {
 
   return (
     <div className="bg-bg">
-      {/* ══════════════════════ HERO SECTION ══════════════════════ */}
-        <section className="relative flex items-center justify-center overflow-hidden bg-black" style={{ height: '100vh', contain: 'layout style' }}>
+      {/* ════════════════════ HERO SECTION ════════════════════ */}
+        <section className="relative flex items-center justify-center overflow-hidden bg-black" style={{ height: '100vh', contain: 'layout style paint' }}>
         {/* Animated Background Slideshow - Optimized for CLS */}
-        <div className="absolute inset-0 z-0" style={{ height: '100vh', contain: 'layout style' }}>
+        <div className="absolute inset-0 z-0" style={{ height: '100vh', contain: 'layout style paint' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={heroIndex}
@@ -146,13 +146,13 @@ const HomePage = () => {
                 fetchpriority={heroIndex === 0 ? "high" : "low"}
                 loading={heroIndex === 0 ? "eager" : "lazy"}
                 decoding="async"
-                style={{ contain: 'layout style', willChange: 'opacity' }}
+                style={{ contain: 'layout style paint', willChange: 'opacity' }}
               />
             </motion.div>
           </AnimatePresence>
-          {/* Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10" />
+          {/* Gradients - pre-rendered to prevent shifts */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10 contain-layout" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10 contain-layout" />
         </div>
 
         {/* Side Images - Floating */}

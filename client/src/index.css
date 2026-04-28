@@ -27,6 +27,17 @@ section, main, div[class*="min-h"], div[class*="h-screen"], header, footer {
 }
 
 /* Prevent CLS from any dynamic content */
+[class*="motion-"], [class*="animate-"], [class*="framer-"] {
+  contain: layout style paint;
+  will-change: transform, opacity;
+}
+
+/* Pre-allocate space for all images with explicit dimensions */
+img[width][height] {
+  contain: layout style paint;
+}
+
+/* Prevent CLS from any dynamic content */
 [class*="motion-"], [class*="animate-"] {
   contain: layout style paint;
 }
